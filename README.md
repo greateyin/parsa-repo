@@ -1,137 +1,429 @@
-<h1 align=center>Parsa Hugo</h1>
+# Parsa Redesigned - Modern Hugo Theme
 
-<p align=center>Parsa is a gorgeous blog theme that is ideal for representing your personal blog website.  </p>
-<h2 align="center"> <a target="_blank" href="https://demo.gethugothemes.com/parsa" rel="nofollow">👀Demo</a> | <a  target="_blank" href="https://pagespeed.web.dev/report?url=https%3A%2F%2Fdemo.gethugothemes.com%2Fparsa%2Fsite%2F&form_factor=desktopF">Page Speed (91%)🚀</a></h2>
+A completely redesigned version of the popular Parsa Hugo theme, featuring modern design elements, Tailwind CSS integration, and enhanced user experience. This theme transforms the traditional Bootstrap-based layout into a contemporary, visually appealing design with gradient backgrounds, card-based layouts, smooth animations, and improved typography.
 
+## ✨ Features
 
+- **Modern Design**: Contemporary UI with gradient backgrounds and card-based layouts
+- **Tailwind CSS**: Utility-first CSS framework with JIT compilation
+- **Responsive Design**: Mobile-first approach with optimized layouts for all devices
+- **Performance Optimized**: Critical CSS inlining, lazy loading, and asset optimization
+- **SEO Ready**: OpenGraph, Twitter Cards, structured data, and comprehensive meta tags
+- **Multilingual Support**: Built-in i18n support for English and Chinese
+- **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
+- **Social Sharing**: Integrated social sharing buttons for major platforms
+- **Search Functionality**: Fast client-side search with modern interface
+- **Hugo Standards**: Follows official Hugo theme development standards
 
-<p align=center>
-  <a href="https://github.com/gohugoio/hugo/releases/tag/v0.147.2" alt="Contributors">
-    <img src="https://img.shields.io/static/v1?label=min-HUGO-version&message=0.147.2&color=f00&logo=hugo" />
-  </a>
+## 🚀 Quick Start
 
-  <a href="https://github.com/themefisher/parsa-hugo/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/themefisher/parsa-hugo" alt="license"></a>
+### Prerequisites
 
-  <img src="https://img.shields.io/github/languages/code-size/themefisher/parsa-hugo" alt="code size">
+- Hugo Extended v0.147.2 or higher
+- Node.js 16+ (for Tailwind CSS processing)
+- Git
 
-  <a href="https://github.com/themefisher/parsa-hugo/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/themefisher/parsa-hugo" alt="contributors"></a>
+### Installation
 
-  <a href="https://twitter.com/intent/follow?screen_name=gethugothemes">
-    <img src="https://img.shields.io/twitter/follow/gethugothemes?style=social&logo=twitter"
-      alt="follow on Twitter"></a>
-</p>
+#### Method 1: Hugo Modules (Recommended)
 
----
-
-<p align="center">
-<img src="https://demo.gethugothemes.com/thumbnails/parsa.png" alt="screenshot" width="100%">
-</p>
-
----
-
-## 🔑Key Features
-- 📄 8+ Pre-designed pages
-- 📊 Google Analytics Support
-- 📦 CSS and JS Bundle with Hugo Pipe
-- ⚙️ Netlify Settings Predefined
-- 📬 Contact Form Support
-- 🔍 Search by Fuse.js
-- 📸 Instagram Feed Available
-- 🔒 GDPR Consent Enabled
-- ⏱️ Post Reading Time Calculator
-- 🧱 Masonry Support
-- 👥 Multiple Author and Single Author Available
-- ⚡ Google Page Speed Optimized
-- 🌐 Open Graph Meta Tag
-- 🐦 Twitter Card Meta Tag
-
-## 📄 8+ Pre-designed pages
-- 🏠Multi Home Page
-- 👤About
-- 📞Contact
-- 📝 Blog Pages
-- 📄 Blog Single Pages
-- 🗂️ Category Page
-- 📄 Category Single Page
-- 🔖 Tag Pag
-
-## 🔧Local development
-
+1. Initialize your Hugo site as a module:
 ```bash
-# clone the repository
-git clone git@github.com:themefisher/parsa-hugo.git
-
-# setup project
-$ npm run project-setup
-
-# Start local dev server
-$ npm run dev
+hugo mod init github.com/yourusername/yoursite
 ```
 
-Or Check out [Full Documentation](https://docs.gethugothemes.com/parsa/?ref=github).
+2. Add the theme to your `hugo.toml`:
+```toml
+[module]
+  [[module.imports]]
+    path = "github.com/yourusername/parsa-redesigned"
+```
 
+3. Download the theme:
+```bash
+hugo mod get
+```
 
-## ⚙️Deployment and hosting
+#### Method 2: Git Submodule
 
-[![Deploy to
-Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/themefisher/parsa-hugo)
+1. Add the theme as a submodule:
+```bash
+git submodule add https://github.com/yourusername/parsa-redesigned.git themes/parsa-redesigned
+```
 
-Follow the steps.
+2. Update your `hugo.toml`:
+```toml
+theme = "parsa-redesigned"
+```
 
-<!-- reporting issue -->
-## 🐞Reporting Issues
+#### Method 3: Download ZIP
 
-We use GitHub Issues as the official bug tracker for the Parsa Template. Please Search [existing
-issues](https://github.com/themefisher/parsa-hugo/issues). Someone may have already reported the same problem.
-If your problem or idea has not been addressed yet, feel free to [open a new
-issue](https://github.com/themefisher/parsa-hugo/issues).
+1. Download the latest release from GitHub
+2. Extract to `themes/parsa-redesigned`
+3. Update your `hugo.toml`:
+```toml
+theme = "parsa-redesigned"
+```
 
-## 📱Submit Your Website To Our Showcase
+### Basic Configuration
 
-Are you using Parsa Hugo theme? Submit it to our [showcase](https://gethugothemes.com/showcase). 
+Copy the example configuration from `exampleSite/hugo.toml` to your site's root directory and customize:
 
-Our showcase aims to demonstrate to the world what amazing websites people like you have created utilizing our Hugo themes and to show that Hugo has tremendous capabilities as a Static Site Generator. 
+```toml
+baseURL = "https://yoursite.com"
+languageCode = "en-us"
+title = "Your Site Title"
+theme = "parsa-redesigned"
 
-[Submit](https://gethugothemes.com/showcase?submit=show) your Parsa Hugo powered website.
+# Hugo configuration
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.147.2"
 
-<!-- licence -->
-## 📄License
+# Theme parameters
+[params]
+  # Design settings
+  primaryColor = "#3b82f6"
+  accentColor = "#8b5cf6"
+  
+  # Site information
+  description = "Your site description"
+  author = "Your Name"
+  
+  # Feature toggles
+  enableSearch = true
+  enableSocialSharing = true
+  enableAnimations = true
+  
+  # SEO settings
+  [params.seo]
+    enableOpenGraph = true
+    enableTwitterCard = true
+    defaultImage = "/images/og-default.jpg"
 
-Copyright &copy; Designed by [Themefisher](https://themefisher.com) & Developed by
-[Gethugothemes](https://gethugothemes.com)
+# Menu configuration
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "Categories"
+    url = "/categories/"
+    weight = 2
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 3
 
-**Code License:** Released under the [MIT](https://github.com/themefisher/parsa-hugo/blob/master/LICENSE) license.
+# Output formats for search
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+```
 
-**Image license:** The images are only for demonstration purposes. They have their licenses. We don't have permission to
-share those images.
+### Content Structure
 
-<!-- resources -->
-## 🙏Special Thanks
+Create your content following Hugo's standard structure:
 
-- [Bootstrap](https://getbootstrap.com)
-- [Jquery](https://jquery.com)
-- [Themify Icons](https://themify.me/themify-icons)
-- [Slick Slider](https://kenwheeler.github.io/slick/)
-- [Headroom](https://wicky.nillia.ms/headroom.js)
-- [Instafeed](https://instafeedjs.com/)
-- [Masonry](https://masonry.desandro.com)
-- [Fuse Js](https://fusejs.io)
-- [Mark Js](https://markjs.io/)
-- [Google Fonts](https://fonts.google.com/)
-- [All Contributors](https://github.com/themefisher/parsa-hugo/graphs/contributors)
+```
+content/
+├── _index.md          # Homepage content
+├── about.md           # About page
+├── posts/             # Blog posts
+│   ├── _index.md
+│   └── my-first-post.md
+└── categories/        # Category pages
+    └── _index.md
+```
 
-## 👨‍💻Hire Us
+### Running the Site
 
-Besides developing unique, blazing-fast Hugo themes, we also provide customized services. We specialize in creating affordable, high-quality static websites based on Hugo.
+1. Install Node.js dependencies (for Tailwind CSS):
+```bash
+npm install
+```
 
-If you need to customize the theme or complete website development from scratch, you can hire us. **Check Our
-[services](https://gethugothemes.com/services/?utm_source=parsa_github&utm_medium=referral&utm_campaign=github_theme_readme)**
+2. Start the Hugo development server:
+```bash
+hugo server -D
+```
 
-<!-- premium themes -->
-## 💎Premium Themes By Us
+3. Visit `http://localhost:1313` to see your site
 
-| [![Mega-Bundle-HUGO](https://demo.gethugothemes.com/thumbnails/bundle.png?)](https://gethugothemes.com/bundle/?utm_source=parsa_github&utm_medium=referral&utm_campaign=github_theme_readme) | [![Reader](https://demo.gethugothemes.com/thumbnails/reader.png)](https://gethugothemes.com/products/reader/) | [![logbook](https://demo.gethugothemes.com/thumbnails/logbook.png)](https://gethugothemes.com/products/logbook/) |
-|:---:|:---:|:---:|
-| **Get 55+ Premium Hugo Themes Bundle** | **Reader** | **Logbook** |
+## 📝 Content Creation
+
+### Front Matter
+
+Use the following front matter structure for optimal theme integration:
+
+```yaml
+---
+title: "Your Post Title"
+date: 2025-10-12T10:00:00Z
+author: "Author Name"
+categories: ["category-name"]
+tags: ["tag1", "tag2"]
+featured: true
+draft: false
+
+# SEO and Social
+description: "Post description for SEO"
+image: "images/post-image.jpg"
+imageAlt: "Descriptive alt text"
+
+# OpenGraph (optional)
+og:
+  title: "Custom OG title"
+  description: "Custom OG description"
+  image: "images/og-image.jpg"
+
+# Twitter Card (optional)
+twitter:
+  card: "summary_large_image"
+  image: "images/twitter-image.jpg"
+---
+
+Your content here...
+```
+
+### Shortcodes
+
+The theme includes enhanced shortcodes for rich content:
+
+#### Enhanced Figure
+```markdown
+{{< figure src="image.jpg" alt="Description" caption="Image caption" >}}
+```
+
+#### YouTube Embed
+```markdown
+{{< youtube "video-id" >}}
+```
+
+#### Image Gallery
+```markdown
+{{< gallery >}}
+{{< gallery-image src="image1.jpg" alt="Description 1" >}}
+{{< gallery-image src="image2.jpg" alt="Description 2" >}}
+{{< /gallery >}}
+```
+
+#### Custom Button
+```markdown
+{{< button href="/contact" text="Contact Us" style="primary" >}}
+```
+
+## 🎨 Customization
+
+### Colors and Styling
+
+Customize the theme colors in your `hugo.toml`:
+
+```toml
+[params.design]
+  primaryColor = "#3b82f6"      # Primary brand color
+  accentColor = "#8b5cf6"       # Accent color for highlights
+  backgroundColor = "#ffffff"    # Background color
+  textColor = "#1f2937"         # Primary text color
+  mutedColor = "#6b7280"        # Muted text color
+```
+
+### Custom CSS
+
+Add custom styles by creating `assets/css/custom.css`:
+
+```css
+/* Custom styles */
+.my-custom-class {
+  @apply bg-primary text-white rounded-lg p-4;
+}
+
+/* Override theme styles */
+.article-card {
+  @apply shadow-xl;
+}
+```
+
+### Custom JavaScript
+
+Add custom JavaScript by creating `assets/js/custom.js`:
+
+```javascript
+// Custom JavaScript functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Your custom code here
+});
+```
+
+### Layout Overrides
+
+Override any theme template by creating the same file structure in your site's `layouts/` directory:
+
+```
+layouts/
+├── _default/
+│   └── single.html    # Override single post layout
+├── partials/
+│   └── header/
+│       └── navbar.html # Override navigation
+└── index.html         # Override homepage
+```
+
+## 🌐 Multilingual Setup
+
+Enable multilingual support in your `hugo.toml`:
+
+```toml
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+    [languages.en.params]
+      description = "English site description"
+  
+  [languages.zh]
+    languageName = "中文"
+    weight = 2
+    [languages.zh.params]
+      description = "中文网站描述"
+
+# Menu per language
+[languages.en.menu]
+  [[languages.en.menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+[languages.zh.menu]
+  [[languages.zh.menu.main]]
+    name = "首页"
+    url = "/"
+    weight = 1
+```
+
+Create language-specific content:
+
+```
+content/
+├── _index.md          # English homepage
+├── _index.zh.md       # Chinese homepage
+├── posts/
+│   ├── post-1.md      # English post
+│   └── post-1.zh.md   # Chinese post
+```
+
+## 🔍 Search Configuration
+
+The theme includes built-in search functionality. Configure it in your `hugo.toml`:
+
+```toml
+# Enable JSON output for search
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+
+[params.search]
+  enabled = true
+  placeholder = "Search articles..."
+  noResultsText = "No results found"
+  minQueryLength = 2
+```
+
+## 📱 Social Media Integration
+
+Configure social media links and sharing:
+
+```toml
+[params.social]
+  twitter = "https://twitter.com/yourusername"
+  facebook = "https://facebook.com/yourpage"
+  github = "https://github.com/yourusername"
+  linkedin = "https://linkedin.com/in/yourprofile"
+
+[params.sharing]
+  enabled = true
+  twitter = true
+  facebook = true
+  linkedin = true
+  copyLink = true
+```
+
+## ⚡ Performance Optimization
+
+The theme includes several performance optimizations:
+
+- **Critical CSS**: Above-the-fold styles are inlined
+- **Lazy Loading**: Images and iframes load on demand
+- **Asset Optimization**: CSS and JS are minified and fingerprinted
+- **Image Processing**: Responsive images with WebP support
+
+Configure performance settings:
+
+```toml
+[params.performance]
+  enableCriticalCSS = true
+  enableLazyLoading = true
+  enableImageOptimization = true
+  enableServiceWorker = false
+```
+
+## 🧪 Testing
+
+Run the included test suite:
+
+```bash
+# Install test dependencies
+cd tests
+npm install
+
+# Run all tests
+npm run test
+
+# Run specific tests
+npm run test:accessibility
+npm run test:performance
+npm run test:cross-browser
+```
+
+## 📚 Documentation
+
+- [Configuration Guide](CONFIGURATION.md) - Detailed configuration options
+- [Migration Guide](MIGRATION.md) - Migrating from original Parsa theme
+- [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions
+- [Performance Guide](docs/performance-optimization.md) - Performance optimization tips
+- [Shortcodes Guide](docs/shortcodes.md) - Available shortcodes and usage
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our contributing guidelines:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This theme is released under the MIT License. See [LICENSE](LICENSE) for details.
+
+## 🙏 Credits
+
+- Original Parsa theme by [Themefisher](https://themefisher.com/)
+- Built with [Hugo](https://gohugo.io/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+- Icons from [Heroicons](https://heroicons.com/)
+
+## 📞 Support
+
+- 📖 [Documentation](https://github.com/yourusername/parsa-redesigned/wiki)
+- 🐛 [Issue Tracker](https://github.com/yourusername/parsa-redesigned/issues)
+- 💬 [Discussions](https://github.com/yourusername/parsa-redesigned/discussions)
+
+---
+
+Made with ❤️ for the Hugo community# parsa-repo
