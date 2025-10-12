@@ -1,0 +1,20 @@
+{{/* Skip Links for Keyboard Navigation */}}
+<div class="skip-links">
+  <a href="#main-content" 
+     class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:font-medium focus:text-sm focus:no-underline focus:transition-all focus:duration-200"
+     tabindex="1">
+    {{ i18n "skipToContent" | default "Skip to main content" }}
+  </a>
+  
+  <a href="#navigation" 
+     class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:font-medium focus:text-sm focus:no-underline focus:transition-all focus:duration-200"
+     tabindex="2">
+    {{ i18n "skipToNavigation" | default "Skip to navigation" }}
+  </a>
+  
+  <a href="#footer" 
+     class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-64 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background focus:font-medium focus:text-sm focus:no-underline focus:transition-all focus:duration-200"
+     tabindex="3">
+    {{ i18n "skipToFooter" | default "Skip to footer" }}
+  </a>
+</div>

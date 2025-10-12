@@ -1,0 +1,245 @@
+{{ $structuredData := dict }}
+
+<!-- Website Schema -->
+{{ if .IsHome }}
+  {{ $websiteSchema := dict
+    "@context" "https://schema.org"
+    "@type" "WebSite"
+    "name" .Site.Title
+    "url" .Site.BaseURL
+    "description" .Site.Params.description
+    "inLanguage" .Site.Language.Lang
+  }}
+  
+  {{ if .Site.Params.author }}
+    {{ $author := dict
+      "@type" "Person"
+      "name" .Site.Params.author.name
+    }}
+    {{ if .Site.Params.author.url }}
+      {{ $author = $author | merge (dict "url" .Site.Params.author.url) }}
+    {{ end }}
+    {{ if .Site.Params.author.image }}
+      {{ $author = $author | merge (dict "image" (.Site.Params.author.image | absURL)) }}
+    {{ end }}
+    {{ $websiteSchema = $websiteSchema | merge (dict "author" $author) }}
+  {{ end }}
+  
+  {{ if .Site.Params.seo.sameAs }}
+    {{ $websiteSchema = $websiteSchema | merge (dict "sameAs" .Site.Params.seo.sameAs) }}
+  {{ end }}
+  
+  <!-- Search Action for the website -->
+  {{ if .Site.Params.features.search }}
+    {{ $searchAction := dict
+      "@type" "SearchAction"
+      "target" (printf "%s/search/?q={search_term_string}" .Site.BaseURL)
+      "query-input" "required name=search_term_string"
+    }}
+    {{ $websiteSchema = $websiteSchema | merge (dict "potentialAction" $searchAction) }}
+  {{ end }}
+  
+  {{ $structuredData = $websiteSchema }}
+
+<!-- Organization Schema -->
+{{ else if eq .Type "about" }}
+  {{ $organizationSchema := dict
+    "@context" "https://schema.org"
+    "@type" "Organization"
+    "name" .Site.Title
+    "url" .Site.BaseURL
+    "description" .Site.Params.description
+  }}
+  
+  {{ if .Site.Params.organization }}
+    {{ if .Site.Params.organization.logo }}
+      {{ $organizationSchema = $organizationSchema | merge (dict "logo" (.Site.Params.organization.logo | absURL)) }}
+    {{ end }}
+    {{ if .Site.Params.organization.address }}
+      {{ $organizationSchema = $organizationSchema | merge (dict "address" .Site.Params.organization.address) }}
+    {{ end }}
+    {{ if .Site.Params.organization.contactPoint }}
+      {{ $organizationSchema = $organizationSchema | merge (dict "contactPoint" .Site.Params.organization.contactPoint) }}
+    {{ end }}
+  {{ end }}
+  
+  {{ if .Site.Params.seo.sameAs }}
+    {{ $organizationSchema = $organizationSchema | merge (dict "sameAs" .Site.Params.seo.sameAs) }}
+  {{ end }}
+  
+  {{ $structuredData = $organizationSchema }}
+
+<!-- Article Schema -->
+{{ else if .IsPage }}
+  {{ $articleSchema := dict
+    "@context" "https://schema.org"
+    "@type" "Article"
+    "headline" .Title
+    "description" (with .Description . | default (.Summary | truncate 160))
+    "url" .Permalink
+    "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+    "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+    "inLanguage" .Site.Language.Lang
+  }}
+  
+  <!-- Article Author -->
+  {{ $authorName := .Params.author | default .Site.Params.author.name }}
+  {{ $author := dict
+    "@type" "Person"
+    "name" $authorName
+  }}
+  {{ if .Site.Params.author.url }}
+    {{ $author = $author | merge (dict "url" .Site.Params.author.url) }}
+  {{ end }}
+  {{ if .Site.Params.author.image }}
+    {{ $author = $author | merge (dict "image" (.Site.Params.author.image | absURL)) }}
+  {{ end }}
+  {{ $articleSchema = $articleSchema | merge (dict "author" $author) }}
+  
+  <!-- Publisher Information -->
+  {{ $publisher := dict
+    "@type" "Organization"
+    "name" .Site.Title
+    "url" .Site.BaseURL
+  }}
+  {{ if .Site.Params.organization.logo }}
+    {{ $logo := dict
+      "@type" "ImageObject"
+      "url" (.Site.Params.organization.logo | absURL)
+    }}
+    {{ $publisher = $publisher | merge (dict "logo" $logo) }}
+  {{ end }}
+  {{ $articleSchema = $articleSchema | merge (dict "publisher" $publisher) }}
+  
+  <!-- Article Image -->
+  {{ $image := .Params.image | default .Site.Params.seo.defaultImage }}
+  {{ if $image }}
+    {{ $imageSchema := dict
+      "@type" "ImageObject"
+      "url" ($image | absURL)
+    }}
+    {{ with .Params.imageAlt }}
+      {{ $imageSchema = $imageSchema | merge (dict "caption" .) }}
+    {{ end }}
+    {{ $articleSchema = $articleSchema | merge (dict "image" $imageSchema) }}
+  {{ end }}
+  
+  <!-- Article Categories and Tags -->
+  {{ if .Params.categories }}
+    {{ $articleSchema = $articleSchema | merge (dict "articleSection" .Params.categories) }}
+  {{ end }}
+  
+  {{ if .Params.tags }}
+    {{ $keywords := delimit .Params.tags ", " }}
+    {{ $articleSchema = $articleSchema | merge (dict "keywords" $keywords) }}
+  {{ end }}
+  
+  <!-- Word Count and Reading Time -->
+  {{ if .WordCount }}
+    {{ $articleSchema = $articleSchema | merge (dict "wordCount" .WordCount) }}
+  {{ end }}
+  
+  {{ if .ReadingTime }}
+    {{ $timeRequired := printf "PT%dM" .ReadingTime }}
+    {{ $articleSchema = $articleSchema | merge (dict "timeRequired" $timeRequired) }}
+  {{ end }}
+  
+  <!-- Main Entity of Page -->
+  {{ $mainEntity := dict
+    "@type" "WebPage"
+    "@id" .Permalink
+    "url" .Permalink
+    "name" .Title
+    "description" (with .Description . | default (.Summary | truncate 160))
+    "inLanguage" .Site.Language.Lang
+    "isPartOf" (dict "@type" "WebSite" "url" .Site.BaseURL "name" .Site.Title)
+  }}
+  {{ $articleSchema = $articleSchema | merge (dict "mainEntityOfPage" $mainEntity) }}
+  
+  {{ $structuredData = $articleSchema }}
+
+<!-- Blog Posting Schema for blog posts -->
+{{ if in .Section "blog" "post" "posts" }}
+  {{ $structuredData = $structuredData | merge (dict "@type" "BlogPosting") }}
+{{ end }}
+
+<!-- Breadcrumb Schema -->
+{{ else if .IsSection }}
+  {{ $breadcrumbSchema := dict
+    "@context" "https://schema.org"
+    "@type" "BreadcrumbList"
+  }}
+  
+  {{ $items := slice }}
+  {{ $items = $items | append (dict
+    "@type" "ListItem"
+    "position" 1
+    "name" .Site.Title
+    "item" .Site.BaseURL
+  ) }}
+  
+  {{ $items = $items | append (dict
+    "@type" "ListItem"
+    "position" 2
+    "name" .Title
+    "item" .Permalink
+  ) }}
+  
+  {{ $breadcrumbSchema = $breadcrumbSchema | merge (dict "itemListElement" $items) }}
+  {{ $structuredData = $breadcrumbSchema }}
+{{ end }}
+
+<!-- Output the structured data -->
+{{ if $structuredData }}
+<script type="application/ld+json">
+{{ $structuredData | jsonify | safeHTML }}
+</script>
+{{ end }}
+
+<!-- Additional structured data for specific content types -->
+{{ if .Params.faq }}
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $index, $faq := .Params.faq }}
+    {{ if $index }},{{ end }}
+    {
+      "@type": "Question",
+      "name": "{{ $faq.question }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ $faq.answer }}"
+      }
+    }
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+
+{{ if .Params.howto }}
+<!-- HowTo Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "{{ .Title }}",
+  "description": "{{ with .Description }}{{ . }}{{ else }}{{ .Summary | truncate 160 }}{{ end }}",
+  "image": {{ if .Params.image }}"{{ .Params.image | absURL }}"{{ else }}""{{ end }},
+  "step": [
+    {{ range $index, $step := .Params.howto }}
+    {{ if $index }},{{ end }}
+    {
+      "@type": "HowToStep",
+      "name": "{{ $step.name }}",
+      "text": "{{ $step.text }}"{{ if $step.image }},
+      "image": "{{ $step.image | absURL }}"{{ end }}
+    }
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}

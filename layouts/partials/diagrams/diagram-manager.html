@@ -1,0 +1,71 @@
+{{/*
+  Diagram Manager
+  Manages Mermaid.js diagram rendering and conditional loading
+  Usage: {{ partial "diagrams/diagram-manager.html" . }}
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+
+{{ if $config.mermaid.enabled }}
+<script>
+  window.ThemeDiagrams = window.ThemeDiagrams || {};
+  
+  // Diagram configuration
+  window.ThemeDiagrams.config = {
+    mermaid: {
+      enabled: true,
+      theme: "{{ $config.mermaid.theme }}",
+      loaded: false
+    }
+  };
+  
+  // Check if page has Mermaid diagrams
+  window.ThemeDiagrams.hasDiagrams = function() {
+    return {{ if .Page.Store.Get "hasMermaid" }}true{{ else }}false{{ end }};
+  };
+  
+  // Load Mermaid.js conditionally
+  window.ThemeDiagrams.loadMermaid = function() {
+    if (window.ThemeDiagrams.config.mermaid.loaded) {
+      return Promise.resolve();
+    }
+    
+    return new Promise(function(resolve, reject) {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+      script.onload = function() {
+        window.ThemeDiagrams.config.mermaid.loaded = true;
+        // Mermaid initialization will be implemented in task 6
+        console.log('Mermaid.js loaded successfully');
+        resolve();
+      };
+      script.onerror = function() {
+        console.error('Failed to load Mermaid.js');
+        reject(new Error('Failed to load Mermaid.js'));
+      };
+      document.head.appendChild(script);
+    });
+  };
+  
+  // Initialize diagrams
+  window.ThemeDiagrams.init = function() {
+    if (window.ThemeDiagrams.hasDiagrams()) {
+      console.log('Mermaid diagrams detected, loading Mermaid.js...');
+      window.ThemeDiagrams.loadMermaid().catch(function(error) {
+        console.error('Diagram initialization failed:', error);
+      });
+    } else {
+      console.log('No Mermaid diagrams found, skipping Mermaid.js loading');
+    }
+  };
+  
+  // Auto-initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.ThemeDiagrams.init);
+  } else {
+    window.ThemeDiagrams.init();
+  }
+</script>
+{{ end }}

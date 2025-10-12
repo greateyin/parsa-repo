@@ -1,0 +1,38 @@
+{{/* ARIA Live Regions for Dynamic Content Updates */}}
+<div class="sr-only" aria-live="polite" aria-atomic="true" id="aria-live-polite"></div>
+<div class="sr-only" aria-live="assertive" aria-atomic="true" id="aria-live-assertive"></div>
+<div class="sr-only" aria-live="off" aria-atomic="false" id="aria-live-status" role="status"></div>
+
+{{/* Screen Reader Announcements */}}
+<script>
+  // Utility function to announce messages to screen readers
+  window.announceToScreenReader = function(message, priority = 'polite') {
+    const liveRegion = document.getElementById(`aria-live-${priority}`);
+    if (liveRegion) {
+      liveRegion.textContent = message;
+      // Clear after announcement
+      setTimeout(() => {
+        liveRegion.textContent = '';
+      }, 1000);
+    }
+  };
+  
+  // Announce page changes for SPA-like navigation
+  window.announcePageChange = function(pageTitle) {
+    const message = `{{ i18n "pageLoaded" | default "Page loaded" }}: ${pageTitle}`;
+    window.announceToScreenReader(message, 'polite');
+  };
+  
+  // Announce search results
+  window.announceSearchResults = function(count, query) {
+    let message;
+    if (count === 0) {
+      message = `{{ i18n "noSearchResults" | default "No search results found for" }} "${query}"`;
+    } else if (count === 1) {
+      message = `{{ i18n "oneSearchResult" | default "1 search result found for" }} "${query}"`;
+    } else {
+      message = `${count} {{ i18n "searchResultsFound" | default "search results found for" }} "${query}"`;
+    }
+    window.announceToScreenReader(message, 'polite');
+  };
+</script>

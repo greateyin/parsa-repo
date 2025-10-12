@@ -1,0 +1,114 @@
+{{/* 
+  Fallback Content Partial
+  Provides graceful fallbacks for missing content metadata
+  Usage: {{ partial "content/fallback-content.html" (dict "context" . "type" "excerpt") }}
+*/}}
+
+{{ $context := .context }}
+{{ $type := .type }}
+{{ $fallback := "" }}
+
+{{ if eq $type "excerpt" }}
+  {{/* Fallback for missing excerpts */}}
+  {{ if $context.Params.excerpt }}
+    {{ $fallback = $context.Params.excerpt }}
+  {{ else if $context.Summary }}
+    {{ $fallback = $context.Summary }}
+  {{ else if $context.Description }}
+    {{ $fallback = $context.Description }}
+  {{ else }}
+    {{/* Generate excerpt from content */}}
+    {{ $content := $context.Content | plainify | truncate 150 }}
+    {{ if $content }}
+      {{ $fallback = $content }}
+    {{ else }}
+      {{ $fallback = printf (i18n "defaultExcerpt" | default "Read more about %s and discover interesting insights.") $context.Title }}
+    {{ end }}
+  {{ end }}
+
+{{ else if eq $type "author" }}
+  {{/* Fallback for missing author */}}
+  {{ if $context.Params.author }}
+    {{ $fallback = $context.Params.author }}
+  {{ else if $context.Site.Params.author.name }}
+    {{ $fallback = $context.Site.Params.author.name }}
+  {{ else }}
+    {{ $fallback = i18n "defaultAuthor" | default "Anonymous" }}
+  {{ end }}
+
+{{ else if eq $type "readTime" }}
+  {{/* Fallback for missing read time */}}
+  {{ if $context.Params.readTime }}
+    {{ $fallback = $context.Params.readTime }}
+  {{ else if $context.ReadingTime }}
+    {{ $fallback = $context.ReadingTime }}
+  {{ else }}
+    {{ $fallback = 5 }}
+  {{ end }}
+
+{{ else if eq $type "image" }}
+  {{/* Fallback for missing images */}}
+  {{ if $context.Params.image }}
+    {{ $fallback = $context.Params.image }}
+  {{ else if $context.Params.featured_image }}
+    {{ $fallback = $context.Params.featured_image }}
+  {{ else }}
+    {{ $fallback = "/images/placeholder.jpg" }}
+  {{ end }}
+
+{{ else if eq $type "imageAlt" }}
+  {{/* Fallback for missing image alt text */}}
+  {{ if $context.Params.imageAlt }}
+    {{ $fallback = $context.Params.imageAlt }}
+  {{ else if $context.Params.image_alt }}
+    {{ $fallback = $context.Params.image_alt }}
+  {{ else }}
+    {{ $fallback = printf (i18n "defaultImageAlt" | default "Featured image for %s") $context.Title }}
+  {{ end }}
+
+{{ else if eq $type "category" }}
+  {{/* Fallback for missing categories */}}
+  {{ if $context.Params.categories }}
+    {{ $fallback = index $context.Params.categories 0 }}
+  {{ else if $context.Section }}
+    {{ $fallback = $context.Section | title }}
+  {{ else }}
+    {{ $fallback = i18n "uncategorized" | default "Uncategorized" }}
+  {{ end }}
+
+{{ else if eq $type "date" }}
+  {{/* Fallback for missing or invalid dates */}}
+  {{ if $context.Date }}
+    {{ $fallback = $context.Date }}
+  {{ else if $context.PublishDate }}
+    {{ $fallback = $context.PublishDate }}
+  {{ else }}
+    {{ $fallback = now }}
+  {{ end }}
+
+{{ else if eq $type "title" }}
+  {{/* Fallback for missing titles */}}
+  {{ if $context.Title }}
+    {{ $fallback = $context.Title }}
+  {{ else if $context.File }}
+    {{ $fallback = $context.File.BaseFileName | title }}
+  {{ else }}
+    {{ $fallback = i18n "untitled" | default "Untitled" }}
+  {{ end }}
+
+{{ else if eq $type "description" }}
+  {{/* Fallback for missing descriptions */}}
+  {{ if $context.Description }}
+    {{ $fallback = $context.Description }}
+  {{ else if $context.Params.description }}
+    {{ $fallback = $context.Params.description }}
+  {{ else if $context.Summary }}
+    {{ $fallback = $context.Summary }}
+  {{ else }}
+    {{ $fallback = printf (i18n "defaultDescription" | default "Learn more about %s") $context.Title }}
+  {{ end }}
+
+{{ end }}
+
+{{/* Return the fallback content */}}
+{{ return $fallback }}

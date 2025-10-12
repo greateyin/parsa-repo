@@ -1,0 +1,64 @@
+{{/*
+  Theme Manager
+  Main coordinator for all theme enhancements
+  Usage: {{ partial "infrastructure/theme-manager.html" . }}
+*/}}
+
+{{/* Load all managers in the correct order */}}
+
+{{/* 1. Configuration validation (must be first) */}}
+{{ partial "helpers/config-validation.html" . }}
+
+{{/* 2. Privacy and consent management (must be early) */}}
+{{ partial "privacy/consent-manager.html" . }}
+
+{{/* 3. Analytics manager */}}
+{{ partial "analytics/analytics-manager.html" . }}
+
+{{/* 4. Advertising manager */}}
+{{ partial "advertising/ad-manager.html" . }}
+
+{{/* 5. Search manager */}}
+{{ partial "search/search-manager.html" . }}
+
+{{/* 6. Diagram manager */}}
+{{ partial "diagrams/diagram-manager.html" . }}
+
+{{/* Global theme initialization */}}
+<script>
+  window.ThemeEnhancements = window.ThemeEnhancements || {};
+  
+  // Theme version and info
+  window.ThemeEnhancements.version = "1.0.0";
+  window.ThemeEnhancements.features = [
+    "Google Analytics 4",
+    "Facebook Pixel", 
+    "Google AdSense",
+    "Google Custom Search",
+    "Mermaid.js Diagrams",
+    "Privacy Management"
+  ];
+  
+  // Global initialization
+  window.ThemeEnhancements.init = function() {
+    console.log('Theme Enhancements v' + window.ThemeEnhancements.version + ' initialized');
+    console.log('Available features:', window.ThemeEnhancements.features);
+    
+    // Verify all managers are loaded
+    var managers = ['ThemePrivacy', 'ThemeAnalytics', 'ThemeAds', 'ThemeSearch', 'ThemeDiagrams'];
+    managers.forEach(function(manager) {
+      if (window[manager]) {
+        console.log('✓ ' + manager + ' loaded');
+      } else {
+        console.log('✗ ' + manager + ' not loaded');
+      }
+    });
+  };
+  
+  // Auto-initialize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.ThemeEnhancements.init);
+  } else {
+    window.ThemeEnhancements.init();
+  }
+</script>

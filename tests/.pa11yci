@@ -1,0 +1,23 @@
+{
+  "defaults": {
+    "timeout": 30000,
+    "wait": 1000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+    },
+    "standard": "WCAG2AA",
+    "reporters": [
+      "json"
+    ],
+    "ignore": [
+      "color-contrast"
+    ]
+  },
+  "urls": [
+    "http://localhost:1313/",
+    "http://localhost:1313/blog/",
+    "http://localhost:1313/categories/",
+    "http://localhost:1313/tags/",
+    "http://localhost:1313/about/"
+  ]
+}

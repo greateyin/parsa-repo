@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square70x70logo src="{{ "images/mstile-70x70.png" | relURL }}"/>
+            <square150x150logo src="{{ "images/mstile-150x150.png" | relURL }}"/>
+            <square310x310logo src="{{ "images/mstile-310x310.png" | relURL }}"/>
+            <wide310x150logo src="{{ "images/mstile-310x150.png" | relURL }}"/>
+            <TileColor>{{ .Site.Params.theme.primaryColor | default "#3b82f6" }}</TileColor>
+        </tile>
+        <notification>
+            <polling-uri src="{{ "notifications/polling.xml" | relURL }}"/>
+            <frequency>30</frequency>
+            <cycle>1</cycle>
+        </notification>
+    </msapplication>
+</browserconfig>

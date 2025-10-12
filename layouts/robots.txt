@@ -1,0 +1,51 @@
+User-agent: *
+{{ if hugo.IsProduction }}
+# Production robots.txt
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /.well-known/
+Disallow: /api/
+
+# Allow search engines to access CSS and JS
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /fonts/
+
+# Crawl delay (optional, adjust as needed)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: {{ .Site.BaseURL }}sitemap.xml
+
+{{ if .Site.Params.seo.additionalSitemaps }}
+{{ range .Site.Params.seo.additionalSitemaps }}
+Sitemap: {{ . }}
+{{ end }}
+{{ end }}
+
+{{ else }}
+# Development/staging robots.txt - block all crawlers
+Disallow: /
+{{ end }}
+
+# Specific bot configurations
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block problematic bots (optional)
+{{ if .Site.Params.seo.blockBots }}
+{{ range .Site.Params.seo.blockBots }}
+User-agent: {{ . }}
+Disallow: /
+{{ end }}
+{{ end }}

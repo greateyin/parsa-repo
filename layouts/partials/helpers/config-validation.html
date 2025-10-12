@@ -1,0 +1,96 @@
+{{/*
+  Configuration Validation Helper
+  Validates theme configuration parameters and provides defaults
+  Usage: {{ partial "helpers/config-validation.html" . }}
+*/}}
+
+{{/* Google Analytics Configuration Validation */}}
+{{ $gaConfig := dict }}
+{{ if site.Config.Services.GoogleAnalytics.ID }}
+  {{ $gaConfig = merge $gaConfig (dict "enabled" true "id" site.Config.Services.GoogleAnalytics.ID) }}
+{{ else }}
+  {{ $gaConfig = merge $gaConfig (dict "enabled" false "id" "") }}
+{{ end }}
+
+{{/* AdSense Configuration Validation */}}
+{{ $adsenseConfig := site.Params.adsense | default dict }}
+{{ $adsenseDefaults := dict 
+  "enabled" false
+  "client" ""
+  "inArticleSlot" ""
+  "autoAds" false
+  "placements" (dict 
+    "header" false
+    "sidebar" false
+    "footer" false
+    "inContent" false
+  )
+}}
+{{ $adsenseConfig = merge $adsenseDefaults $adsenseConfig }}
+
+{{/* Facebook Pixel Configuration Validation */}}
+{{ $fbPixelConfig := site.Params.facebookPixel | default dict }}
+{{ $fbPixelDefaults := dict
+  "enabled" false
+  "pixelId" ""
+  "events" (dict
+    "pageView" true
+    "viewContent" false
+    "search" false
+    "contact" false
+  )
+}}
+{{ $fbPixelConfig = merge $fbPixelDefaults $fbPixelConfig }}
+
+{{/* Google Custom Search Configuration Validation */}}
+{{ $gcsConfig := site.Params.gcs_engine_id | default dict }}
+{{ $gcsDefaults := dict "value" "" }}
+{{ $gcsConfig = merge $gcsDefaults $gcsConfig }}
+
+{{/* Mermaid Configuration Validation */}}
+{{ $mermaidConfig := site.Params.mermaid | default dict }}
+{{ $mermaidDefaults := dict
+  "enabled" true
+  "theme" "default"
+}}
+{{ $mermaidConfig = merge $mermaidDefaults $mermaidConfig }}
+
+{{/* Privacy Configuration Validation */}}
+{{ $privacyConfig := site.Params.privacy | default dict }}
+{{ $privacyDefaults := dict
+  "respectDoNotTrack" true
+  "cookieConsent" false
+}}
+{{ $privacyConfig = merge $privacyDefaults $privacyConfig }}
+
+{{/* Performance Configuration Validation */}}
+{{ $performanceConfig := site.Params.performance | default dict }}
+{{ $performanceDefaults := dict
+  "lazyLoadAds" true
+  "asyncScripts" true
+}}
+{{ $performanceConfig = merge $performanceDefaults $performanceConfig }}
+
+{{/* Store validated configurations in page context */}}
+{{ .Page.Store.Set "validatedConfig" (dict
+  "googleAnalytics" $gaConfig
+  "adsense" $adsenseConfig
+  "facebookPixel" $fbPixelConfig
+  "googleCustomSearch" $gcsConfig
+  "mermaid" $mermaidConfig
+  "privacy" $privacyConfig
+  "performance" $performanceConfig
+) }}
+
+{{/* Configuration validation warnings */}}
+{{ if and $adsenseConfig.enabled (not $adsenseConfig.client) }}
+  {{ warnf "AdSense is enabled but no client ID is configured. Please set params.adsense.client in your configuration." }}
+{{ end }}
+
+{{ if and $fbPixelConfig.enabled (not $fbPixelConfig.pixelId) }}
+  {{ warnf "Facebook Pixel is enabled but no pixel ID is configured. Please set params.facebookPixel.pixelId in your configuration." }}
+{{ end }}
+
+{{ if and $gcsConfig.value (eq $gcsConfig.value "") }}
+  {{ warnf "Google Custom Search engine ID is empty. Please set params.gcs_engine_id.value in your configuration." }}
+{{ end }}

@@ -1,145 +1,166 @@
 {{ define "main" }}
-
-<!-- page-title -->
-<section class="section bg-secondary">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <h4>{{.Title}}</h4>
-      </div>
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <header class="text-center mb-12">
+    {{ if .Data.Singular }}
+    <!-- Category/Tag specific header -->
+    <div class="mb-4">
+      {{ if eq .Data.Singular "category" }}
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-primary/10 text-primary mb-4">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+        </svg>
+        {{ i18n "category" | default "Category" | title }}
+      </span>
+      {{ else if eq .Data.Singular "tag" }}
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-accent/10 text-accent mb-4">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+        </svg>
+        {{ i18n "tags" | default "Tag" | singularize | title }}
+      </span>
+      {{ end }}
     </div>
-  </div>
-</section>
-<!-- /page-title -->
-
-<!-- category post -->
-<section>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 mt-5">
-        {{ $paginator := .Paginate .Data.Pages }}
-        {{ if eq site.Params.layout "1" }}
-        <div class="row masonry-container">
-          {{ range $paginator.Pages }}
-          <div class="col-sm-6 mb-5">
-            <article class="text-center">
-              {{ partial "image.html" (dict "Src" .Params.Image "Alt" "post-thumb" "Class" "img-fluid mb-4" ) }}
-              <p class="text-uppercase mb-2">{{ .Params.Categories }}</p>
-              <h4 class="title-border"><a class="text-dark" href="{{.Permalink}}">{{.Title}}</a></h4>
-              <p>{{.Summary | strings.Truncate site.Params.summaryLength}}</p>
-              <a href="{{.Permalink}}" class="btn btn-transparent">read more</a>
-            </article>
-          </div>
+    {{ end }}
+    
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+      {{ .Title }}
+    </h1>
+    
+    {{ with .Description }}
+    <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+      {{ . }}
+    </p>
+    {{ end }}
+    
+    <!-- Article Count -->
+    {{ if .Pages }}
+    <div class="mt-4">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-muted text-muted-foreground">
+        {{ len .Pages }} {{ if eq (len .Pages) 1 }}{{ i18n "article" | default "article" }}{{ else }}{{ i18n "articles" | default "articles" }}{{ end }}
+        {{ if .Data.Singular }}
+          {{ if eq .Data.Singular "category" }}
+            {{ i18n "articlesInCategory" | default "in this category" | lower }}
+          {{ else if eq .Data.Singular "tag" }}
+            {{ i18n "articlesWithTag" | default "with this tag" | lower }}
           {{ end }}
-        </div>
-
-        {{ else if (eq site.Params.layout "2")}}
-
-        <div class="row">
-          {{ range $i,$p := $paginator.Pages }}
-          <div class="col-12 mb-100">
-            <article data-file="{{.Permalink}}" data-target="article"
-              class="article-full-width {{if not (modBool $i 2)}} article-right {{ end }}">
-              <div class="post-image">
-                {{ partial "image.html" (dict "Src" .Params.Image "Alt" "post-thumb" "Class" "img-fluid" ) }}
-              </div>
-              <div class="post-content">
-                <ul class="list-inline d-flex justify-content-between border-bottom post-meta pb-2 mb-4">
-                  <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{ .PublishDate.Format "Jan 02, 2006" }}
-                  </li>
-                  <li class="list-inline-item"><i class="ti-alarm-clock mr-2"></i><span class="eta"></span> read</li>
-                </ul>
-                <h4 class="mb-4"><a href="{{.Permalink}}" class="text-dark">{{ .Title }}</a></h4>
-                <p class="mb-0 post-summary">{{.Summary }}</p>
-                <a class="btn btn-transparent mb-4" href="{{.Permalink}}">Continue...</a>
-              </div>
-            </article>
-          </div>
-          {{ end }}
-        </div>
         {{ end }}
-        <!-- pagination -->
-        <div class="row">
-          <div class="col-12">
-            {{ $paginator := .Paginator }}
-            <!-- Number of links either side of the current page. -->
-            {{ $adjacent_links := 2 }}
-            <!-- $max_links = ($adjacent_links * 2) + 1 -->
-            {{ $max_links := (add (mul $adjacent_links 2) 1) }}
-            <!-- $lower_limit = $adjacent_links + 1 -->
-            {{ $lower_limit := (add $adjacent_links 1) }}
-            <!-- $upper_limit = $paginator.TotalPages - $adjacent_links -->
-            {{ $upper_limit := (sub $paginator.TotalPages $adjacent_links) }}
-            <!-- If there's more than one page. -->
-            {{ if gt $paginator.TotalPages 1 }}
-            <nav aria-label="Page navigation">
-              <ul class="pagination justify-content-center align-items-center">
-                <!-- Previous page. -->
-                {{ if $paginator.HasPrev }}
-                <li class="page-item">
-                  <a href="{{ $paginator.Prev.URL }}" class="page-link">
-                    &laquo; Previous
-                  </a>
-                </li>
-                {{ end }}
-                <!-- Page numbers. -->
-                {{ range $paginator.Pagers }}
-                {{ $.Scratch.Set "page_number_flag" false }}
-                <!-- Advanced page numbers. -->
-                {{ if gt $paginator.TotalPages $max_links }}
-                <!-- Lower limit pages. -->
-                <!-- If the user is on a page which is in the lower limit.  -->
-                {{ if le $paginator.PageNumber $lower_limit }}
-                <!-- If the current loop page is less than max_links. -->
-                {{ if le .PageNumber $max_links }}
-                {{ $.Scratch.Set "page_number_flag" true }}
-                {{ end }}
-                <!-- Upper limit pages. -->
-                <!-- If the user is on a page which is in the upper limit. -->
-                {{ else if ge $paginator.PageNumber $upper_limit }}
-                <!-- If the current loop page is greater than total pages minus $max_links -->
-                {{ if gt .PageNumber (sub $paginator.TotalPages $max_links) }}
-                {{ $.Scratch.Set "page_number_flag" true }}
-                {{ end }}
-                <!-- Middle pages. -->
-                {{ else }}
-                {{ if and ( ge .PageNumber (sub $paginator.PageNumber $adjacent_links) ) ( le .PageNumber (add $paginator.PageNumber $adjacent_links) ) }}
-                {{ $.Scratch.Set "page_number_flag" true }}
-                {{ end }}
-                {{ end }}
-                <!-- Simple page numbers. -->
-                {{ else }}
-                {{ $.Scratch.Set "page_number_flag" true }}
-                {{ end }}
-                <!-- Output page numbers. -->
-                {{ if eq ($.Scratch.Get "page_number_flag") true }}
-                <li class="page-item{{ if eq . $paginator }} page-item active {{ end }}">
-                  <a href="{{ .URL }}" class="page-link">
-                    {{ .PageNumber }}
-                  </a>
-                </li>
-                {{ end }}
-                {{ end }}
-                <!-- Next page. -->
-                {{ if $paginator.HasNext }}
-                <li class="page-item">
-                  <a href="{{ $paginator.Next.URL }}" class="page-link">
-                    Next &raquo;
-                  </a>
-                </li>
-                {{ end }}
-              </ul>
-            </nav>
-            {{ end }}
-          </div>
-        </div>
-        <!-- pagination -->
-      </div>
-      <!-- /blog post -->
-      {{ partial "sidebar.html" . }}
+      </span>
     </div>
+    {{ end }}
+  </header>
+  
+  <!-- Breadcrumb Navigation -->
+  {{ if not .IsHome }}
+  <nav class="mb-8" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2 text-sm text-muted-foreground flex-wrap">
+      <li>
+        <a href="{{ "/" | relLangURL }}" class="hover:text-primary transition-colors flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+          </svg>
+          {{ i18n "home" | default "Home" }}
+        </a>
+      </li>
+      <li>
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      {{ if .IsSection }}
+      <li>
+        <span class="text-foreground font-medium">{{ .Title }}</span>
+      </li>
+      {{ else if .Data.Singular }}
+      <li>
+        {{ $taxonomyURL := printf "/%s/" .Data.Plural }}
+        <a href="{{ $taxonomyURL | relLangURL }}" class="hover:text-primary transition-colors">
+          {{ if eq .Data.Plural "categories" }}
+            {{ i18n "categories" | default "Categories" }}
+          {{ else if eq .Data.Plural "tags" }}
+            {{ i18n "tags" | default "Tags" }}
+          {{ else }}
+            {{ .Data.Plural | title }}
+          {{ end }}
+        </a>
+      </li>
+      <li>
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li>
+        <span class="text-foreground font-medium">{{ .Title }}</span>
+      </li>
+      {{ end }}
+    </ol>
+  </nav>
+  {{ end }}
+  
+  <!-- Articles Grid -->
+  {{ if .Pages }}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    {{ range .Paginator.Pages }}
+      {{ partial "content/article-card.html" . }}
+    {{ end }}
   </div>
-</section>
-<!-- /category post -->
-
+  
+  <!-- Pagination -->
+  {{ if gt .Paginator.TotalPages 1 }}
+  <nav class="flex justify-center" aria-label="Pagination">
+    <div class="flex items-center space-x-2">
+      <!-- Previous Page -->
+      {{ if .Paginator.HasPrev }}
+      <a href="{{ .Paginator.Prev.URL }}" 
+         class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>
+        {{ i18n "previous" | default "Previous" }}
+      </a>
+      {{ end }}
+      
+      <!-- Page Numbers -->
+      {{ range .Paginator.Pagers }}
+        {{ if eq . $.Paginator }}
+        <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-primary rounded-md">
+          {{ .PageNumber }}
+        </span>
+        {{ else }}
+        <a href="{{ .URL }}" 
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors">
+          {{ .PageNumber }}
+        </a>
+        {{ end }}
+      {{ end }}
+      
+      <!-- Next Page -->
+      {{ if .Paginator.HasNext }}
+      <a href="{{ .Paginator.Next.URL }}" 
+         class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors">
+        {{ i18n "next" | default "Next" }}
+        <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </a>
+      {{ end }}
+    </div>
+  </nav>
+  {{ end }}
+  
+  {{ else }}
+  <!-- Empty State -->
+  {{ if .Data.Singular }}
+    {{ if eq .Data.Singular "category" }}
+      {{ partial "content/empty-state.html" (dict "context" . "type" "no-category-articles") }}
+    {{ else if eq .Data.Singular "tag" }}
+      {{ partial "content/empty-state.html" (dict "context" . "type" "no-tag-articles") }}
+    {{ else }}
+      {{ partial "content/empty-state.html" (dict "context" . "type" "no-articles") }}
+    {{ end }}
+  {{ else }}
+    {{ partial "content/empty-state.html" (dict "context" . "type" "no-articles") }}
+  {{ end }}
+  {{ end }}
+</div>
 {{ end }}

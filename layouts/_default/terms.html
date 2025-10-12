@@ -1,0 +1,120 @@
+{{ define "main" }}
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <header class="text-center mb-12">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+      {{ .Title }}
+    </h1>
+    
+    {{ with .Description }}
+    <p class="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
+      {{ . }}
+    </p>
+    {{ end }}
+    
+    <!-- Terms Count -->
+    {{ if .Data.Terms }}
+    <div class="mt-4">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-muted text-muted-foreground">
+        {{ len .Data.Terms }} {{ if eq (len .Data.Terms) 1 }}{{ .Data.Singular | title }}{{ else }}{{ .Data.Plural | title }}{{ end }}
+      </span>
+    </div>
+    {{ end }}
+  </header>
+  
+  <!-- Breadcrumb Navigation -->
+  <nav class="mb-8" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2 text-sm text-muted-foreground">
+      <li>
+        <a href="{{ "/" | relLangURL }}" class="hover:text-primary transition-colors">
+          {{ i18n "home" | default "Home" }}
+        </a>
+      </li>
+      <li>
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li>
+        <span class="text-foreground">{{ .Title }}</span>
+      </li>
+    </ol>
+  </nav>
+  
+  {{ if eq .Data.Plural "tags" }}
+    <!-- Tags Cloud Layout -->
+    <div class="mb-12">
+      {{ partial "widgets/tags-cloud.html" . }}
+    </div>
+  {{ else }}
+    <!-- Categories Grid Layout -->
+    {{ if .Data.Terms }}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      {{ range .Data.Terms.Alphabetical }}
+        {{ $term := . }}
+        {{ $count := len .Pages }}
+        <div class="group">
+          <a href="{{ .Page.Permalink }}" 
+             class="block p-6 bg-card border border-border rounded-lg hover:shadow-lg hover:border-primary/50 transition-all duration-300 hover:-translate-y-1">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                {{ .Page.Title }}
+              </h3>
+              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-muted text-muted-foreground">
+                {{ $count }} {{ if eq $count 1 }}{{ i18n "article" | default "article" }}{{ else }}{{ i18n "articles" | default "articles" }}{{ end }}
+              </span>
+            </div>
+            
+            {{ with .Page.Description }}
+            <p class="text-sm text-muted-foreground mb-4 line-clamp-2">
+              {{ . }}
+            </p>
+            {{ end }}
+            
+            <div class="flex items-center text-sm text-primary group-hover:text-primary/80 transition-colors">
+              <span>{{ i18n "viewArticles" | default "View Articles" }}</span>
+              <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </a>
+        </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  {{ end }}
+  
+  {{ if not .Data.Terms }}
+  <!-- Empty State -->
+  <div class="text-center py-16">
+    <div class="max-w-md mx-auto">
+      {{ if eq .Data.Plural "tags" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+      </svg>
+      <h3 class="text-lg font-semibold text-foreground mb-2">
+        {{ i18n "noTagsFound" | default "No tags found" }}
+      </h3>
+      <p class="text-muted-foreground mb-6">
+        {{ i18n "noTagsYet" | default "No tags have been created yet." }}
+      </p>
+      {{ else }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      </svg>
+      <h3 class="text-lg font-semibold text-foreground mb-2">
+        {{ i18n "noCategoriesFound" | default "No categories found" }}
+      </h3>
+      <p class="text-muted-foreground mb-6">
+        {{ i18n "noCategoriesYet" | default "No categories have been created yet." }}
+      </p>
+      {{ end }}
+      <a href="{{ "/" | relLangURL }}" 
+         class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+        {{ i18n "backToHome" | default "Back to Home" }}
+      </a>
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

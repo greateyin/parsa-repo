@@ -1,102 +1,187 @@
-# default config
-baseurl = "https://demo.gethugothemes.com/parsa/site/"
+# Example Site Configuration for Parsa Redesigned Theme
+# This demonstrates how to configure the theme
+
+baseURL = "https://parsa-redesigned-demo.netlify.app"
 languageCode = "en-us"
-title = "Parsa Hugo | Personal Blog Template"
-theme = "parsa-hugo"
+title = "Parsa Redesigned - Demo Site"
+theme = "parsa-redesigned"
 
-pagination.pagerSize = 6
-# google analytics
-googleAnalytics = "" # example : UA-123-45
+# Enable Hugo extended features
+enableRobotsTXT = true
+enableGitInfo = true
+enableEmoji = true
 
-# output
+# Content settings
+paginate = 9
+paginatePath = "page"
+summaryLength = 30
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
+# Hugo Modules
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.147.2"
+
+# Taxonomies
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  author = "authors"
+
+# Output formats (including SEO enhancements)
 [outputs]
-home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "RSS", "JSON", "WebAppManifest"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
 
-[markup.goldmark.renderer]
-unsafe = true
+# Media types for additional outputs
+[mediaTypes]
+  [mediaTypes."application/manifest+json"]
+    suffixes = ["webmanifest"]
 
-# CSS Plugins
-[[params.plugins.css]]
-link = "plugins/bootstrap/bootstrap.min.css"
-[[params.plugins.css]]
-link = "plugins/slick/slick.css"
-[[params.plugins.css]]
-link = "plugins/themify-icons/themify-icons.css"
+[outputFormats]
+  [outputFormats.WebAppManifest]
+    mediaType = "application/manifest+json"
+    rel = "manifest"
 
-# JS Plugins
-[[params.plugins.js]]
-link = "plugins/jQuery/jquery.min.js"
-[[params.plugins.js]]
-link = "plugins/bootstrap/bootstrap.min.js"
-[[params.plugins.js]]
-link = "plugins/slick/slick.min.js"
-[[params.plugins.js]]
-link = "plugins/headroom/headroom.js"
-[[params.plugins.js]]
-link = "plugins/instafeed/instafeed.min.js"
-[[params.plugins.js]]
-link = "plugins/masonry/masonry.js"
-[[params.plugins.js]]
-link = "plugins/reading-time/readingTime.min.js"
-[[params.plugins.js]]
-link = "plugins/smooth-scroll/smooth-scroll.js"
-[[params.plugins.js]]
-link = "plugins/search/fuse.min.js"
-[[params.plugins.js]]
-link = "plugins/search/mark.js"
-[[params.plugins.js]]
-link = "plugins/search/search.js"
+# Sitemap configuration
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+  filename = "sitemap.xml"
 
+# Markup settings
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "github"
+    lineNos = true
 
-# deult parameter
+# Theme parameters - Example configuration
 [params]
-summaryLength = 100
-logo = "images/logo.png"
-home = "Home"
-# theme layout ( two layout is available, "1" and "2" )
-layout = "1"
-# Meta data
-description = "This is meta description"
-# Preloader
-preloader = true
-# search
-search = true
-# about author
-author = "John Doe"
-author_image = "images/banner-img.png"
-bio = "I’m a Freelance Interactive Art Director based in France. Focusing across branding and identity, digital and print."
-# Contact info
-mobile = "+90 000 333 22"
-email = "exmaple@ymail.com"
-address = "6 rip carl Avenue CA 90733"
-# Contact Form Action
-contact_form_action = "#"
-# copyright
-copyright = "Copyright &copy; 2023 a theme by [themefisher.com](https://themefisher.com)"
+  # Site information
+  description = "A modern, redesigned Hugo theme showcasing contemporary web design with Tailwind CSS"
+  author = "Parsa Redesigned Team"
+  logo = "/images/logo.png"
+  favicon = "/favicon.ico"
+  
+  # Design settings
+  [params.colors]
+    primary = "#3b82f6"
+    accent = "#8b5cf6"
+    
+  # Layout settings
+  [params.layout]
+    articlesPerPage = 9
+    featuredArticlesCount = 2
+    
+  # Features
+  [params.features]
+    search = true
+    tagCloud = true
+    animations = true
+    socialSharing = true
+    relatedArticles = true
+    readingTime = true
+    
+  # SEO Configuration
+  keywords = ["hugo", "theme", "blog", "modern", "tailwind", "responsive"]
+  
+  [params.seo]
+    enableSEO = true
+    enableOpenGraph = true
+    enableTwitterCard = true
+    enableStructuredData = true
+    defaultImage = "/images/og-default.jpg"
+    
+    # Site verification codes (add your own)
+    googleSiteVerification = ""
+    bingSiteVerification = ""
+    
+    # Social media profiles for structured data
+    sameAs = [
+      "https://twitter.com/example",
+      "https://github.com/example",
+      "https://linkedin.com/company/example"
+    ]
+    
+    # Performance optimization
+    preconnect = [
+      "https://fonts.googleapis.com",
+      "https://fonts.gstatic.com"
+    ]
+    
+  [params.openGraph]
+    siteName = "Parsa Redesigned Demo"
+    twitterSite = "@parsa_redesigned"
+    
+  # Organization information for structured data
+  [params.organization]
+    name = "Parsa Redesigned Demo"
+    logo = "/images/logo.png"
+    
+  # PWA settings
+  [params.pwa]
+    name = "Parsa Redesigned Demo"
+    shortName = "Parsa Demo"
+    description = "A modern Hugo theme demonstration"
+    themeColor = "#3b82f6"
+    backgroundColor = "#ffffff"
+    
+  # Author info
+  [params.author]
+    name = "Demo Author"
+    image = "/images/author.jpg"
+    bio = "Demonstrating the capabilities of the Parsa Redesigned theme with modern design and functionality."
+    
+  # Social links
+  [params.social]
+    twitter = "https://twitter.com/example"
+    github = "https://github.com/example"
+    linkedin = "https://linkedin.com/in/example"
+    
+  # Search
+  [params.search]
+    placeholder = "Search articles..."
+    
+# Navigation menus
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+    
+  [[menu.main]]
+    name = "Categories"
+    url = "/categories/"
+    weight = 2
+    
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 3
+    
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 4
+    
+  [[menu.main]]
+    name = "Contact"
+    url = "/contact/"
+    weight = 5
 
-# Instagram feed
-[params.instafeed]
-enable = true
-access_token = "IGQVJYeUk4YWNIY1h4OWZANeS1wRHZARdjJ5QmdueXN2RFR6NF9iYUtfcGp1NmpxZA3RTbnU1MXpDNVBHTzZAMOFlxcGlkVHBKdjhqSnUybERhNWdQSE5hVmtXT013MEhOQVJJRGJBRURn"
-
-# cookies
-[params.cookies]
-enable = true
-expire_days = 2
-
-# social site
-[[params.social]]
-icon = "ti-facebook"
-link = "https://facebook.com/themefisher"
-
-[[params.social]]
-icon = "ti-twitter-alt"
-link = "#"
-
-[[params.social]]
-icon = "ti-linkedin"
-link = "#"
-
-[[params.social]]
-icon = "ti-github"
-link = "#"
+# Languages
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+    
+  [languages.zh]
+    languageName = "中文"
+    weight = 2

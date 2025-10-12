@@ -1,0 +1,390 @@
+/* Accessibility and WCAG 2.1 AA Compliance Styles */
+
+/* Screen Reader Only Content */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only:focus,
+.sr-only:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: inherit !important;
+  margin: inherit !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: inherit !important;
+}
+
+/* Skip Links */
+.skip-links {
+  position: relative;
+  z-index: 9999;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 16px;
+  left: 16px;
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+/* Enhanced Focus Indicators */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Custom focus styles for interactive elements */
+.focus-visible:focus-visible,
+.focus-enhanced:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Button focus styles */
+button:focus-visible,
+.btn:focus-visible,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Link focus styles */
+a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* Form element focus styles */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor;
+  }
+  
+  .border {
+    border-width: 2px;
+  }
+  
+  button, .btn {
+    border: 2px solid currentColor;
+  }
+  
+  a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable hover effects for reduced motion */
+  .hover\:scale-105:hover,
+  .group-hover\:scale-110,
+  .hover\:translate-x-1:hover,
+  .group-hover\:translate-x-1 {
+    transform: none !important;
+  }
+}
+
+/* Touch Target Sizes (Minimum 44x44px) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure adequate spacing between interactive elements */
+.interactive-spacing > * + * {
+  margin-left: 8px;
+}
+
+.interactive-spacing-vertical > * + * {
+  margin-top: 8px;
+}
+
+/* Color Contrast Enhancements */
+.text-muted-foreground {
+  color: #475569; /* Ensures 4.5:1 contrast ratio on white background */
+}
+
+.text-muted {
+  color: #64748b; /* Ensures 4.5:1 contrast ratio on white background */
+}
+
+/* Error and Success States */
+.error-state {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.error-state:focus {
+  outline-color: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.success-state {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.success-state:focus {
+  outline-color: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+}
+
+/* Keyboard Navigation Indicators */
+.keyboard-navigation-active *:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Hide focus indicators when using mouse */
+.mouse-navigation-active *:focus {
+  outline: none !important;
+}
+
+/* Table Accessibility */
+table {
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Form Labels and Descriptions */
+.form-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.form-description {
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.form-error {
+  font-size: 14px;
+  color: #dc2626;
+  margin-top: 4px;
+}
+
+/* Loading States */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-text::after {
+  content: "...";
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: ""; }
+  40% { content: "."; }
+  60% { content: ".."; }
+  80%, 100% { content: "..."; }
+}
+
+/* Print Styles */
+@media print {
+  .skip-links,
+  .navigation,
+  .mobile-menu,
+  .search-widget,
+  .social-share,
+  button,
+  .btn {
+    display: none !important;
+  }
+  
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 12px;
+    color: #666;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* Dark Mode Accessibility */
+@media (prefers-color-scheme: dark) {
+  .focus-visible:focus-visible,
+  .focus-enhanced:focus {
+    outline-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+  }
+  
+  .text-muted-foreground {
+    color: #94a3b8; /* Maintains contrast in dark mode */
+  }
+  
+  .text-muted {
+    color: #64748b; /* Maintains contrast in dark mode */
+  }
+}
+
+/* Windows High Contrast Mode */
+@media (-ms-high-contrast: active) {
+  * {
+    border-color: windowText !important;
+    color: windowText !important;
+    background-color: window !important;
+  }
+  
+  button, .btn {
+    border: 2px solid buttonText !important;
+    background-color: buttonFace !important;
+    color: buttonText !important;
+  }
+  
+  a {
+    color: linkText !important;
+  }
+  
+  a:visited {
+    color: visitedText !important;
+  }
+}
+
+/* Focus Management for Modal/Dialog */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap-active {
+  overflow: hidden;
+}
+
+/* Landmark Regions */
+main {
+  outline: none;
+}
+
+nav[role="navigation"] {
+  outline: none;
+}
+
+/* Responsive Text Scaling */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Ensure minimum font size for readability */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Status and Alert Messages */
+.alert {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid;
+  margin-bottom: 16px;
+}
+
+.alert-info {
+  background-color: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+.alert-success {
+  background-color: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}
+
+.alert-warning {
+  background-color: #fef3c7;
+  border-color: #d97706;
+  color: #92400e;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  border-color: #dc2626;
+  color: #991b1b;
+}

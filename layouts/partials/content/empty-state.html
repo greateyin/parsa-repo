@@ -1,0 +1,222 @@
+{{/* 
+  Empty State Partial
+  Provides consistent empty state designs for various scenarios
+  Usage: {{ partial "content/empty-state.html" (dict "context" . "type" "no-articles" "title" "Custom Title") }}
+*/}}
+
+{{ $context := .context }}
+{{ $type := .type | default "no-articles" }}
+{{ $customTitle := .title }}
+{{ $customMessage := .message }}
+{{ $showActions := .showActions | default true }}
+
+<div class="text-center py-16 px-4">
+  <div class="max-w-md mx-auto">
+    
+    {{/* Icon and Title based on type */}}
+    {{ if eq $type "no-articles" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noArticlesFound" | default "No articles found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ $customMessage | default (i18n "noArticlesYet" | default "There are no articles published yet.") }}
+      </p>
+      
+    {{ else if eq $type "no-category-articles" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noArticlesFound" | default "No articles found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ if $customMessage }}
+          {{ $customMessage }}
+        {{ else if $context.Title }}
+          {{ printf (i18n "noArticlesInThisCategory" | default "There are no articles in the \"%s\" category yet.") $context.Title }}
+        {{ else }}
+          {{ i18n "noArticlesInCategory" | default "There are no articles in this category yet." }}
+        {{ end }}
+      </p>
+      
+    {{ else if eq $type "no-tag-articles" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noArticlesFound" | default "No articles found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ if $customMessage }}
+          {{ $customMessage }}
+        {{ else if $context.Title }}
+          {{ printf (i18n "noArticlesWithThisTag" | default "There are no articles tagged with \"%s\" yet.") $context.Title }}
+        {{ else }}
+          {{ i18n "noTaggedArticles" | default "There are no articles with this tag yet." }}
+        {{ end }}
+      </p>
+      
+    {{ else if eq $type "no-search-results" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noResultsTitle" | default "No results found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ $customMessage | default (i18n "noResultsMessage" | default "Try adjusting your search terms or browse our categories.") }}
+      </p>
+      
+      {{/* Search suggestions */}}
+      <div class="bg-muted/30 rounded-lg p-4 mb-6 text-left">
+        <h4 class="font-medium text-foreground mb-3">{{ i18n "searchSuggestions" | default "Suggestions:" }}</h4>
+        <ul class="text-sm text-muted-foreground space-y-2">
+          <li class="flex items-center">
+            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            {{ i18n "searchTip1" | default "Check your spelling" }}
+          </li>
+          <li class="flex items-center">
+            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            {{ i18n "searchTip2" | default "Try different keywords" }}
+          </li>
+          <li class="flex items-center">
+            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            {{ i18n "searchTip3" | default "Use more general terms" }}
+          </li>
+        </ul>
+      </div>
+      
+    {{ else if eq $type "no-categories" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noCategoriesFound" | default "No categories found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ $customMessage | default (i18n "noCategoriesYet" | default "No categories have been created yet.") }}
+      </p>
+      
+    {{ else if eq $type "no-tags" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noTagsFound" | default "No tags found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ $customMessage | default (i18n "noTagsYet" | default "No tags have been created yet.") }}
+      </p>
+      
+    {{ else if eq $type "content-unavailable" }}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "contentUnavailable" | default "Content temporarily unavailable") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ $customMessage | default (i18n "contentUnavailableMessage" | default "The content you're looking for is temporarily unavailable. Please try again later.") }}
+      </p>
+      
+    {{ else }}
+      {{/* Generic empty state */}}
+      <svg class="w-16 h-16 mx-auto text-muted-foreground/40 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-foreground mb-3">
+        {{ $customTitle | default (i18n "noContentFound" | default "No content found") }}
+      </h3>
+      <p class="text-muted-foreground mb-6 leading-relaxed">
+        {{ $customMessage | default (i18n "noContentMessage" | default "There is no content available at the moment.") }}
+      </p>
+    {{ end }}
+    
+    {{/* Action buttons */}}
+    {{ if $showActions }}
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      {{/* Primary action - always show home link */}}
+      <a href="{{ "/" | relLangURL }}" 
+         class="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+        </svg>
+        {{ i18n "backToHome" | default "Back to Home" }}
+      </a>
+      
+      {{/* Secondary actions based on type */}}
+      {{ if eq $type "no-category-articles" }}
+        <a href="{{ "/categories/" | relLangURL }}" 
+           class="inline-flex items-center px-6 py-3 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors font-medium">
+          {{ i18n "browseCategories" | default "Browse Categories" }}
+        </a>
+      {{ else if eq $type "no-tag-articles" }}
+        <a href="{{ "/tags/" | relLangURL }}" 
+           class="inline-flex items-center px-6 py-3 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors font-medium">
+          {{ i18n "allTags" | default "All Tags" }}
+        </a>
+      {{ else if eq $type "no-search-results" }}
+        {{ if .Site.Taxonomies.categories }}
+        <a href="{{ "/categories/" | relLangURL }}" 
+           class="inline-flex items-center px-6 py-3 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors font-medium">
+          {{ i18n "browseCategories" | default "Browse Categories" }}
+        </a>
+        {{ end }}
+      {{ else }}
+        {{/* Generic secondary action */}}
+        {{ if .Site.Taxonomies.categories }}
+        <a href="{{ "/categories/" | relLangURL }}" 
+           class="inline-flex items-center px-6 py-3 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors font-medium">
+          {{ i18n "exploreContent" | default "Explore Content" }}
+        </a>
+        {{ end }}
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+
+{{/* Enhanced CSS for empty states */}}
+<style>
+  /* Ensure empty states work without JavaScript */
+  .empty-state {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Enhanced focus states for accessibility */
+  .empty-state a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .empty-state .flex-col {
+      gap: 0.75rem;
+    }
+    
+    .empty-state .px-6 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+  
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .empty-state .transition-colors {
+      transition: none;
+    }
+  }
+</style>

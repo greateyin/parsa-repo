@@ -1,0 +1,308 @@
+{{/* 
+  No-JavaScript Fallback Partial
+  Provides fallback functionality when JavaScript is disabled
+  Usage: {{ partial "content/no-js-fallback.html" . }}
+*/}}
+
+<!-- No-JavaScript Fallback Styles -->
+<noscript>
+  <style>
+    /* Show elements that are normally hidden and controlled by JS */
+    .js-hidden {
+      display: block !important;
+    }
+    
+    .js-only {
+      display: none !important;
+    }
+    
+    /* Mobile menu fallback - show as regular menu */
+    .mobile-menu-hidden {
+      display: block !important;
+      position: static !important;
+      transform: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    
+    /* Navigation fallback */
+    .nav-mobile-toggle {
+      display: none !important;
+    }
+    
+    .nav-desktop-hidden {
+      display: flex !important;
+    }
+    
+    /* Search form fallback */
+    .search-form {
+      display: block !important;
+    }
+    
+    .search-js-only {
+      display: none !important;
+    }
+    
+    /* Remove hover effects that depend on JS */
+    .js-hover-effect:hover {
+      transform: none !important;
+    }
+    
+    /* Ensure forms work without JS */
+    .form-submit-js {
+      display: none !important;
+    }
+    
+    .form-submit-nojs {
+      display: inline-flex !important;
+    }
+    
+    /* Animation fallbacks */
+    .animate-on-scroll {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    
+    /* Lazy loading fallbacks */
+    .lazy-load {
+      opacity: 1 !important;
+    }
+    
+    /* Modal and overlay fallbacks */
+    .modal-overlay {
+      display: none !important;
+    }
+    
+    .modal-content {
+      position: static !important;
+      transform: none !important;
+      box-shadow: none !important;
+      border: 1px solid var(--color-border) !important;
+      border-radius: 0.5rem !important;
+      margin: 1rem 0 !important;
+    }
+    
+    /* Dropdown menu fallbacks */
+    .dropdown-menu {
+      position: static !important;
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      box-shadow: none !important;
+      border: 1px solid var(--color-border) !important;
+      border-radius: 0.5rem !important;
+      margin-top: 0.5rem !important;
+    }
+    
+    /* Tab content fallback - show all tabs */
+    .tab-content {
+      display: block !important;
+    }
+    
+    .tab-hidden {
+      display: block !important;
+      border-top: 1px solid var(--color-border) !important;
+      padding-top: 1rem !important;
+      margin-top: 1rem !important;
+    }
+    
+    /* Accordion fallback - show all content */
+    .accordion-content {
+      display: block !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+    
+    .accordion-toggle::after {
+      display: none !important;
+    }
+    
+    /* Image gallery fallback */
+    .gallery-thumbnails {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+      gap: 1rem !important;
+    }
+    
+    .gallery-main {
+      display: none !important;
+    }
+    
+    /* Carousel fallback - show all items */
+    .carousel-item {
+      display: block !important;
+      position: static !important;
+      transform: none !important;
+      opacity: 1 !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    .carousel-controls {
+      display: none !important;
+    }
+    
+    /* Infinite scroll fallback - show pagination */
+    .pagination-nojs {
+      display: flex !important;
+    }
+    
+    .infinite-scroll-trigger {
+      display: none !important;
+    }
+    
+    /* Copy to clipboard fallback */
+    .copy-button {
+      display: none !important;
+    }
+    
+    .copy-fallback {
+      display: inline-block !important;
+      font-family: monospace !important;
+      background: var(--color-muted) !important;
+      padding: 0.25rem 0.5rem !important;
+      border-radius: 0.25rem !important;
+      font-size: 0.875rem !important;
+      word-break: break-all !important;
+    }
+    
+    /* Theme toggle fallback */
+    .theme-toggle {
+      display: none !important;
+    }
+    
+    /* Loading states */
+    .loading-spinner {
+      display: none !important;
+    }
+    
+    .loading-content {
+      display: block !important;
+    }
+    
+    /* Smooth scrolling fallback */
+    html {
+      scroll-behavior: auto !important;
+    }
+    
+    /* Focus management fallback */
+    .focus-trap {
+      position: static !important;
+    }
+    
+    /* Progressive enhancement indicators */
+    .enhanced-only {
+      display: none !important;
+    }
+    
+    .basic-fallback {
+      display: block !important;
+    }
+    
+    /* Ensure all interactive elements are accessible */
+    button[disabled] {
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+    }
+    
+    /* Form validation fallback */
+    .validation-message {
+      display: block !important;
+      color: var(--color-destructive) !important;
+      font-size: 0.875rem !important;
+      margin-top: 0.25rem !important;
+    }
+    
+    /* Responsive behavior without JS */
+    @media (max-width: 768px) {
+      .mobile-hidden-nojs {
+        display: none !important;
+      }
+      
+      .mobile-visible-nojs {
+        display: block !important;
+      }
+      
+      .mobile-menu-nojs {
+        display: block !important;
+        width: 100% !important;
+        background: var(--color-card) !important;
+        border: 1px solid var(--color-border) !important;
+        border-radius: 0.5rem !important;
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+      }
+      
+      .mobile-menu-nojs a {
+        display: block !important;
+        padding: 0.75rem 0 !important;
+        border-bottom: 1px solid var(--color-border) !important;
+        text-decoration: none !important;
+      }
+      
+      .mobile-menu-nojs a:last-child {
+        border-bottom: none !important;
+      }
+      
+      .mobile-menu-nojs a:hover {
+        color: var(--color-primary) !important;
+      }
+    }
+  </style>
+</noscript>
+
+<!-- No-JavaScript Content Fallbacks -->
+<noscript>
+  <!-- Search form fallback -->
+  {{ if .Site.Params.features.search }}
+  <div class="search-fallback bg-muted/30 border border-border rounded-lg p-4 mb-6">
+    <h3 class="font-medium text-foreground mb-2">{{ i18n "search" | default "Search" }}</h3>
+    <p class="text-sm text-muted-foreground mb-3">
+      {{ i18n "searchNoJSMessage" | default "JavaScript is required for search functionality. Please enable JavaScript or browse our categories." }}
+    </p>
+    <div class="flex flex-wrap gap-2">
+      <a href="{{ "/categories/" | relLangURL }}" class="inline-flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 transition-colors">
+        {{ i18n "browseCategories" | default "Browse Categories" }}
+      </a>
+      {{ if .Site.Taxonomies.tags }}
+      <a href="{{ "/tags/" | relLangURL }}" class="inline-flex items-center px-3 py-1 bg-accent text-accent-foreground rounded-md text-sm hover:bg-accent/90 transition-colors">
+        {{ i18n "browseTags" | default "Browse Tags" }}
+      </a>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+  
+  <!-- Mobile navigation fallback -->
+  <div class="mobile-nav-fallback md:hidden bg-card border border-border rounded-lg p-4 mb-6">
+    <h3 class="font-medium text-foreground mb-3">{{ i18n "navigation" | default "Navigation" }}</h3>
+    <nav class="space-y-2">
+      {{ range .Site.Menus.main }}
+      <a href="{{ .URL | relLangURL }}" 
+         class="block py-2 px-3 text-foreground hover:text-primary hover:bg-muted rounded-md transition-colors {{ if $.IsMenuCurrent "main" . }}bg-primary/10 text-primary{{ end }}">
+        {{ .Name }}
+      </a>
+      {{ end }}
+    </nav>
+  </div>
+  
+  <!-- Enhanced functionality notice -->
+  <div class="js-notice bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-amber-800">
+    <div class="flex items-start">
+      <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+      </svg>
+      <div>
+        <h4 class="font-medium mb-1">{{ i18n "enhancedExperienceAvailable" | default "Enhanced Experience Available" }}</h4>
+        <p class="text-sm">
+          {{ i18n "enableJavaScriptMessage" | default "Enable JavaScript for enhanced features like search, animations, and interactive elements." }}
+        </p>
+      </div>
+    </div>
+  </div>
+</noscript>

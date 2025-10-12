@@ -1,0 +1,55 @@
+{{/*
+  Analytics Manager
+  Coordinates all analytics and tracking services
+  Usage: {{ partial "analytics/analytics-manager.html" . }}
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+
+{{/* Initialize privacy and consent management */}}
+{{ partial "privacy/consent-manager.html" . }}
+
+{{/* Google Analytics Integration */}}
+{{ if $config.googleAnalytics.enabled }}
+  {{/* Google Analytics will be loaded conditionally based on consent */}}
+  <script>
+    // Load Google Analytics only if tracking is allowed
+    if (window.ThemePrivacy && window.ThemePrivacy.canTrack()) {
+      // Google Analytics loading will be implemented in task 2
+      console.log('Google Analytics: Ready to load (implementation pending)');
+    } else {
+      console.log('Google Analytics: Blocked by privacy settings');
+    }
+  </script>
+{{ end }}
+
+{{/* Facebook Pixel Integration */}}
+{{ if $config.facebookPixel.enabled }}
+  {{/* Facebook Pixel will be loaded conditionally based on consent */}}
+  <script>
+    // Load Facebook Pixel only if tracking is allowed
+    if (window.ThemePrivacy && window.ThemePrivacy.canTrack()) {
+      // Facebook Pixel loading will be implemented in task 3
+      console.log('Facebook Pixel: Ready to load (implementation pending)');
+    } else {
+      console.log('Facebook Pixel: Blocked by privacy settings');
+    }
+  </script>
+{{ end }}
+
+{{/* Performance monitoring */}}
+{{ if $config.performance.asyncScripts }}
+<script>
+  // Performance monitoring for analytics loading
+  window.ThemeAnalytics = window.ThemeAnalytics || {};
+  
+  window.ThemeAnalytics.trackLoadTime = function(service, startTime) {
+    var loadTime = performance.now() - startTime;
+    console.log(service + ' load time:', loadTime + 'ms');
+  };
+  
+  window.ThemeAnalytics.loadStart = performance.now();
+</script>
+{{ end }}

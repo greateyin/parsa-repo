@@ -1,0 +1,130 @@
+# SEO Configuration for Parsa Redesigned Theme
+# This file contains all SEO-related configuration options
+
+[params.seo]
+  # Enable/disable SEO features
+  enableSEO = true
+  enableOpenGraph = true
+  enableTwitterCard = true
+  enableStructuredData = true
+  enableCSP = false  # Content Security Policy (set to true for production)
+  
+  # Default images for social sharing
+  defaultImage = "/images/og-default.jpg"
+  twitterImage = "/images/twitter-card.jpg"
+  
+  # Site verification codes
+  googleSiteVerification = ""
+  bingSiteVerification = ""
+  yandexSiteVerification = ""
+  pinterestSiteVerification = ""
+  
+  # Social media profiles (for structured data)
+  sameAs = [
+    "https://twitter.com/yourhandle",
+    "https://facebook.com/yourpage",
+    "https://linkedin.com/company/yourcompany",
+    "https://github.com/yourusername"
+  ]
+  
+  # Performance optimization
+  preconnect = [
+    "https://fonts.googleapis.com",
+    "https://fonts.gstatic.com"
+  ]
+  
+  dnsPrefetch = [
+    "https://www.google-analytics.com",
+    "https://www.googletagmanager.com"
+  ]
+  
+  # Robots.txt configuration
+  blockBots = [
+    "AhrefsBot",
+    "SemrushBot",
+    "MJ12bot"
+  ]
+  
+  additionalSitemaps = [
+    # Add additional sitemap URLs here if needed
+  ]
+  
+  # Geographic information (optional)
+  [params.seo.geo]
+    region = "US-CA"
+    placename = "San Francisco, California"
+    position = "37.7749;-122.4194"
+    ICBM = "37.7749, -122.4194"
+
+# Organization information for structured data
+[params.organization]
+  name = "Your Organization Name"
+  logo = "/images/logo.png"
+  
+  [params.organization.address]
+    "@type" = "PostalAddress"
+    streetAddress = "123 Main Street"
+    addressLocality = "San Francisco"
+    addressRegion = "CA"
+    postalCode = "94102"
+    addressCountry = "US"
+  
+  [params.organization.contactPoint]
+    "@type" = "ContactPoint"
+    telephone = "+1-555-123-4567"
+    contactType = "customer service"
+    availableLanguage = ["English", "Chinese"]
+
+# Author information
+[params.author]
+  name = "Your Name"
+  url = "https://yourwebsite.com"
+  image = "/images/author.jpg"
+  bio = "Your bio description"
+  
+  [params.author.social]
+    twitter = "https://twitter.com/yourhandle"
+    github = "https://github.com/yourusername"
+    linkedin = "https://linkedin.com/in/yourprofile"
+
+# OpenGraph specific settings
+[params.openGraph]
+  siteName = "Your Site Name"
+  twitterSite = "@yourhandle"
+  facebookAppId = ""  # Facebook App ID if you have one
+  
+# PWA settings (affects SEO and mobile experience)
+[params.pwa]
+  name = "Your App Name"
+  shortName = "YourApp"
+  description = "Your app description"
+  themeColor = "#3b82f6"
+  backgroundColor = "#ffffff"
+
+# Default keywords (can be overridden per page)
+[params]
+  keywords = ["hugo", "blog", "tech", "web development"]
+  description = "Your site description for SEO"
+
+# Sitemap configuration
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+# Output formats (required for sitemap and search)
+[outputs]
+  home = ["HTML", "RSS", "JSON", "WebAppManifest"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
+
+# Media types for additional outputs
+[mediaTypes]
+  [mediaTypes."application/manifest+json"]
+    suffixes = ["webmanifest"]
+
+[outputFormats]
+  [outputFormats.WebAppManifest]
+    mediaType = "application/manifest+json"
+    rel = "manifest"

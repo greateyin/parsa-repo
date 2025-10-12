@@ -1,0 +1,346 @@
+# Chinese translations (Simplified Chinese)
+# 基础导航和内容
+- id: skipToContent
+  translation: "跳转到主要内容"
+- id: minRead
+  translation: "分钟阅读"
+- id: tags
+  translation: "标签"
+- id: relatedArticles
+  translation: "相关文章"
+- id: article
+  translation: "篇文章"
+- id: articles
+  translation: "篇文章"
+- id: home
+  translation: "首页"
+- id: previous
+  translation: "上一页"
+- id: next
+  translation: "下一页"
+- id: noArticlesFound
+  translation: "未找到文章"
+- id: noArticlesInCategory
+  translation: "此分类下暂无文章。"
+- id: noArticlesYet
+  translation: "暂无已发布的文章。"
+- id: backToHome
+  translation: "返回首页"
+- id: featuredArticles
+  translation: "精选文章"
+- id: featuredDescription
+  translation: "发现我们最受欢迎和热门的文章"
+- id: latestArticles
+  translation: "最新文章"
+- id: latestDescription
+  translation: "获取我们最新的内容更新"
+- id: viewAll
+  translation: "查看全部"
+- id: viewAllArticles
+  translation: "查看所有文章"
+- id: browseCategories
+  translation: "浏览分类"
+- id: categoriesDescription
+  translation: "按主题探索文章，找到您最感兴趣的内容"
+- id: viewAllCategories
+  translation: "查看所有分类"
+- id: emailPlaceholder
+  translation: "输入您的邮箱"
+- id: subscribe
+  translation: "订阅"
+- id: shareArticle
+  translation: "分享文章："
+- id: copyLink
+  translation: "复制链接"
+- id: navigation
+  translation: "导航"
+- id: toggleMenu
+  translation: "切换导航菜单"
+- id: closeMenu
+  translation: "关闭导航菜单"
+- id: search
+  translation: "搜索"
+- id: searchArticles
+  translation: "搜索文章"
+- id: featured
+  translation: "精选"
+- id: readMore
+  translation: "阅读更多"
+- id: more
+  translation: "更多"
+- id: featuredImage
+  translation: "精选图片"
+- id: featured_content
+  translation: "精选内容"
+- id: featured_articles
+  translation: "精选文章"
+- id: featured_description
+  translation: "发现我们最受欢迎和热门的文章"
+- id: latest_articles
+  translation: "最新文章"
+- id: latest_description
+  translation: "获取我们最新的内容更新"
+- id: view_all
+  translation: "查看全部"
+- id: view_all_articles
+  translation: "查看所有文章"
+- id: explore_content
+  translation: "探索内容"
+
+# 语言切换
+- id: language
+  translation: "语言"
+- id: switchLanguage
+  translation: "切换语言"
+- id: currentLanguage
+  translation: "当前语言"
+- id: availableLanguages
+  translation: "可用语言"
+- id: selectLanguage
+  translation: "选择语言"
+
+# 日期和时间格式
+- id: publishedOn
+  translation: "发布于"
+- id: updatedOn
+  translation: "更新于"
+- id: readingTime
+  translation: "阅读时间"
+- id: minutes
+  translation: "分钟"
+- id: minute
+  translation: "分钟"
+- id: seconds
+  translation: "秒"
+- id: second
+  translation: "秒"
+
+# 内容元数据
+- id: author
+  translation: "作者"
+- id: authors
+  translation: "作者"
+- id: by
+  translation: "由"
+- id: in
+  translation: "在"
+- id: on
+  translation: "于"
+- id: at
+  translation: "在"
+- id: and
+  translation: "和"
+
+# 无障碍访问
+- id: mainContent
+  translation: "主要内容"
+- id: siteNavigation
+  translation: "网站导航"
+- id: pageNavigation
+  translation: "页面导航"
+- id: skipToNavigation
+  translation: "跳转到导航"
+- id: skipToFooter
+  translation: "跳转到页脚"
+- id: openInNewWindow
+  translation: "在新窗口中打开"
+- id: externalLink
+  translation: "外部链接"
+
+# 错误信息
+- id: pageNotFound
+  translation: "页面未找到"
+- id: pageNotFoundMessage
+  translation: "您要查找的页面不存在或已被移动。"
+- id: goHome
+  translation: "返回首页"
+- id: tryAgain
+  translation: "重试"
+- id: errorOccurred
+  translation: "发生错误"
+
+# 加载状态
+- id: loading
+  translation: "加载中"
+- id: loadingContent
+  translation: "正在加载内容"
+- id: pleaseWait
+  translation: "请稍候"
+
+# 分页
+- id: page
+  translation: "第"
+- id: of
+  translation: "页，共"
+- id: firstPage
+  translation: "首页"
+- id: lastPage
+  translation: "末页"
+- id: previousPage
+  translation: "上一页"
+- id: nextPage
+  translation: "下一页"
+- id: currentPage
+  translation: "当前页"
+
+# 内容操作
+- id: showMore
+  translation: "显示更多"
+- id: showLess
+  translation: "显示更少"
+- id: expand
+  translation: "展开"
+- id: collapse
+  translation: "收起"
+- id: close
+  translation: "关闭"
+- id: open
+  translation: "打开"
+- id: toggle
+  translation: "切换"
+
+# 排版和格式
+- id: emphasis
+  translation: "强调"
+- id: strong
+  translation: "重要"
+- id: quote
+  translation: "引用"
+- id: citation
+  translation: "引文"
+- id: code
+  translation: "代码"
+- id: link
+  translation: "链接"
+# Search related translations
+- id: searchTitle
+  translation: "搜索文章"
+- id: searchDescription
+  translation: "找到您要寻找的内容"
+- id: searchPlaceholder
+  translation: "搜索文章..."
+- id: searchResults
+  translation: "搜索结果"
+- id: searching
+  translation: "搜索中..."
+- id: noResultsTitle
+  translation: "未找到结果"
+- id: noResultsMessage
+  translation: "请尝试调整搜索词或浏览我们的分类。"
+- id: searchSuggestions
+  translation: "建议："
+- id: searchTip1
+  translation: "检查拼写"
+- id: searchTip2
+  translation: "尝试不同的关键词"
+- id: searchTip3
+  translation: "使用更通用的词汇"
+- id: recentArticles
+  translation: "最新文章"
+- id: resultsFound
+  translation: "个结果，搜索词："
+- id: resultFound
+  translation: "个结果，搜索词："
+# Category and Tag related translations
+- id: categories
+  translation: "分类"
+- id: category
+  translation: "个分类"
+- id: viewArticles
+  translation: "查看文章"
+- id: noCategoriesFound
+  translation: "未找到分类"
+- id: noCategoriesYet
+  translation: "暂无已创建的分类。"
+- id: noTagsFound
+  translation: "未找到标签"
+- id: noTagsYet
+  translation: "暂无已创建的标签。"
+- id: browseByCategory
+  translation: "按分类浏览"
+- id: browseByTag
+  translation: "按标签浏览"
+- id: allCategories
+  translation: "所有分类"
+- id: allTags
+  translation: "所有标签"
+- id: articlesInCategory
+  translation: "此分类下的文章"
+- id: articlesWithTag
+  translation: "包含此标签的文章"
+- id: noArticlesInThisCategory
+  translation: "「%s」分类下暂无文章。"
+- id: noArticlesWithThisTag
+  translation: "暂无标记为「%s」的文章。"
+- id: tagsDescription
+  translation: "通过我们的标签云发现内容，找到符合您兴趣的文章"# S
+ocial sharing translations
+- id: shareOnTwitter
+  translation: "在 Twitter 上分享"
+- id: shareOnFacebook
+  translation: "在 Facebook 上分享"
+- id: shareOnLinkedIn
+  translation: "在 LinkedIn 上分享"
+- id: linkCopied
+  translation: "已复制！"# F
+ooter translations
+- id: footer_navigation
+  translation: "导航"
+- id: footer_categories
+  translation: "分类"
+- id: footer_connect
+  translation: "联系我们"
+- id: footer_rights
+  translation: "版权所有。"
+- id: footer_powered_by
+  translation: "技术支持"
+- id: footer_and
+  translation: "和"
+- id: newsletter_title
+  translation: "订阅更新"
+- id: newsletter_placeholder
+  translation: "输入您的邮箱"
+- id: newsletter_subscribe
+  translation: "订阅"
+
+# Related articles translations
+- id: related_articles
+  translation: "相关文章"
+- id: related_articles_description
+  translation: "发现更多您可能感兴趣的内容"
+- id: reading_time_min
+  translation: "分钟阅读"
+
+# Fallback content translations
+- id: defaultExcerpt
+  translation: "了解更多关于%s的内容，发现有趣的见解。"
+- id: defaultAuthor
+  translation: "匿名"
+- id: defaultImageAlt
+  translation: "%s的特色图片"
+- id: uncategorized
+  translation: "未分类"
+- id: untitled
+  translation: "无标题"
+- id: defaultDescription
+  translation: "了解更多关于%s的信息"
+- id: imageLoadError
+  translation: "图片加载失败"
+- id: contentUnavailable
+  translation: "内容暂时不可用"
+- id: contentUnavailableMessage
+  translation: "您要查找的内容暂时不可用。请稍后再试。"
+- id: noContentFound
+  translation: "未找到内容"
+- id: noContentMessage
+  translation: "目前没有可用的内容。"
+- id: noTaggedArticles
+  translation: "暂无包含此标签的文章。"
+- id: searchNoJSMessage
+  translation: "搜索功能需要启用 JavaScript。请启用 JavaScript 或浏览我们的分类。"
+- id: browseTags
+  translation: "浏览标签"
+- id: enhancedExperienceAvailable
+  translation: "增强体验可用"
+- id: enableJavaScriptMessage
+  translation: "启用 JavaScript 以获得搜索、动画和交互元素等增强功能。"

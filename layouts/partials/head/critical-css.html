@@ -1,0 +1,69 @@
+{{/* Critical CSS inlining for above-the-fold content */}}
+{{/* This partial inlines critical CSS directly in the HTML head for faster rendering */}}
+
+{{ $critical := resources.Get "css/critical.css" }}
+{{ if $critical }}
+  {{ if hugo.IsProduction }}
+    {{ $critical = $critical | minify }}
+  {{ end }}
+  <style>
+    {{ $critical.Content | safeCSS }}
+  </style>
+{{ end }}
+
+{{/* Preload non-critical CSS */}}
+{{ $tailwind := resources.Get "css/tailwind.css" }}
+{{ $custom := resources.Get "css/custom.css" }}
+{{ $css := slice $tailwind $custom | resources.Concat "css/style.css" }}
+{{ if hugo.IsProduction }}
+  {{ $css = $css | minify | fingerprint }}
+{{ end }}
+
+{{/* Preload the main stylesheet */}}
+<link rel="preload" href="{{ $css.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $css.Data.Integrity }}"{{ end }}></noscript>
+
+{{/* Fallback for browsers that don't support preload */}}
+<script>
+  // CSS loading fallback for older browsers
+  if (!window.CSS || !CSS.supports('color', 'var(--fake-var)')) {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '{{ $css.RelPermalink }}';
+    {{ if hugo.IsProduction }}link.integrity = '{{ $css.Data.Integrity }}';{{ end }}
+    document.head.appendChild(link);
+  }
+</script>
+
+{{/* Font preloading for critical fonts */}}
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+
+{{/* Preload critical images */}}
+{{ if .IsHome }}
+  {{ with .Site.Params.hero.backgroundImage }}
+    <link rel="preload" href="{{ . | absURL }}" as="image">
+  {{ end }}
+  {{ with .Site.Params.logo }}
+    <link rel="preload" href="{{ . | absURL }}" as="image">
+  {{ end }}
+{{ end }}
+
+{{ if .Params.image }}
+  <link rel="preload" href="{{ .Params.image | absURL }}" as="image">
+{{ end }}
+
+{{/* Resource hints for external domains */}}
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
+{{ if .Site.Params.analytics.googleAnalytics }}
+<link rel="dns-prefetch" href="//www.google-analytics.com">
+<link rel="dns-prefetch" href="//www.googletagmanager.com">
+{{ end }}
+{{ if .Site.Params.comments.disqusShortname }}
+<link rel="dns-prefetch" href="//{{ .Site.Params.comments.disqusShortname }}.disqus.com">
+{{ end }}
+
+{{/* Preconnect to critical external resources */}}
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

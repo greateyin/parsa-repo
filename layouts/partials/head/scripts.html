@@ -1,0 +1,8 @@
+{{ $main := resources.Get "js/main.js" }}
+{{ if $main }}
+    {{ $main = $main | js.Build }}
+    {{ if hugo.IsProduction }}
+        {{ $main = $main | minify | fingerprint }}
+    {{ end }}
+    <script src="{{ $main.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $main.Data.Integrity }}"{{ end }}></script>
+{{ end }}

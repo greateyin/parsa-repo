@@ -1,0 +1,28 @@
+{{ if .Site.Params.enableTwitterCard | default true }}
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="{{ .Params.twitter.card | default "summary_large_image" }}" />
+{{ with .Site.Params.openGraph.twitterSite }}<meta name="twitter:site" content="{{ . }}" />{{ end }}
+{{ with .Site.Params.openGraph.twitterCreator }}<meta name="twitter:creator" content="{{ . }}" />{{ end }}
+<meta name="twitter:title" content="{{ with .Params.twitter.title }}{{ . }}{{ else }}{{ .Title }}{{ end }}" />
+<meta name="twitter:description" content="{{ with .Params.twitter.description }}{{ . }}{{ else }}{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
+
+{{ with .Params.twitter.image | default .Params.image | default .Site.Params.openGraph.defaultImage }}
+<meta name="twitter:image" content="{{ . | absURL }}" />
+{{ end }}
+
+{{ with .Params.imageAlt }}
+<meta name="twitter:image:alt" content="{{ . }}" />
+{{ end }}
+
+{{ if eq (.Params.twitter.card | default "summary_large_image") "player" }}
+{{ with .Params.twitter.player }}
+<meta name="twitter:player" content="{{ . }}" />
+{{ end }}
+{{ with .Params.twitter.playerWidth }}
+<meta name="twitter:player:width" content="{{ . }}" />
+{{ end }}
+{{ with .Params.twitter.playerHeight }}
+<meta name="twitter:player:height" content="{{ . }}" />
+{{ end }}
+{{ end }}
+{{ end }}

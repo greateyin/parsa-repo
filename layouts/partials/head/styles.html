@@ -1,0 +1,15 @@
+{{ $tailwind := resources.Get "css/tailwind.css" }}
+{{ $tailwind = $tailwind | resources.PostCSS }}
+{{ if hugo.IsProduction }}
+    {{ $tailwind = $tailwind | minify | fingerprint }}
+{{ end }}
+<link rel="stylesheet" href="{{ $tailwind.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $tailwind.Data.Integrity }}"{{ end }}>
+
+{{ $custom := resources.Get "css/custom.css" }}
+{{ if $custom }}
+    {{ $custom = $custom | resources.PostCSS }}
+    {{ if hugo.IsProduction }}
+        {{ $custom = $custom | minify | fingerprint }}
+    {{ end }}
+    <link rel="stylesheet" href="{{ $custom.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $custom.Data.Integrity }}"{{ end }}>
+{{ end }}

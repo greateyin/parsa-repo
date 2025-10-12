@@ -1,0 +1,129 @@
+{{/*
+  Privacy and Consent Management
+  Handles Do Not Track, GDPR compliance, and cookie consent
+  Usage: {{ partial "privacy/consent-manager.html" . }}
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+{{ $privacyConfig := $config.privacy }}
+
+{{/* Do Not Track Detection */}}
+{{ $respectDNT := $privacyConfig.respectDoNotTrack }}
+<script>
+  // Privacy and Consent Management
+  window.ThemePrivacy = window.ThemePrivacy || {};
+  
+  // Do Not Track detection
+  {{ if $respectDNT -}}
+  window.ThemePrivacy.doNotTrack = function() {
+    var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    return (dnt === "1" || dnt === "yes");
+  };
+  {{- else -}}
+  window.ThemePrivacy.doNotTrack = function() { return false; };
+  {{- end }}
+  
+  // Consent management
+  window.ThemePrivacy.hasConsent = function(service) {
+    // Check if Do Not Track is enabled
+    if (window.ThemePrivacy.doNotTrack()) {
+      return false;
+    }
+    
+    {{- if $privacyConfig.cookieConsent }}
+    // Check for cookie consent (placeholder for future cookie consent integration)
+    var consent = localStorage.getItem('theme-consent-' + service);
+    return consent === 'granted';
+    {{- else }}
+    // If cookie consent is disabled, assume consent is granted (unless DNT is set)
+    return true;
+    {{- end }}
+  };
+  
+  // Grant consent for a service
+  window.ThemePrivacy.grantConsent = function(service) {
+    {{- if $privacyConfig.cookieConsent }}
+    localStorage.setItem('theme-consent-' + service, 'granted');
+    {{- end }}
+  };
+  
+  // Revoke consent for a service
+  window.ThemePrivacy.revokeConsent = function(service) {
+    {{- if $privacyConfig.cookieConsent }}
+    localStorage.removeItem('theme-consent-' + service);
+    {{- end }}
+  };
+  
+  // Check if analytics tracking is allowed
+  window.ThemePrivacy.canTrack = function() {
+    return window.ThemePrivacy.hasConsent('analytics');
+  };
+  
+  // Check if advertising is allowed
+  window.ThemePrivacy.canShowAds = function() {
+    return window.ThemePrivacy.hasConsent('advertising');
+  };
+  
+  // Initialize privacy settings
+  window.ThemePrivacy.init = function() {
+    console.log('Theme Privacy Manager initialized');
+    console.log('Do Not Track:', window.ThemePrivacy.doNotTrack());
+    console.log('Can Track:', window.ThemePrivacy.canTrack());
+    console.log('Can Show Ads:', window.ThemePrivacy.canShowAds());
+  };
+  
+  // Auto-initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.ThemePrivacy.init);
+  } else {
+    window.ThemePrivacy.init();
+  }
+</script>
+
+{{ if $privacyConfig.cookieConsent }}
+{{/* Cookie Consent Banner (Basic Implementation) */}}
+<div id="cookie-consent-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: white; padding: 1rem; z-index: 9999;">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+    <div style="flex: 1; margin-right: 1rem;">
+      <p style="margin: 0;">This website uses cookies and tracking technologies to improve your experience. By continuing to use this site, you consent to our use of cookies.</p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button id="accept-all-cookies" style="background: #007bff; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Accept All</button>
+      <button id="reject-cookies" style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Reject</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cookie consent banner management
+  (function() {
+    var banner = document.getElementById('cookie-consent-banner');
+    var acceptBtn = document.getElementById('accept-all-cookies');
+    var rejectBtn = document.getElementById('reject-cookies');
+    
+    // Show banner if no consent decision has been made
+    if (!localStorage.getItem('theme-consent-decision')) {
+      banner.style.display = 'block';
+    }
+    
+    acceptBtn.addEventListener('click', function() {
+      window.ThemePrivacy.grantConsent('analytics');
+      window.ThemePrivacy.grantConsent('advertising');
+      localStorage.setItem('theme-consent-decision', 'accepted');
+      banner.style.display = 'none';
+      
+      // Reload page to apply consent settings
+      window.location.reload();
+    });
+    
+    rejectBtn.addEventListener('click', function() {
+      window.ThemePrivacy.revokeConsent('analytics');
+      window.ThemePrivacy.revokeConsent('advertising');
+      localStorage.setItem('theme-consent-decision', 'rejected');
+      banner.style.display = 'none';
+    });
+  })();
+</script>
+{{ end }}

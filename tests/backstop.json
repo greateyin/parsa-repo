@@ -1,0 +1,142 @@
+{
+  "id": "parsa-redesigned-visual-tests",
+  "viewports": [
+    {
+      "label": "phone",
+      "width": 375,
+      "height": 667
+    },
+    {
+      "label": "tablet",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "label": "desktop",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "onBeforeScript": "puppet/onBefore.js",
+  "onReadyScript": "puppet/onReady.js",
+  "scenarios": [
+    {
+      "label": "Homepage",
+      "cookiePath": "backstop_data/engine_scripts/cookies.json",
+      "url": "http://localhost:1313/",
+      "referenceUrl": "",
+      "readyEvent": "",
+      "readySelector": "",
+      "delay": 1000,
+      "hideSelectors": [],
+      "removeSelectors": [],
+      "hoverSelector": "",
+      "clickSelector": "",
+      "postInteractionWait": 0,
+      "selectors": [
+        "document"
+      ],
+      "selectorExpansion": true,
+      "expect": 0,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Homepage Hero Section",
+      "url": "http://localhost:1313/",
+      "delay": 1000,
+      "selectors": [
+        ".hero, .banner, .jumbotron"
+      ],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Navigation Header",
+      "url": "http://localhost:1313/",
+      "delay": 500,
+      "selectors": [
+        "header"
+      ],
+      "misMatchThreshold": 0.05
+    },
+    {
+      "label": "Article Cards",
+      "url": "http://localhost:1313/",
+      "delay": 1000,
+      "selectors": [
+        "article, .post, .card"
+      ],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Blog List Page",
+      "url": "http://localhost:1313/blog/",
+      "delay": 1000,
+      "selectors": [
+        "document"
+      ],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Categories Page",
+      "url": "http://localhost:1313/categories/",
+      "delay": 1000,
+      "selectors": [
+        "document"
+      ],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Tags Page",
+      "url": "http://localhost:1313/tags/",
+      "delay": 1000,
+      "selectors": [
+        "document"
+      ],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Mobile Navigation",
+      "url": "http://localhost:1313/",
+      "delay": 500,
+      "clickSelector": ".menu-toggle, .hamburger, .mobile-menu-button",
+      "postInteractionWait": 500,
+      "selectors": [
+        ".mobile-menu, .nav-mobile"
+      ],
+      "viewports": [
+        {
+          "label": "phone",
+          "width": 375,
+          "height": 667
+        }
+      ],
+      "misMatchThreshold": 0.1
+    },
+    {
+      "label": "Footer",
+      "url": "http://localhost:1313/",
+      "delay": 1000,
+      "selectors": [
+        "footer"
+      ],
+      "misMatchThreshold": 0.05
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "backstop_data/bitmaps_reference",
+    "bitmaps_test": "backstop_data/bitmaps_test",
+    "engine_scripts": "backstop_data/engine_scripts",
+    "html_report": "backstop_data/html_report",
+    "ci_report": "backstop_data/ci_report"
+  },
+  "report": ["browser"],
+  "engine": "puppeteer",
+  "engineOptions": {
+    "args": ["--no-sandbox"]
+  },
+  "asyncCaptureLimit": 5,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false
+}

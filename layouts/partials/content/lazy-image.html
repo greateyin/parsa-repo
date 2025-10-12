@@ -1,0 +1,118 @@
+{{/* Lazy loading image partial with WebP support and responsive images */}}
+{{/* Usage: {{ partial "content/lazy-image.html" (dict "src" "image.jpg" "alt" "Alt text" "class" "custom-class" "critical" false) }} */}}
+
+{{ $src := .src }}
+{{ $alt := .alt | default "" }}
+{{ $class := .class | default "" }}
+{{ $critical := .critical | default false }}
+{{ $aspectRatio := .aspectRatio | default "16/9" }}
+{{ $sizes := .sizes | default "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" }}
+
+{{ $baseClass := "w-full h-full object-cover transition-opacity duration-300" }}
+{{ if not $critical }}
+  {{ $baseClass = printf "%s lazy opacity-0" $baseClass }}
+{{ end }}
+{{ if $class }}
+  {{ $baseClass = printf "%s %s" $baseClass $class }}
+{{ end }}
+
+{{ if $src }}
+  {{ $image := resources.Get $src }}
+  {{ if $image }}
+    {{/* Generate responsive image variants */}}
+    {{ $sizes := slice 320 640 768 1024 1280 1920 }}
+    {{ $srcset := slice }}
+    {{ $webpSrcset := slice }}
+    
+    {{/* Generate different sizes */}}
+    {{ range $sizes }}
+      {{ $resized := $image.Resize (printf "%dx webp q85" .) }}
+      {{ $resizedJpg := $image.Resize (printf "%dx jpg q85" .) }}
+      {{ if $resized }}
+        {{ $webpSrcset = $webpSrcset | append (printf "%s %dw" $resized.RelPermalink .) }}
+      {{ end }}
+      {{ if $resizedJpg }}
+        {{ $srcset = $srcset | append (printf "%s %dw" $resizedJpg.RelPermalink .) }}
+      {{ end }}
+    {{ end }}
+    
+    {{/* Default fallback image */}}
+    {{ $defaultImage := $image.Resize "800x jpg q85" }}
+    {{ $defaultWebP := $image.Resize "800x webp q85" }}
+    
+    <picture class="block {{ if eq $aspectRatio "16/9" }}aspect-video{{ else if eq $aspectRatio "1/1" }}aspect-square{{ else if eq $aspectRatio "4/3" }}aspect-[4/3]{{ else if eq $aspectRatio "3/2" }}aspect-[3/2]{{ end }} overflow-hidden">
+      {{/* WebP source with srcset */}}
+      {{ if $webpSrcset }}
+        <source 
+          {{ if $critical }}
+            srcset="{{ delimit $webpSrcset ", " }}"
+          {{ else }}
+            data-srcset="{{ delimit $webpSrcset ", " }}"
+          {{ end }}
+          sizes="{{ $sizes }}"
+          type="image/webp">
+      {{ end }}
+      
+      {{/* JPEG/PNG fallback with srcset */}}
+      {{ if $srcset }}
+        <source 
+          {{ if $critical }}
+            srcset="{{ delimit $srcset ", " }}"
+          {{ else }}
+            data-srcset="{{ delimit $srcset ", " }}"
+          {{ end }}
+          sizes="{{ $sizes }}"
+          type="image/jpeg">
+      {{ end }}
+      
+      {{/* Main img element */}}
+      <img 
+        {{ if $critical }}
+          src="{{ $defaultImage.RelPermalink }}"
+          {{ if $defaultWebP }}data-webp="{{ $defaultWebP.RelPermalink }}"{{ end }}
+          data-critical="true"
+        {{ else }}
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {{ $image.Width }} {{ $image.Height }}'%3E%3C/svg%3E"
+          data-src="{{ $defaultImage.RelPermalink }}"
+          {{ if $defaultWebP }}data-webp="{{ $defaultWebP.RelPermalink }}"{{ end }}
+          {{ if $srcset }}data-srcset="{{ delimit $srcset ", " }}"{{ end }}
+        {{ end }}
+        alt="{{ $alt }}"
+        class="{{ $baseClass }}"
+        width="{{ $image.Width }}"
+        height="{{ $image.Height }}"
+        loading="{{ if $critical }}eager{{ else }}lazy{{ end }}"
+        decoding="async"
+        {{ if not $critical }}
+          onload="this.classList.remove('opacity-0'); this.classList.add('opacity-100');"
+          onerror="this.classList.remove('opacity-0'); this.classList.add('opacity-100');"
+        {{ end }}>
+    </picture>
+  {{ else }}
+    {{/* Fallback for external images or missing resources */}}
+    <div class="block {{ if eq $aspectRatio "16/9" }}aspect-video{{ else if eq $aspectRatio "1/1" }}aspect-square{{ else if eq $aspectRatio "4/3" }}aspect-[4/3]{{ else if eq $aspectRatio "3/2" }}aspect-[3/2]{{ end }} overflow-hidden bg-muted">
+      <img 
+        {{ if $critical }}
+          src="{{ $src }}"
+        {{ else }}
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'%3E%3C/svg%3E"
+          data-src="{{ $src }}"
+        {{ end }}
+        alt="{{ $alt }}"
+        class="{{ $baseClass }}"
+        loading="{{ if $critical }}eager{{ else }}lazy{{ end }}"
+        decoding="async"
+        {{ if not $critical }}
+          onload="this.classList.remove('opacity-0'); this.classList.add('opacity-100');"
+          onerror="this.classList.remove('opacity-0'); this.classList.add('opacity-100');"
+        {{ end }}>
+    </div>
+  {{ end }}
+{{ else }}
+  {{/* Placeholder when no image is provided */}}
+  <div class="block {{ if eq $aspectRatio "16/9" }}aspect-video{{ else if eq $aspectRatio "1/1" }}aspect-square{{ else if eq $aspectRatio "4/3" }}aspect-[4/3]{{ else if eq $aspectRatio "3/2" }}aspect-[3/2]{{ end }} overflow-hidden bg-muted flex items-center justify-center">
+    <svg class="w-12 h-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+    </svg>
+  </div>
+{{ end }}

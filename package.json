@@ -1,17 +1,59 @@
 {
-  "name": "parsa-hugo",
-  "version": "2.0.1",
-  "license": "MIT",
-  "author": "gethugothemes",
+  "name": "parsa-redesigned-hugo-theme",
+  "version": "1.0.0",
+  "description": "A modern, redesigned version of the Parsa Hugo theme with Tailwind CSS",
+  "main": "index.js",
   "scripts": {
-    "dev": "hugo server",
-    "build": "hugo --gc --minify --templateMetrics --templateMetricsHints --buildDrafts --buildExpired --buildFuture --forceSyncStatic",
-    "preview": "hugo server --disableFastRender --navigateToChanged --templateMetrics --templateMetricsHints --buildDrafts --buildExpired --buildFuture --watch --forceSyncStatic -e production --minify",
-    "dev:example": "cd exampleSite; hugo server --themesDir ../..",
-    "build:example": "cd exampleSite; hugo --themesDir ../.. --gc --minify --templateMetrics --templateMetricsHints --buildDrafts --buildExpired --buildFuture --forceSyncStatic",
-    "preview:example": "cd exampleSite; hugo server --themesDir ../.. --disableFastRender --navigateToChanged --templateMetrics --templateMetricsHints --buildDrafts --buildExpired --buildFuture --watch --forceSyncStatic -e production --minify",
-    "update-modules": "node ./scripts/clearModules.js && hugo mod clean --all && hugo mod get -u ./... && hugo mod tidy",
-    "project-setup": "node ./scripts/projectSetup.js",
-    "theme-setup": "node ./scripts/themeSetup.js"
-  }
+    "dev": "hugo server --disableFastRender --buildDrafts --buildFuture",
+    "build": "hugo --minify --gc",
+    "build:css": "tailwindcss -i ./assets/css/tailwind.css -o ./static/css/tailwind.css --watch",
+    "build:production": "NODE_ENV=production HUGO_ENVIRONMENT=production hugo --minify --gc --cleanDestinationDir",
+    "build:analyze": "NODE_ENV=production HUGO_ENVIRONMENT=production hugo --minify --gc --templateMetrics --templateMetricsHints",
+    "optimize:images": "find static/images -name '*.jpg' -o -name '*.png' | xargs -I {} sh -c 'cwebp -q 85 \"$1\" -o \"${1%.*}.webp\"' _ {}",
+    "clean": "rm -rf public resources",
+    "lint:css": "stylelint 'assets/css/**/*.css'",
+    "test": "cd tests && npm run setup && npm run test",
+    "test:hugo": "cd tests && node hugo-template-tests.js",
+    "test:performance": "cd tests && node performance-tests.js",
+    "test:accessibility": "cd tests && node accessibility-tests.js",
+    "test:cross-browser": "cd tests && npx playwright test",
+    "test:visual": "cd tests && npx backstop test",
+    "test:lighthouse": "lighthouse http://localhost:1313 --output=json --output-path=./lighthouse-report.json",
+    "test:setup": "cd tests && npm install",
+    "test:reference": "cd tests && npx backstop reference",
+    "precommit": "npm run lint:css && npm run build:production"
+  },
+  "keywords": [
+    "hugo",
+    "theme",
+    "tailwindcss",
+    "blog",
+    "modern",
+    "responsive"
+  ],
+  "author": "Hugo Theme Developer",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
+    "tailwindcss": "^3.3.5",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0",
+    "lighthouse": "^11.3.0",
+    "webp-converter": "^2.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/parsa-redesigned.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/parsa-redesigned/issues"
+  },
+  "homepage": "https://github.com/username/parsa-redesigned#readme"
 }

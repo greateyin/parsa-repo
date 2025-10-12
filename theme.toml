@@ -1,13 +1,37 @@
-name = "Parsa Hugo"
+# Theme metadata following Hugo theme standards
+name = "Parsa Redesigned"
 license = "MIT"
-licenselink = "https://github.com/themefisher/parsa-hugo/blob/master/LICENSE"
-description = "Parsa is a personal blog theme powered by Hugo. It also can be used for portfolio website."
-homepage = "https://gethugothemes.com/products/parsa-hugo-theme/"
-demosite = "https://demo.gethugothemes.com/parsa/"
-tags = ['landing-page', 'fast', 'light', 'white', 'modern', 'themefisher', 'hugo-theme', 'hugo-templates', 'bootstrap', 'blog', 'responsive', 'clean', 'simple', 'creative', 'contact-form', 'custom-themes', 'mobile', 'minimalistic', 'pages', 'resume', 'portfolio', 'google analytics', 'customizable', 'flexbox', 'presentation', 'product', 'theme', 'typography']
-features = ['bootstrap','responsive']
+licenselink = "https://github.com/username/parsa-redesigned/blob/main/LICENSE"
+description = "A modern, redesigned version of the Parsa Hugo theme with Tailwind CSS and contemporary design elements"
+homepage = "https://github.com/username/parsa-redesigned"
+demosite = "https://parsa-redesigned-demo.netlify.app"
+
+# Theme tags for discoverability
+tags = [
+  "blog", "personal", "modern", "tailwind", "responsive", 
+  "multilingual", "seo", "fast", "minimal", "cards", "gradient",
+  "performance", "accessibility", "social-sharing"
+]
+
+# Theme features
+features = [
+  "responsive", "tailwind-css", "multilingual", 
+  "seo-optimized", "social-sharing", "search", "performance",
+  "accessibility", "dark-mode-ready", "hugo-modules"
+]
+
+# Hugo version requirements
 min_version = "0.147.2"
 
+# Author information
 [author]
-  name = "Themefisher"
-  homepage = "https://themefisher.com/"
+  name = "Parsa Redesigned Team"
+  homepage = "https://github.com/username"
+  email = "contact@parsa-redesigned.com"
+
+# Original theme attribution
+[original]
+  name = "Parsa Hugo"
+  homepage = "https://gethugothemes.com/products/parsa-hugo-theme/"
+  repo = "https://github.com/themefisher/parsa-hugo"
+  author = "Themefisher"

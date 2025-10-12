@@ -1,0 +1,34 @@
+{
+  "name": "parsa-redesigned-tests",
+  "version": "1.0.0",
+  "description": "Testing suite for Parsa Redesigned Hugo Theme",
+  "private": true,
+  "scripts": {
+    "test": "node run-all-tests.js",
+    "test:hugo": "node hugo-template-tests.js",
+    "test:accessibility": "node accessibility-tests.js",
+    "test:performance": "node performance-tests.js",
+    "test:visual": "backstop test",
+    "test:cross-browser": "playwright test",
+    "test:lighthouse": "lighthouse-ci autorun",
+    "test:pa11y": "pa11y-ci --sitemap http://localhost:1313/sitemap.xml",
+    "setup": "mkdir -p reports && npm install",
+    "validate": "node validate-setup.js",
+    "clean": "rm -rf reports/* backstop_data/bitmaps_test/*",
+    "reference": "backstop reference",
+    "approve": "backstop approve"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "lighthouse": "^11.3.0",
+    "lighthouse-ci": "^0.12.0",
+    "pa11y": "^7.0.0",
+    "pa11y-ci": "^3.1.0",
+    "backstopjs": "^6.2.2",
+    "axe-core": "^4.8.3",
+    "puppeteer": "^21.5.2",
+    "cheerio": "^1.0.0-rc.12",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.10"
+  }
+}

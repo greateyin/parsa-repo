@@ -1,0 +1,82 @@
+{{/*
+  Advertising Manager
+  Coordinates all advertising services and ad placements
+  Usage: {{ partial "advertising/ad-manager.html" . }}
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+
+{{/* AdSense Integration */}}
+{{ if $config.adsense.enabled }}
+  {{/* AdSense will be loaded conditionally based on consent */}}
+  <script>
+    // Load AdSense only if advertising is allowed
+    if (window.ThemePrivacy && window.ThemePrivacy.canShowAds()) {
+      // AdSense loading will be implemented in task 4
+      console.log('Google AdSense: Ready to load (implementation pending)');
+    } else {
+      console.log('Google AdSense: Blocked by privacy settings');
+    }
+  </script>
+{{ end }}
+
+{{/* Ad placement management */}}
+<script>
+  window.ThemeAds = window.ThemeAds || {};
+  
+  // Ad placement registry
+  window.ThemeAds.placements = [];
+  
+  // Register an ad placement
+  window.ThemeAds.registerPlacement = function(placement) {
+    window.ThemeAds.placements.push(placement);
+  };
+  
+  // Initialize ads based on privacy settings
+  window.ThemeAds.init = function() {
+    if (!window.ThemePrivacy || !window.ThemePrivacy.canShowAds()) {
+      console.log('Ads blocked by privacy settings');
+      return;
+    }
+    
+    console.log('Ad Manager initialized with', window.ThemeAds.placements.length, 'placements');
+  };
+  
+  // Auto-initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.ThemeAds.init);
+  } else {
+    window.ThemeAds.init();
+  }
+</script>
+
+{{ if $config.performance.lazyLoadAds }}
+{{/* Lazy loading setup for ads */}}
+<script>
+  // Intersection Observer for lazy loading ads
+  window.ThemeAds.lazyLoader = null;
+  
+  window.ThemeAds.setupLazyLoading = function() {
+    if ('IntersectionObserver' in window) {
+      window.ThemeAds.lazyLoader = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var adElement = entry.target;
+            // Lazy load implementation will be completed in task 9
+            console.log('Ad element entered viewport:', adElement);
+          }
+        });
+      }, {
+        rootMargin: '50px'
+      });
+    }
+  };
+  
+  // Initialize lazy loading
+  document.addEventListener('DOMContentLoaded', function() {
+    window.ThemeAds.setupLazyLoading();
+  });
+</script>
+{{ end }}

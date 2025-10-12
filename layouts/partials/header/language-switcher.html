@@ -1,0 +1,173 @@
+<!-- Language Switcher Component -->
+{{ if .Site.IsMultiLingual }}
+<div class="relative inline-block text-left" data-language-switcher>
+  <!-- Language Switcher Button -->
+  <button type="button" 
+          class="inline-flex items-center justify-center w-full px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-enhanced touch-target"
+          id="language-menu-button" 
+          aria-expanded="false" 
+          aria-haspopup="true"
+          aria-label="{{ i18n "switchLanguage" | default "Switch Language" }}"
+          data-language-button>
+    <!-- Current Language Icon -->
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+    </svg>
+    
+    <!-- Current Language Code -->
+    <span class="text-xs font-semibold uppercase tracking-wider">
+      {{ .Site.Language.Lang }}
+    </span>
+    
+    <!-- Dropdown Arrow -->
+    <svg class="w-4 h-4 ml-1 transition-transform duration-200" 
+         fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+         data-dropdown-arrow>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <!-- Language Dropdown Menu -->
+  <div class="absolute right-0 z-50 mt-2 w-48 origin-top-right bg-popover border border-border rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 scale-95 pointer-events-none transition-all duration-200"
+       id="language-menu" 
+       role="menu" 
+       aria-orientation="vertical" 
+       aria-labelledby="language-menu-button"
+       data-language-menu>
+    <div class="py-1" role="none">
+      <!-- Language Menu Header -->
+      <div class="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border">
+        {{ i18n "availableLanguages" | default "Available Languages" }}
+      </div>
+      
+      <!-- Language Options -->
+      {{ range .Site.Languages }}
+        {{ $isCurrentLang := eq . $.Site.Language }}
+        <a href="{{ if $isCurrentLang }}#{{ else }}{{ $.Permalink | relLangURL . }}{{ end }}" 
+           class="group flex items-center px-4 py-3 text-sm transition-colors duration-200 {{ if $isCurrentLang }}bg-muted text-primary font-medium{{ else }}text-foreground hover:bg-muted/50 hover:text-primary{{ end }}"
+           role="menuitem"
+           {{ if $isCurrentLang }}aria-current="true"{{ end }}
+           hreflang="{{ .Lang }}"
+           lang="{{ .Lang }}">
+          
+          <!-- Language Flag/Icon (you can customize this) -->
+          <div class="flex-shrink-0 w-5 h-5 mr-3 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
+            {{ if eq .Lang "en" }}
+              <span class="text-xs font-bold">🇺🇸</span>
+            {{ else if eq .Lang "zh" }}
+              <span class="text-xs font-bold">🇨🇳</span>
+            {{ else if eq .Lang "zh-tw" }}
+              <span class="text-xs font-bold">🇹🇼</span>
+            {{ else }}
+              <span class="text-xs font-bold uppercase">{{ substr .Lang 0 2 }}</span>
+            {{ end }}
+          </div>
+          
+          <!-- Language Name -->
+          <div class="flex-1 min-w-0">
+            <div class="font-medium truncate">
+              {{ .LanguageName | default .Lang }}
+            </div>
+            <div class="text-xs text-muted-foreground truncate">
+              {{ .Lang }}
+            </div>
+          </div>
+          
+          <!-- Current Language Indicator -->
+          {{ if $isCurrentLang }}
+            <svg class="w-4 h-4 ml-2 text-primary" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          {{ end }}
+        </a>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<!-- Language Switcher JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const languageSwitcher = document.querySelector('[data-language-switcher]');
+  if (!languageSwitcher) return;
+  
+  const button = languageSwitcher.querySelector('[data-language-button]');
+  const menu = languageSwitcher.querySelector('[data-language-menu]');
+  const arrow = languageSwitcher.querySelector('[data-dropdown-arrow]');
+  
+  let isOpen = false;
+  
+  function toggleMenu() {
+    isOpen = !isOpen;
+    
+    // Update button state
+    button.setAttribute('aria-expanded', isOpen.toString());
+    
+    // Update menu visibility
+    if (isOpen) {
+      menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+      menu.classList.add('opacity-100', 'scale-100');
+      arrow.style.transform = 'rotate(180deg)';
+    } else {
+      menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+      menu.classList.remove('opacity-100', 'scale-100');
+      arrow.style.transform = 'rotate(0deg)';
+    }
+  }
+  
+  function closeMenu() {
+    if (isOpen) {
+      toggleMenu();
+    }
+  }
+  
+  // Button click handler
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleMenu();
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!languageSwitcher.contains(e.target)) {
+      closeMenu();
+    }
+  });
+  
+  // Close menu on escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeMenu();
+    }
+  });
+  
+  // Handle keyboard navigation
+  menu.addEventListener('keydown', function(e) {
+    const menuItems = menu.querySelectorAll('a[role="menuitem"]');
+    const currentIndex = Array.from(menuItems).findIndex(item => item === document.activeElement);
+    
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        const nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+        menuItems[nextIndex].focus();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+        menuItems[prevIndex].focus();
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (document.activeElement.href) {
+          window.location.href = document.activeElement.href;
+        }
+        break;
+    }
+  });
+});
+</script>
+{{ end }}

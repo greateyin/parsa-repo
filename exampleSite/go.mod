@@ -1,5 +1,7 @@
-module gethugothemes.com
+module github.com/username/parsa-redesigned-example
 
-go 1.19
+go 1.21
 
-require github.com/gethugothemes/hugo-modules/images v0.0.0-20250112030311-a0de82520a5a // indirect
+replace github.com/username/parsa-redesigned => ../
+
+require github.com/username/parsa-redesigned v0.0.0-00010101000000-000000000000 // indirect

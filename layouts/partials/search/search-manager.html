@@ -1,0 +1,40 @@
+{{/*
+  Search Manager
+  Coordinates search functionality including Google Custom Search and local search
+  Usage: {{ partial "search/search-manager.html" . }}
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+
+<script>
+  window.ThemeSearch = window.ThemeSearch || {};
+  
+  // Search configuration
+  window.ThemeSearch.config = {
+    googleCustomSearch: {
+      enabled: {{ if $config.googleCustomSearch.value }}true{{ else }}false{{ end }},
+      engineId: "{{ $config.googleCustomSearch.value }}"
+    },
+    localSearch: {
+      enabled: true // Always available as fallback
+    }
+  };
+  
+  // Initialize search functionality
+  window.ThemeSearch.init = function() {
+    console.log('Search Manager initialized');
+    console.log('Google Custom Search:', window.ThemeSearch.config.googleCustomSearch.enabled ? 'enabled' : 'disabled');
+    console.log('Local Search fallback:', window.ThemeSearch.config.localSearch.enabled ? 'available' : 'unavailable');
+    
+    // Search implementation will be completed in task 5
+  };
+  
+  // Auto-initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.ThemeSearch.init);
+  } else {
+    window.ThemeSearch.init();
+  }
+</script>

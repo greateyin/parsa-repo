@@ -1,0 +1,179 @@
+{{/* Performance monitoring and analytics */}}
+{{/* Only include in production builds */}}
+
+{{ if hugo.IsProduction }}
+<!-- Performance monitoring script -->
+<script>
+  // Core Web Vitals monitoring
+  (function() {
+    'use strict';
+    
+    // Performance metrics collection
+    const performanceMetrics = {
+      lcp: null,
+      fid: null,
+      cls: null,
+      fcp: null,
+      ttfb: null
+    };
+
+    // Send metrics to analytics
+    function sendMetric(name, value, id) {
+      // Send to Google Analytics if available
+      if (typeof gtag !== 'undefined') {
+        gtag('event', name, {
+          event_category: 'Web Vitals',
+          event_label: id,
+          value: Math.round(value),
+          non_interaction: true
+        });
+      }
+      
+      // Send to custom analytics endpoint if configured
+      {{ if .Site.Params.analytics.customEndpoint }}
+      fetch('{{ .Site.Params.analytics.customEndpoint }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          metric: name,
+          value: value,
+          id: id,
+          url: window.location.href,
+          timestamp: Date.now()
+        })
+      }).catch(err => console.warn('Analytics error:', err));
+      {{ end }}
+    }
+
+    // Largest Contentful Paint
+    if ('PerformanceObserver' in window) {
+      try {
+        const lcpObserver = new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          performanceMetrics.lcp = lastEntry.startTime;
+          sendMetric('LCP', lastEntry.startTime, lastEntry.id);
+        });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      } catch (e) {
+        console.warn('LCP monitoring not supported');
+      }
+
+      // First Input Delay
+      try {
+        const fidObserver = new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          entries.forEach(entry => {
+            const fid = entry.processingStart - entry.startTime;
+            performanceMetrics.fid = fid;
+            sendMetric('FID', fid, entry.name);
+          });
+        });
+        fidObserver.observe({ entryTypes: ['first-input'] });
+      } catch (e) {
+        console.warn('FID monitoring not supported');
+      }
+
+      // Cumulative Layout Shift
+      try {
+        let clsValue = 0;
+        const clsObserver = new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          entries.forEach(entry => {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+            }
+          });
+          performanceMetrics.cls = clsValue;
+        });
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
+        
+        // Send CLS on page unload
+        window.addEventListener('beforeunload', () => {
+          sendMetric('CLS', clsValue, 'page');
+        });
+      } catch (e) {
+        console.warn('CLS monitoring not supported');
+      }
+    }
+
+    // Navigation Timing metrics
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const navigation = performance.getEntriesByType('navigation')[0];
+        if (navigation) {
+          // Time to First Byte
+          const ttfb = navigation.responseStart - navigation.requestStart;
+          performanceMetrics.ttfb = ttfb;
+          sendMetric('TTFB', ttfb, 'navigation');
+          
+          // First Contentful Paint
+          const paintEntries = performance.getEntriesByType('paint');
+          const fcpEntry = paintEntries.find(entry => entry.name === 'first-contentful-paint');
+          if (fcpEntry) {
+            performanceMetrics.fcp = fcpEntry.startTime;
+            sendMetric('FCP', fcpEntry.startTime, 'paint');
+          }
+          
+          // Page Load Time
+          const loadTime = navigation.loadEventEnd - navigation.loadEventStart;
+          sendMetric('Load Time', loadTime, 'navigation');
+          
+          // DOM Content Loaded
+          const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart;
+          sendMetric('DOM Content Loaded', domContentLoaded, 'navigation');
+        }
+      }, 0);
+    });
+
+    // Resource timing monitoring
+    function monitorResourceTiming() {
+      const resources = performance.getEntriesByType('resource');
+      const slowResources = resources.filter(resource => resource.duration > 1000);
+      
+      slowResources.forEach(resource => {
+        sendMetric('Slow Resource', resource.duration, resource.name);
+      });
+    }
+
+    // Monitor resources after page load
+    window.addEventListener('load', () => {
+      setTimeout(monitorResourceTiming, 2000);
+    });
+
+    // Error monitoring
+    window.addEventListener('error', (event) => {
+      sendMetric('JavaScript Error', 1, event.message);
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      sendMetric('Promise Rejection', 1, event.reason);
+    });
+
+    // Make metrics available for debugging
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      window.performanceMetrics = performanceMetrics;
+    }
+  })();
+</script>
+
+<!-- Resource hints for better performance -->
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
+
+{{ if .Site.Params.analytics.googleAnalytics }}
+<link rel="dns-prefetch" href="//www.google-analytics.com">
+<link rel="dns-prefetch" href="//www.googletagmanager.com">
+{{ end }}
+
+{{ if .Site.Params.comments.disqusShortname }}
+<link rel="dns-prefetch" href="//{{ .Site.Params.comments.disqusShortname }}.disqus.com">
+{{ end }}
+
+<!-- Preconnect to critical external resources -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+{{ end }}

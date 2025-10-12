@@ -1,5 +1,31 @@
-{{- $.Scratch.Add "index" slice -}}
-{{- range site.RegularPages -}}
-    {{- $.Scratch.Add "index" (dict "title" .Title "tags" .Params.tags "categories" .Params.categories "contents" .Plain "permalink" .Permalink) -}}
+{{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+{{- $pages = where $pages "Params.draft" "!=" true -}}
+[
+{{- range $index, $page := $pages -}}
+  {{- if $index -}},{{- end }}
+  {
+    "title": {{ $page.Title | jsonify }},
+    "content": {{ $page.Plain | jsonify }},
+    "summary": {{ with $page.Summary }}{{ . | plainify | jsonify }}{{ else }}{{ $page.Content | plainify | truncate 160 | jsonify }}{{ end }},
+    "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+    "permalink": {{ $page.Permalink | jsonify }},
+    "relpermalink": {{ $page.RelPermalink | jsonify }},
+    "categories": [
+      {{- range $catIndex, $category := $page.Params.categories -}}
+        {{- if $catIndex -}},{{- end -}}
+        {{ $category | jsonify }}
+      {{- end -}}
+    ],
+    "tags": [
+      {{- range $tagIndex, $tag := $page.Params.tags -}}
+        {{- if $tagIndex -}},{{- end -}}
+        {{ $tag | jsonify }}
+      {{- end -}}
+    ],
+    "author": {{ with $page.Params.author }}{{ . | jsonify }}{{ else }}{{ .Site.Params.author.name | jsonify }}{{ end }},
+    "image": {{ with $page.Params.image }}{{ . | absURL | jsonify }}{{ else }}""{{ end }},
+    "readTime": {{ with $page.Params.readTime }}{{ . }}{{ else }}{{ div (countwords $page.Content) 200 }}{{ end }},
+    "wordCount": {{ $page.WordCount }}
+  }
 {{- end -}}
-{{- $.Scratch.Get "index" | jsonify -}}
+]

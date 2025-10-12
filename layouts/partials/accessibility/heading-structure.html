@@ -1,0 +1,73 @@
+{{/* Semantic Heading Structure Validation */}}
+{{/* This partial ensures proper heading hierarchy for screen readers */}}
+
+{{ if not hugo.IsProduction }}
+<script>
+// Heading hierarchy validation for development
+document.addEventListener('DOMContentLoaded', function() {
+  validateHeadingStructure();
+});
+
+function validateHeadingStructure() {
+  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  const issues = [];
+  let previousLevel = 0;
+  
+  headings.forEach((heading, index) => {
+    const currentLevel = parseInt(heading.tagName.charAt(1));
+    
+    // Check for proper hierarchy
+    if (index === 0 && currentLevel !== 1) {
+      issues.push(`First heading should be h1, found ${heading.tagName.toLowerCase()}`);
+    }
+    
+    if (currentLevel > previousLevel + 1) {
+      issues.push(`Heading level skipped: ${heading.tagName.toLowerCase()} follows h${previousLevel} (should be h${previousLevel + 1})`);
+    }
+    
+    // Check for empty headings
+    if (!heading.textContent.trim()) {
+      issues.push(`Empty heading: ${heading.tagName.toLowerCase()}`);
+    }
+    
+    // Check for very long headings
+    if (heading.textContent.length > 120) {
+      issues.push(`Very long heading (${heading.textContent.length} chars): ${heading.textContent.substring(0, 50)}...`);
+    }
+    
+    previousLevel = currentLevel;
+  });
+  
+  // Log issues to console in development
+  if (issues.length > 0) {
+    console.group('🔍 Heading Structure Issues');
+    issues.forEach(issue => console.warn(issue));
+    console.groupEnd();
+  } else {
+    console.log('✅ Heading structure is valid');
+  }
+}
+</script>
+{{ end }}
+
+{{/* Helper function to generate proper heading levels */}}
+{{ define "partials/accessibility/heading" }}
+  {{ $level := .level | default 2 }}
+  {{ $text := .text }}
+  {{ $id := .id | default (.text | urlize) }}
+  {{ $class := .class | default "" }}
+  
+  {{ if eq $level 1 }}
+    <h1 id="{{ $id }}" class="{{ $class }}">{{ $text }}</h1>
+  {{ else if eq $level 2 }}
+    <h2 id="{{ $id }}" class="{{ $class }}">{{ $text }}</h2>
+  {{ else if eq $level 3 }}
+    <h3 id="{{ $id }}" class="{{ $class }}">{{ $text }}</h3>
+  {{ else if eq $level 4 }}
+    <h4 id="{{ $id }}" class="{{ $class }}">{{ $text }}</h4>
+  {{ else if eq $level 5 }}
+    <h5 id="{{ $id }}" class="{{ $class }}">{{ $text }}</h5>
+  {{ else }}
+    <h6 id="{{ $id }}" class="{{ $class }}">{{ $text }}</h6>
+  {{ end }}
+{{ end }}

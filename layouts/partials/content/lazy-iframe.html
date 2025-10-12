@@ -1,0 +1,119 @@
+{{/* Lazy loading iframe partial for videos and embeds */}}
+{{/* Usage: {{ partial "content/lazy-iframe.html" (dict "src" "https://youtube.com/embed/..." "title" "Video title" "aspectRatio" "16/9") }} */}}
+
+{{ $src := .src }}
+{{ $title := .title | default "Embedded content" }}
+{{ $aspectRatio := .aspectRatio | default "16/9" }}
+{{ $class := .class | default "" }}
+{{ $allowFullscreen := .allowFullscreen | default true }}
+
+{{ if $src }}
+  <div class="lazy-iframe-container relative {{ if eq $aspectRatio "16/9" }}aspect-video{{ else if eq $aspectRatio "4/3" }}aspect-[4/3]{{ else if eq $aspectRatio "1/1" }}aspect-square{{ end }} bg-muted rounded-lg overflow-hidden {{ $class }}">
+    {{/* Loading placeholder */}}
+    <div class="lazy-iframe-placeholder absolute inset-0 flex items-center justify-center bg-gradient-to-br from-muted/50 to-muted/80 transition-opacity duration-300">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+          <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <p class="text-sm font-medium text-foreground mb-2">{{ $title }}</p>
+        <button class="lazy-iframe-load-btn inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6-8h8a2 2 0 012 2v8a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z"></path>
+          </svg>
+          {{ i18n "loadContent" | default "Load Content" }}
+        </button>
+      </div>
+    </div>
+    
+    {{/* Actual iframe (loaded on demand) */}}
+    <iframe 
+      data-src="{{ $src }}"
+      title="{{ $title }}"
+      class="lazy-iframe absolute inset-0 w-full h-full border-0 opacity-0 transition-opacity duration-300"
+      {{ if $allowFullscreen }}allowfullscreen{{ end }}
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <script>
+    // Lazy iframe loading functionality
+    (function() {
+      const lazyIframeContainers = document.querySelectorAll('.lazy-iframe-container');
+      
+      lazyIframeContainers.forEach(container => {
+        const placeholder = container.querySelector('.lazy-iframe-placeholder');
+        const iframe = container.querySelector('.lazy-iframe');
+        const loadBtn = container.querySelector('.lazy-iframe-load-btn');
+        
+        if (!placeholder || !iframe || !loadBtn) return;
+        
+        // Load iframe when button is clicked
+        loadBtn.addEventListener('click', function() {
+          loadIframe();
+        });
+        
+        // Auto-load when scrolled into view (optional)
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                // Optionally auto-load after a delay
+                setTimeout(() => {
+                  if (iframe.dataset.src && !iframe.src) {
+                    // Show load button more prominently
+                    loadBtn.classList.add('animate-pulse');
+                  }
+                }, 2000);
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.5 });
+          
+          observer.observe(container);
+        }
+        
+        function loadIframe() {
+          if (iframe.dataset.src && !iframe.src) {
+            // Show loading state
+            loadBtn.innerHTML = `
+              <svg class="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              {{ i18n "loading" | default "Loading..." }}
+            `;
+            loadBtn.disabled = true;
+            
+            // Load the iframe
+            iframe.src = iframe.dataset.src;
+            
+            // Handle iframe load
+            iframe.onload = function() {
+              placeholder.style.opacity = '0';
+              iframe.style.opacity = '1';
+              
+              setTimeout(() => {
+                placeholder.style.display = 'none';
+              }, 300);
+            };
+            
+            // Handle iframe error
+            iframe.onerror = function() {
+              loadBtn.innerHTML = `
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                {{ i18n "loadError" | default "Failed to load" }}
+              `;
+              loadBtn.disabled = false;
+              loadBtn.classList.add('bg-destructive', 'hover:bg-destructive/90');
+              loadBtn.classList.remove('bg-primary', 'hover:bg-primary/90');
+            };
+          }
+        }
+      });
+    })();
+  </script>
+{{ end }}

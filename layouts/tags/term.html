@@ -1,0 +1,146 @@
+{{ define "main" }}
+<div class="container mx-auto px-4 py-8">
+  <!-- Tag Header -->
+  <header class="text-center mb-12">
+    <div class="mb-4">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-accent/10 text-accent mb-4">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+        </svg>
+        {{ i18n "tags" | singularize | default "Tag" | title }}
+      </span>
+    </div>
+    
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+      {{ .Title }}
+    </h1>
+    
+    {{ with .Description }}
+    <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+      {{ . }}
+    </p>
+    {{ end }}
+    
+    <!-- Article Count -->
+    {{ if .Pages }}
+    <div class="mt-6">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-muted text-muted-foreground">
+        {{ len .Pages }} {{ if eq (len .Pages) 1 }}{{ i18n "article" | default "article" }}{{ else }}{{ i18n "articles" | default "articles" }}{{ end }}
+        {{ i18n "articlesWithTag" | default "with this tag" | lower }}
+      </span>
+    </div>
+    {{ end }}
+  </header>
+  
+  <!-- Breadcrumb Navigation -->
+  <nav class="mb-8" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2 text-sm text-muted-foreground flex-wrap">
+      <li>
+        <a href="{{ "/" | relLangURL }}" class="hover:text-primary transition-colors flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+          </svg>
+          {{ i18n "home" | default "Home" }}
+        </a>
+      </li>
+      <li>
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li>
+        <a href="{{ "/tags/" | relLangURL }}" class="hover:text-primary transition-colors">
+          {{ i18n "tags" | default "Tags" }}
+        </a>
+      </li>
+      <li>
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li>
+        <span class="text-foreground font-medium">{{ .Title }}</span>
+      </li>
+    </ol>
+  </nav>
+  
+  <!-- Articles Grid -->
+  {{ if .Pages }}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    {{ range .Paginator.Pages }}
+      {{ partial "content/article-card.html" . }}
+    {{ end }}
+  </div>
+  
+  <!-- Pagination -->
+  {{ if gt .Paginator.TotalPages 1 }}
+  <nav class="flex justify-center" aria-label="Pagination">
+    <div class="flex items-center space-x-2">
+      <!-- Previous Page -->
+      {{ if .Paginator.HasPrev }}
+      <a href="{{ .Paginator.Prev.URL }}" 
+         class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>
+        {{ i18n "previous" | default "Previous" }}
+      </a>
+      {{ end }}
+      
+      <!-- Page Numbers -->
+      {{ range .Paginator.Pagers }}
+        {{ if eq . $.Paginator }}
+        <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-primary rounded-md">
+          {{ .PageNumber }}
+        </span>
+        {{ else }}
+        <a href="{{ .URL }}" 
+           class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors">
+          {{ .PageNumber }}
+        </a>
+        {{ end }}
+      {{ end }}
+      
+      <!-- Next Page -->
+      {{ if .Paginator.HasNext }}
+      <a href="{{ .Paginator.Next.URL }}" 
+         class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors">
+        {{ i18n "next" | default "Next" }}
+        <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </a>
+      {{ end }}
+    </div>
+  </nav>
+  {{ end }}
+  
+  {{ else }}
+  <!-- Empty State -->
+  <div class="text-center py-16">
+    <div class="max-w-md mx-auto">
+      <svg class="w-16 h-16 mx-auto text-muted-foreground mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+      </svg>
+      <h3 class="text-lg font-semibold text-foreground mb-2">
+        {{ i18n "noArticlesFound" | default "No articles found" }}
+      </h3>
+      <p class="text-muted-foreground mb-6">
+        {{ printf (i18n "noArticlesWithThisTag" | default "There are no articles tagged with \"%s\" yet.") .Title }}
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="{{ "/" | relLangURL }}" 
+           class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+          {{ i18n "backToHome" | default "Back to Home" }}
+        </a>
+        <a href="{{ "/tags/" | relLangURL }}" 
+           class="inline-flex items-center px-4 py-2 bg-muted text-muted-foreground rounded-md hover:bg-muted/80 transition-colors">
+          {{ i18n "allTags" | default "All Tags" }}
+        </a>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

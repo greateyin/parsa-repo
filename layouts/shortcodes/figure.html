@@ -1,0 +1,93 @@
+{{/*
+Enhanced Figure Shortcode with Modern Styling and Accessibility
+Usage: {{< figure src="image.jpg" alt="Description" caption="Caption text" class="custom-class" >}}
+*/}}
+
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" -}}
+{{- $caption := .Get "caption" -}}
+{{- $class := .Get "class" -}}
+{{- $width := .Get "width" -}}
+{{- $height := .Get "height" -}}
+{{- $loading := .Get "loading" | default "lazy" -}}
+{{- $sizes := .Get "sizes" | default "(min-width: 1024px) 1024px, (min-width: 768px) 768px, 100vw" -}}
+
+{{- if not $src -}}
+  {{- errorf "Figure shortcode requires 'src' parameter" -}}
+{{- end -}}
+
+{{- if not $alt -}}
+  {{- warnf "Figure shortcode missing 'alt' parameter for accessibility. Image: %s" $src -}}
+{{- end -}}
+
+{{- $image := "" -}}
+{{- $imageResource := "" -}}
+
+{{/* Try to get image as page resource first, then site resource */}}
+{{- with .Page.Resources.GetMatch $src -}}
+  {{- $imageResource = . -}}
+{{- else -}}
+  {{- with resources.Get $src -}}
+    {{- $imageResource = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Generate responsive images if we have a resource */}}
+{{- if $imageResource -}}
+  {{- $webp := $imageResource.Resize "1024x webp" -}}
+  {{- $large := $imageResource.Resize "1024x" -}}
+  {{- $medium := $imageResource.Resize "768x" -}}
+  {{- $small := $imageResource.Resize "480x" -}}
+  
+  <figure class="figure {{ with $class }}{{ . }}{{ end }} my-8">
+    <div class="relative overflow-hidden rounded-lg bg-muted">
+      <picture>
+        <source 
+          srcset="{{ $small.Resize "480x webp" | relURL }} 480w,
+                  {{ $medium.Resize "768x webp" | relURL }} 768w,
+                  {{ $large.Resize "1024x webp" | relURL }} 1024w"
+          sizes="{{ $sizes }}"
+          type="image/webp">
+        <img 
+          src="{{ $large | relURL }}"
+          srcset="{{ $small | relURL }} 480w,
+                  {{ $medium | relURL }} 768w,
+                  {{ $large | relURL }} 1024w"
+          sizes="{{ $sizes }}"
+          alt="{{ $alt }}"
+          {{ with $width }}width="{{ . }}"{{ end }}
+          {{ with $height }}height="{{ . }}"{{ end }}
+          loading="{{ $loading }}"
+          class="w-full h-auto transition-transform duration-300 hover:scale-105"
+          decoding="async">
+      </picture>
+    </div>
+    
+    {{- if $caption -}}
+    <figcaption class="mt-3 text-sm text-muted-foreground text-center italic">
+      {{ $caption | markdownify }}
+    </figcaption>
+    {{- end -}}
+  </figure>
+
+{{- else -}}
+  {{/* Fallback for external images or when resource processing fails */}}
+  <figure class="figure {{ with $class }}{{ . }}{{ end }} my-8">
+    <div class="relative overflow-hidden rounded-lg bg-muted">
+      <img 
+        src="{{ $src | relURL }}"
+        alt="{{ $alt }}"
+        {{ with $width }}width="{{ . }}"{{ end }}
+        {{ with $height }}height="{{ . }}"{{ end }}
+        loading="{{ $loading }}"
+        class="w-full h-auto transition-transform duration-300 hover:scale-105"
+        decoding="async">
+    </div>
+    
+    {{- if $caption -}}
+    <figcaption class="mt-3 text-sm text-muted-foreground text-center italic">
+      {{ $caption | markdownify }}
+    </figcaption>
+    {{- end -}}
+  </figure>
+{{- end -}}

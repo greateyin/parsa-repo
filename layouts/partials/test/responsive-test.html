@@ -1,0 +1,68 @@
+{{/* Responsive Design Test Component */}}
+<div class="responsive-test-container p-8 bg-muted/20 rounded-lg">
+  <h3 class="responsive-text-lg font-bold mb-4">Responsive Design Test</h3>
+  
+  <!-- Breakpoint indicators -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-6">
+    <div class="p-4 bg-red-100 text-red-800 rounded text-center xs:bg-orange-100 xs:text-orange-800">
+      <div class="font-semibold">XS (320px+)</div>
+      <div class="text-sm">Extra Small</div>
+    </div>
+    <div class="p-4 bg-yellow-100 text-yellow-800 rounded text-center sm:bg-green-100 sm:text-green-800">
+      <div class="font-semibold">SM (640px+)</div>
+      <div class="text-sm">Small</div>
+    </div>
+    <div class="p-4 bg-blue-100 text-blue-800 rounded text-center md:bg-purple-100 md:text-purple-800">
+      <div class="font-semibold">MD (768px+)</div>
+      <div class="text-sm">Medium</div>
+    </div>
+    <div class="p-4 bg-indigo-100 text-indigo-800 rounded text-center lg:bg-pink-100 lg:text-pink-800">
+      <div class="font-semibold">LG (1024px+)</div>
+      <div class="text-sm">Large</div>
+    </div>
+    <div class="p-4 bg-gray-100 text-gray-800 rounded text-center xl:bg-teal-100 xl:text-teal-800">
+      <div class="font-semibold">XL (1280px+)</div>
+      <div class="text-sm">Extra Large</div>
+    </div>
+  </div>
+  
+  <!-- Touch target test -->
+  <div class="mb-6">
+    <h4 class="font-semibold mb-2">Touch Target Test</h4>
+    <div class="flex flex-wrap gap-2">
+      <button class="touch-target bg-primary text-primary-foreground rounded-lg">Touch Button</button>
+      <a href="#" class="touch-target bg-secondary text-secondary-foreground rounded-lg">Touch Link</a>
+    </div>
+  </div>
+  
+  <!-- Typography scaling test -->
+  <div class="mb-6">
+    <h4 class="font-semibold mb-2">Responsive Typography</h4>
+    <div class="space-y-2">
+      <p class="responsive-text-xs">Extra Small Text (responsive-text-xs)</p>
+      <p class="responsive-text-sm">Small Text (responsive-text-sm)</p>
+      <p class="responsive-text-base">Base Text (responsive-text-base)</p>
+      <p class="responsive-text-lg">Large Text (responsive-text-lg)</p>
+      <p class="responsive-text-xl">Extra Large Text (responsive-text-xl)</p>
+    </div>
+  </div>
+  
+  <!-- Grid system test -->
+  <div class="mb-6">
+    <h4 class="font-semibold mb-2">Responsive Grid System</h4>
+    <div class="responsive-grid-1 sm:responsive-grid-2 lg:responsive-grid-3 xl:responsive-grid-4 gap-4">
+      <div class="p-4 bg-primary/10 rounded text-center">Grid Item 1</div>
+      <div class="p-4 bg-primary/10 rounded text-center">Grid Item 2</div>
+      <div class="p-4 bg-primary/10 rounded text-center">Grid Item 3</div>
+      <div class="p-4 bg-primary/10 rounded text-center">Grid Item 4</div>
+      <div class="p-4 bg-primary/10 rounded text-center">Grid Item 5</div>
+      <div class="p-4 bg-primary/10 rounded text-center">Grid Item 6</div>
+    </div>
+  </div>
+  
+  <!-- Mobile padding test -->
+  <div class="mobile-p bg-accent/10 rounded">
+    <h4 class="font-semibold mb-2">Mobile Padding Test</h4>
+    <p class="responsive-text-sm">This container uses mobile-responsive padding that adjusts based on screen size.</p>
+  </div>
+</div>

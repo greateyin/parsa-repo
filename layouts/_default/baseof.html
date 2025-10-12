@@ -1,10 +1,198 @@
 <!DOCTYPE html>
-<html lang="{{ with site.LanguageCode }}{{ . }}{{ else }}en-US{{ end }}">
-    {{- partial "head.html" . -}}
-    <body>
-        {{- partial "preloader.html" . -}}
-        {{- partial "header.html" . -}}
-        {{- block "main" . }}{{- end }}
-        {{- partial "footer.html" . -}}
-    </body>
+<html lang="{{ .Site.Language.Lang | default "en" }}" 
+      dir="{{ .Site.Params.languageDirection | default "ltr" }}"
+      class="{{ if in (slice "zh" "zh-cn" "zh-tw" "zh-hk") .Site.Language.Lang }}zh-font zh-spacing{{ end }}{{ if eq (.Site.Params.languageDirection | default "ltr") "rtl" }} rtl-support{{ end }}"
+      data-lang="{{ .Site.Language.Lang }}"
+      data-lang-dir="{{ .Site.Params.languageDirection | default "ltr" }}"
+      {{ if .Site.IsMultiLingual }}data-multilingual="true"{{ end }}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <!-- Enhanced mobile optimization -->
+  <meta name="format-detection" content="telephone=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="{{ .Site.Params.theme.primaryColor | default "#3b82f6" }}">
+  
+  <!-- Primary Meta Tags -->
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  <meta name="title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
+  
+  <!-- Language and Internationalization Meta Tags -->
+  <meta name="language" content="{{ .Site.Language.Lang }}">
+  <meta name="content-language" content="{{ .Site.Language.Lang }}">
+  
+  <!-- CSS Custom Properties for Theme -->
+  <style>
+    :root {
+      --color-primary: {{ .Site.Params.theme.primaryColor | default "#3b82f6" }};
+      --color-accent: {{ .Site.Params.theme.accentColor | default "#8b5cf6" }};
+      --color-background: #ffffff;
+      --color-foreground: #0f172a;
+      --color-muted: #64748b;
+      --color-muted-foreground: #475569;
+      --color-border: #e2e8f0;
+      --color-card: #ffffff;
+      --color-card-foreground: #0f172a;
+      
+      /* Enhanced responsive design variables */
+      --vh: 1vh;
+      --safe-area-inset-top: env(safe-area-inset-top);
+      --safe-area-inset-right: env(safe-area-inset-right);
+      --safe-area-inset-bottom: env(safe-area-inset-bottom);
+      --safe-area-inset-left: env(safe-area-inset-left);
+    }
+    
+    /* Dark mode variables */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-background: #0f172a;
+        --color-foreground: #f8fafc;
+        --color-muted: #475569;
+        --color-muted-foreground: #64748b;
+        --color-border: #334155;
+        --color-card: #1e293b;
+        --color-card-foreground: #f8fafc;
+      }
+    }
+    
+    /* Smooth scrolling with mobile optimization */
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    
+    /* Enhanced mobile touch handling */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    /* Touch device optimizations */
+    .touch-active {
+      opacity: 0.7;
+      transform: scale(0.98);
+    }
+  </style>
+  
+  <!-- Critical CSS inlining -->
+  {{ partial "head/critical-css.html" . }}
+  
+  <!-- Accessibility CSS -->
+  {{ $accessibilityCSS := resources.Get "css/accessibility.css" }}
+  {{ if $accessibilityCSS }}
+    {{ if hugo.IsProduction }}
+      {{ $accessibilityCSS = $accessibilityCSS | minify | fingerprint }}
+    {{ end }}
+    <link rel="stylesheet" href="{{ $accessibilityCSS.RelPermalink }}" {{ if hugo.IsProduction }}integrity="{{ $accessibilityCSS.Data.Integrity }}"{{ end }}>
+  {{ end }}
+  
+  <!-- Asset version for cache busting -->
+  <meta name="asset-version" content="{{ now.Unix }}">
+  
+  <!-- SEO Configuration and Meta Tags -->
+  {{ partial "head/meta.html" . }}
+  
+  <!-- SEO Configuration -->
+  {{ partial "head/seo-config.html" . }}
+  
+  <!-- Additional head content -->
+  {{ block "head" . }}{{ end }}
+</head>
+
+<body class="bg-background text-foreground antialiased">
+  <!-- Skip Links for Accessibility -->
+  {{ partial "accessibility/skip-links.html" . }}
+  
+  <!-- ARIA Live Regions -->
+  {{ partial "accessibility/aria-live.html" . }}
+  
+  <!-- No-JavaScript Fallback -->
+  {{ partial "content/no-js-fallback.html" . }}
+  
+  <!-- Header -->
+  <header role="banner">
+    {{ partial "header/navbar.html" . }}
+  </header>
+  
+  <!-- Main Content -->
+  <main id="main-content" role="main" class="min-h-screen" tabindex="-1">
+    {{ block "main" . }}{{ end }}
+  </main>
+  
+  <!-- Footer -->
+  <footer id="footer" role="contentinfo">
+    {{ partial "footer/footer.html" . }}
+  </footer>
+  
+  <!-- Hugo Pipes JavaScript Processing with bundling -->
+  {{ $performance := resources.Get "js/modules/performance.js" }}
+  {{ $assetManager := resources.Get "js/modules/assetManager.js" }}
+  {{ $errorHandling := resources.Get "js/error-handling.js" }}
+  {{ $accessibility := resources.Get "js/accessibility.js" }}
+  {{ $main := resources.Get "js/main.js" }}
+  
+  {{ if and $performance $assetManager $main }}
+    {{ $jsFiles := slice $performance $assetManager $main }}
+    {{ if $errorHandling }}
+      {{ $jsFiles = $jsFiles | append $errorHandling }}
+    {{ end }}
+    {{ if $accessibility }}
+      {{ $jsFiles = $jsFiles | append $accessibility }}
+    {{ end }}
+    {{ $js := $jsFiles | resources.Concat "js/bundle.js" }}
+    {{ if hugo.IsProduction }}
+      {{ $js = $js | js.Build (dict "target" "es2018" "minify" true) | fingerprint "sha384" }}
+    {{ else }}
+      {{ $js = $js | js.Build (dict "target" "es2018" "minify" false "sourceMap" "inline") }}
+    {{ end }}
+    <script src="{{ $js.RelPermalink }}" {{ if hugo.IsProduction }}integrity="{{ $js.Data.Integrity }}"{{ end }} type="module" defer></script>
+  {{ end }}
+  
+  <!-- Service Worker registration -->
+  {{ if hugo.IsProduction }}
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(registration) {
+            console.log('SW registered: ', registration);
+          })
+          .catch(function(registrationError) {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+  </script>
+  {{ end }}
+  
+  <!-- Performance monitoring -->
+  {{ partial "performance/monitoring.html" . }}
+  
+  <!-- Accessibility testing panel (development only) -->
+  {{ if not hugo.IsProduction }}
+    {{ partial "accessibility/color-contrast-test.html" . }}
+    {{ partial "accessibility/heading-structure.html" . }}
+    {{ partial "accessibility/wcag-compliance.html" . }}
+  {{ end }}
+  
+  <!-- Additional scripts -->
+  {{ block "scripts" . }}{{ end }}
+</body>
 </html>

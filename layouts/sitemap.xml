@@ -1,0 +1,60 @@
+{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  {{ range .Data.Pages }}
+    {{ if not .Params.noindex }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      {{ if not .Lastmod.IsZero }}
+        <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      {{ end }}
+      {{ with .Sitemap.ChangeFreq }}
+        <changefreq>{{ . }}</changefreq>
+      {{ end }}
+      {{ if ge .Sitemap.Priority 0.0 }}
+        <priority>{{ .Sitemap.Priority }}</priority>
+      {{ end }}
+      
+      <!-- Multilingual alternate URLs -->
+      {{ if .Site.IsMultiLingual }}
+        {{ range .Site.Languages }}
+          {{ if ne . $.Site.Language }}
+            <xhtml:link rel="alternate" hreflang="{{ .Lang }}" href="{{ $.Permalink | relLangURL . }}" />
+          {{ end }}
+        {{ end }}
+        <xhtml:link rel="alternate" hreflang="x-default" href="{{ .Permalink | relLangURL .Site.DefaultContentLanguage }}" />
+      {{ end }}
+      
+      <!-- Image sitemap for articles with images -->
+      {{ if .Params.image }}
+        <image:image>
+          <image:loc>{{ .Params.image | absURL }}</image:loc>
+          {{ with .Params.imageAlt }}
+            <image:caption>{{ . }}</image:caption>
+          {{ end }}
+          {{ with .Title }}
+            <image:title>{{ . }}</image:title>
+          {{ end }}
+        </image:image>
+      {{ end }}
+      
+      <!-- News sitemap for recent articles -->
+      {{ if and (eq .Section "blog") (lt (now.Sub .Date).Hours 2160) }}
+        <news:news>
+          <news:publication>
+            <news:name>{{ .Site.Title }}</news:name>
+            <news:language>{{ .Site.Language.Lang }}</news:language>
+          </news:publication>
+          <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</news:publication_date>
+          <news:title>{{ .Title }}</news:title>
+          {{ with .Params.keywords }}
+            <news:keywords>{{ delimit . ", " }}</news:keywords>
+          {{ end }}
+        </news:news>
+      {{ end }}
+    </url>
+    {{ end }}
+  {{ end }}
+</urlset>

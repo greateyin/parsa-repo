@@ -1,0 +1,166 @@
+<!-- Mobile Menu Slide-out Panel with Enhanced Responsive Design -->
+<div data-mobile-menu 
+     id="mobile-menu"
+     class="fixed inset-0 z-40 md:hidden transform translate-x-full transition-transform duration-300 ease-in-out safe-area-inset-top safe-area-inset-bottom focus-trap"
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="mobile-menu-title"
+     data-focus-trigger="[data-mobile-menu-button]">
+  
+  <!-- Enhanced Backdrop Overlay with Better Touch Handling -->
+  <div data-mobile-menu-overlay 
+       class="absolute inset-0 bg-black/30 backdrop-blur-md opacity-0 transition-opacity duration-300 mobile-menu-overlay"
+       aria-hidden="true"
+       touch-action="none"></div>
+  
+  <!-- Responsive Slide-out Panel -->
+  <div class="relative ml-auto h-full w-full max-w-xs xs:max-w-sm bg-background shadow-2xl overflow-hidden">
+    <!-- Enhanced Mobile Menu Header with Touch-Friendly Design -->
+    <div class="flex items-center justify-between mobile-p border-b border-border bg-background/95 backdrop-blur-sm">
+      <h2 id="mobile-menu-title" class="responsive-text-lg font-semibold text-foreground">
+        {{ i18n "navigation" | default "Navigation" }}
+      </h2>
+      <button data-mobile-menu-close
+              type="button"
+              class="touch-target p-3 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-colors focus-enhanced active:scale-95"
+              aria-label="{{ i18n "closeMenu" | default "Close menu" }}"
+              tabindex="0">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Enhanced Mobile Menu Content with Responsive Design -->
+    <div class="flex flex-col h-full overflow-hidden">
+      <!-- Scrollable Navigation Links -->
+      <nav class="flex-1 mobile-px py-6 space-y-1 overflow-y-auto overscroll-contain interactive-spacing-vertical" role="navigation" aria-label="{{ i18n "mobileNavigation" | default "Mobile navigation" }}">
+        {{ range .Site.Menus.main }}
+        <a href="{{ .URL | relLangURL }}" 
+           class="flex items-center touch-target px-4 py-4 responsive-text-base font-medium text-foreground hover:text-primary hover:bg-muted/50 rounded-xl transition-all duration-200 group active:scale-98 focus-enhanced {{ if $.IsMenuCurrent "main" . }}text-primary bg-muted/30 border-l-4 border-primary shadow-sm{{ end }}"
+           {{ if $.IsMenuCurrent "main" . }}aria-current="page"{{ end }}
+           tabindex="0">
+          <span class="group-hover:translate-x-1 transition-transform duration-200 flex-1">{{ .Name }}</span>
+          <!-- Enhanced arrow indicator -->
+          <svg class="w-5 h-5 ml-3 opacity-0 group-hover:opacity-100 {{ if $.IsMenuCurrent "main" . }}opacity-100{{ end }} transition-all duration-200 group-hover:translate-x-1" 
+               fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        {{ end }}
+        
+        <!-- Enhanced Mobile Search Link -->
+        <div class="pt-6 border-t border-border mt-6">
+          <a href="{{ "/search" | relLangURL }}" 
+             class="flex items-center touch-target px-4 py-4 responsive-text-base font-medium text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-xl transition-all duration-200 group active:scale-98">
+            <svg class="w-6 h-6 mr-4 group-hover:scale-110 transition-transform duration-200" 
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <span class="group-hover:translate-x-1 transition-transform duration-200 flex-1">{{ i18n "search" | default "Search" }}</span>
+            <svg class="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity duration-200" 
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
+        </div>
+        
+        <!-- Mobile Language Switcher -->
+        {{ if .Site.IsMultiLingual }}
+        <div class="pt-4 border-t border-border mt-4">
+          <div class="px-4 py-2 responsive-text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            {{ i18n "language" | default "Language" }}
+          </div>
+          <div class="space-y-1">
+            {{ range .Site.Languages }}
+              {{ $isCurrentLang := eq . $.Site.Language }}
+              <a href="{{ if $isCurrentLang }}#{{ else }}{{ $.Permalink | relLangURL . }}{{ end }}" 
+                 class="flex items-center touch-target px-4 py-3 responsive-text-sm font-medium transition-all duration-200 group {{ if $isCurrentLang }}text-primary bg-muted/30 border-l-4 border-primary{{ else }}text-muted-foreground hover:text-primary hover:bg-muted/30 rounded-lg{{ end }}"
+                 {{ if $isCurrentLang }}aria-current="true"{{ end }}
+                 hreflang="{{ .Lang }}"
+                 lang="{{ .Lang }}">
+                
+                <!-- Language Flag/Icon -->
+                <div class="flex-shrink-0 w-6 h-6 mr-3 rounded-sm overflow-hidden bg-muted flex items-center justify-center">
+                  {{ if eq .Lang "en" }}
+                    <span class="text-sm font-bold">🇺🇸</span>
+                  {{ else if eq .Lang "zh" }}
+                    <span class="text-sm font-bold">🇨🇳</span>
+                  {{ else if eq .Lang "zh-tw" }}
+                    <span class="text-sm font-bold">🇹🇼</span>
+                  {{ else }}
+                    <span class="text-xs font-bold uppercase">{{ substr .Lang 0 2 }}</span>
+                  {{ end }}
+                </div>
+                
+                <!-- Language Name -->
+                <div class="flex-1 min-w-0">
+                  <div class="font-medium truncate group-hover:translate-x-1 transition-transform duration-200">
+                    {{ .LanguageName | default .Lang }}
+                  </div>
+                  <div class="text-xs text-muted-foreground truncate">
+                    {{ .Lang }}
+                  </div>
+                </div>
+                
+                <!-- Current Language Indicator -->
+                {{ if $isCurrentLang }}
+                  <svg class="w-4 h-4 ml-2 text-primary" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                {{ end }}
+              </a>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+        
+        <!-- Additional Mobile Menu Items (Categories, Tags) -->
+        <div class="pt-4 space-y-1">
+          <a href="{{ "/categories" | relLangURL }}" 
+             class="flex items-center touch-target px-4 py-3 responsive-text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted/30 rounded-lg transition-all duration-200 group">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            <span class="group-hover:translate-x-1 transition-transform duration-200">{{ i18n "categories" | default "Categories" }}</span>
+          </a>
+          
+          <a href="{{ "/tags" | relLangURL }}" 
+             class="flex items-center touch-target px-4 py-3 responsive-text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted/30 rounded-lg transition-all duration-200 group">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            <span class="group-hover:translate-x-1 transition-transform duration-200">{{ i18n "tags" | default "Tags" }}</span>
+          </a>
+        </div>
+      </nav>
+      
+      <!-- Enhanced Mobile Menu Footer -->
+      <div class="mobile-px py-4 border-t border-border bg-muted/10 safe-area-inset-bottom">
+        <div class="text-center">
+          <p class="responsive-text-xs text-muted-foreground mb-2">
+            {{ .Site.Title }}
+          </p>
+          {{ if .Site.Params.social }}
+          <div class="flex justify-center space-x-4">
+            {{ range .Site.Params.social }}
+            <a href="{{ .url }}" 
+               class="touch-target p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg"
+               aria-label="{{ .name }}"
+               target="_blank" 
+               rel="noopener noreferrer">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <!-- Social icon would go here -->
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+            </a>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
