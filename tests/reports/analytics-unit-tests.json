@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-10-12T15:40:35.952Z",
+  "testSuite": "Analytics Configuration Unit Tests",
+  "totalTests": 14,
+  "passed": 1,
+  "failed": 13,
+  "results": [
+    {
+      "name": "Valid GA4 Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Invalid GA4 Configuration Handling",
+      "passed": true,
+      "message": "Build warnings expected for invalid config"
+    },
+    {
+      "name": "Missing GA4 Configuration Handling",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Services GA4 Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Facebook Pixel Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Facebook Pixel Custom Events Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Disabled Facebook Pixel Configuration",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Respect Do Not Track Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Disabled Do Not Track Configuration",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Cookie Consent Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Do Not Track Functionality",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Default Configuration Values",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "String Boolean Configuration Handling",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    },
+    {
+      "name": "Multiple Analytics Services Configuration",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet"
+    }
+  ],
+  "requirements": {
+    "1.1": "Google Analytics 4 Integration - Configuration parsing and validation",
+    "1.2": "Privacy settings and Do Not Track functionality"
+  }
+}

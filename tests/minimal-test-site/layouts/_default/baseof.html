@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="{{ site.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }} | {{ site.Title }}</title>
+  
+  {{/* Include analytics partials */}}
+  {{ partial "analytics/analytics-manager.html" . }}
+</head>
+<body>
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+</body>
+</html>

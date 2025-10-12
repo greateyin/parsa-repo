@@ -1,0 +1,104 @@
+{{/*
+  Configuration Defaults Helper
+  Provides default configuration values for all theme features
+  
+  Usage: {{ $defaults := partial "helpers/config-defaults.html" . }}
+  
+  Returns: Dictionary with all default configuration values
+*/}}
+
+{{ return (dict
+  "googleAnalytics" (dict
+    "enabled" false
+    "id" ""
+    "anonymizeIP" true
+    "respectDoNotTrack" true
+  )
+  
+  "adsense" (dict
+    "enabled" false
+    "client" ""
+    "inArticleSlot" ""
+    "autoAds" false
+    "placements" (dict
+      "header" false
+      "sidebar" false
+      "footer" false
+      "inContent" false
+      "beforeContent" false
+      "afterContent" false
+    )
+    "responsive" true
+    "lazyLoad" true
+  )
+  
+  "facebookPixel" (dict
+    "enabled" false
+    "pixelId" ""
+    "events" (dict
+      "pageView" true
+      "viewContent" false
+      "search" false
+      "contact" false
+      "lead" false
+      "completeRegistration" false
+    )
+    "advancedMatching" false
+  )
+  
+  "googleCustomSearch" (dict
+    "engineId" ""
+    "enabled" false
+    "autoComplete" true
+    "enableHistory" true
+    "maxCompletions" 5
+    "fallbackToLocal" true
+  )
+  
+  "mermaid" (dict
+    "enabled" true
+    "theme" "default"
+    "startOnLoad" true
+    "securityLevel" "loose"
+    "flowchart" (dict
+      "useMaxWidth" true
+      "htmlLabels" true
+    )
+  )
+  
+  "privacy" (dict
+    "respectDoNotTrack" true
+    "cookieConsent" false
+    "anonymizeIP" true
+    "disableTracking" false
+    "consentBanner" (dict
+      "enabled" false
+      "message" "This website uses cookies to ensure you get the best experience."
+      "acceptText" "Accept"
+      "declineText" "Decline"
+      "learnMoreText" "Learn More"
+      "learnMoreUrl" "/privacy-policy"
+    )
+  )
+  
+  "performance" (dict
+    "lazyLoadAds" true
+    "asyncScripts" true
+    "preconnectDomains" (slice
+      "https://www.googletagmanager.com"
+      "https://pagead2.googlesyndication.com"
+      "https://connect.facebook.net"
+      "https://cse.google.com"
+      "https://cdn.jsdelivr.net"
+    )
+    "resourceHints" true
+    "criticalCSS" false
+  )
+  
+  "security" (dict
+    "contentSecurityPolicy" false
+    "subresourceIntegrity" false
+    "httpsOnly" true
+    "noSniff" true
+  )
+) }}

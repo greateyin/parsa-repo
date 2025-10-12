@@ -1,0 +1,98 @@
+{
+  "timestamp": "2025-10-12T16:02:03.317Z",
+  "testSuite": "Facebook Pixel Unit Tests",
+  "totalTests": 17,
+  "passed": 17,
+  "failed": 0,
+  "results": [
+    {
+      "name": "Facebook Pixel ID Validation - Valid IDs",
+      "passed": true,
+      "message": "Valid Pixel IDs correctly identified: 3/3"
+    },
+    {
+      "name": "Facebook Pixel ID Validation - Invalid IDs",
+      "passed": true,
+      "message": "Invalid Pixel IDs correctly rejected: 6/6"
+    },
+    {
+      "name": "Facebook Pixel Configuration Extraction",
+      "passed": true,
+      "message": "Enabled: true, Pixel ID: 123456789012345"
+    },
+    {
+      "name": "Facebook Pixel Event Configuration Extraction",
+      "passed": true,
+      "message": "PageView: true, ViewContent: true, Search: false, Contact: true, Lead: false"
+    },
+    {
+      "name": "Facebook Pixel Enabled State Handling",
+      "passed": true,
+      "message": "Correctly handled 6/6 enabled state configurations"
+    },
+    {
+      "name": "Standard Facebook Pixel Events Configuration",
+      "passed": true,
+      "message": "PageView: true, ViewContent: true, Search: true, Contact: false, Lead: true"
+    },
+    {
+      "name": "Custom Facebook Pixel Events Configuration",
+      "passed": true,
+      "message": "Enabled custom events: Newsletter, Download"
+    },
+    {
+      "name": "Event Parameter Validation",
+      "passed": true,
+      "message": "Valid parameters: 4/4 events"
+    },
+    {
+      "name": "Do Not Track Configuration Processing",
+      "passed": true,
+      "message": "Correctly processed 5/5 DNT configurations"
+    },
+    {
+      "name": "Privacy Settings Validation",
+      "passed": true,
+      "message": "Pixel enabled: true, Respects DNT: true, Cookie consent: true, Conditional loading: true"
+    },
+    {
+      "name": "Conditional Loading Logic",
+      "passed": true,
+      "message": "Correct loading decisions: 4/4 scenarios"
+    },
+    {
+      "name": "Cookie Consent Integration Configuration",
+      "passed": true,
+      "message": "Consent required: true, Needs handling: true, Events: cookieConsentGiven, cookieConsentRevoked"
+    },
+    {
+      "name": "Consent Management Configuration",
+      "passed": true,
+      "message": "Correct consent handling: 4/4 scenarios"
+    },
+    {
+      "name": "Data Processing Transparency Configuration",
+      "passed": true,
+      "message": "Pixel ID: 123456789012345, Data points: 3, Transparency required: true"
+    },
+    {
+      "name": "Required Field Validation",
+      "passed": true,
+      "message": "Correct validation: 5/5 configurations"
+    },
+    {
+      "name": "Data Type Validation and Normalization",
+      "passed": true,
+      "message": "Correctly normalized 6/6 configurations"
+    },
+    {
+      "name": "Default Value Handling",
+      "passed": true,
+      "message": "Default values correctly applied to all configurations"
+    }
+  ],
+  "requirements": {
+    "7.1": "Facebook Pixel Integration - Configuration parsing, event tracking setup, and initialization logic",
+    "7.5": "Privacy compliance and GDPR requirements - Do Not Track, cookie consent, and data processing transparency"
+  }
+}

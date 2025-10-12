@@ -1,0 +1,154 @@
+{{/*
+  Mermaid.js Loader Partial
+  
+  This partial conditionally loads Mermaid.js library and initializes it
+  only when Mermaid diagrams are present on the page.
+  
+  Usage: Include in head or before closing body tag
+  {{ partial "diagrams/mermaid-loader.html" . }}
+*/}}
+
+{{- $mermaidConfig := site.Params.mermaid | default dict -}}
+{{- $enabled := $mermaidConfig.enabled | default true -}}
+{{- $hasMermaid := .Page.Store.Get "hasMermaid" -}}
+
+{{- if and $enabled $hasMermaid -}}
+{{/* Mermaid configuration */}}
+{{- $theme := $mermaidConfig.theme | default "default" -}}
+{{- $securityLevel := $mermaidConfig.securityLevel | default "loose" -}}
+{{- $startOnLoad := $mermaidConfig.startOnLoad | default true -}}
+
+{{/* Load Mermaid.js from CDN */}}
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js" 
+        crossorigin="anonymous" 
+        async></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait for Mermaid to be available
+  function initializeMermaid() {
+    if (typeof mermaid === 'undefined') {
+      setTimeout(initializeMermaid, 100);
+      return;
+    }
+    
+    try {
+      // Base configuration
+      const config = {
+        theme: '{{ $theme }}',
+        startOnLoad: {{ $startOnLoad }},
+        securityLevel: '{{ $securityLevel }}',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          diagramMarginX: 50,
+          diagramMarginY: 10,
+          actorMargin: 50,
+          width: 150,
+          height: 65,
+          boxMargin: 10,
+          boxTextMargin: 5,
+          noteMargin: 10,
+          messageMargin: 35,
+          mirrorActors: true,
+          bottomMarginAdj: 1,
+          useMaxWidth: true
+        },
+        gantt: {
+          titleTopMargin: 25,
+          barHeight: 20,
+          fontsize: 11,
+          sidePadding: 75,
+          leftPadding: 75,
+          gridLineStartPadding: 35,
+          fontSize: 11,
+          numberSectionStyles: 4
+        },
+        themeVariables: {
+          primaryColor: '{{ $mermaidConfig.primaryColor | default "#ff6b6b" }}',
+          primaryTextColor: '{{ $mermaidConfig.primaryTextColor | default "#fff" }}',
+          primaryBorderColor: '{{ $mermaidConfig.primaryBorderColor | default "#ff4757" }}',
+          lineColor: '{{ $mermaidConfig.lineColor | default "#333333" }}',
+          secondaryColor: '{{ $mermaidConfig.secondaryColor | default "#006100" }}',
+          tertiaryColor: '{{ $mermaidConfig.tertiaryColor | default "#fff" }}'
+        }
+      };
+      
+      // Initialize Mermaid with configuration
+      mermaid.initialize(config);
+      
+      // Re-render diagrams
+      mermaid.init(undefined, '.mermaid');
+      
+      console.log('Mermaid.js initialized successfully');
+      
+    } catch (error) {
+      console.error('Error initializing Mermaid.js:', error);
+      
+      // Fallback: show error message in diagram containers
+      const mermaidContainers = document.querySelectorAll('.mermaid-container');
+      mermaidContainers.forEach(function(container) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'mermaid-error p-4 bg-red-50 border border-red-200 rounded-lg text-red-800';
+        errorDiv.innerHTML = '<strong>Diagram Error:</strong> Failed to render Mermaid diagram. Please check the syntax.';
+        container.appendChild(errorDiv);
+      });
+    }
+  }
+  
+  initializeMermaid();
+});
+</script>
+
+{{/* Add CSS for better diagram styling */}}
+<style>
+.mermaid-container {
+  margin: 1.5rem 0;
+}
+
+.mermaid-diagram {
+  position: relative;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.mermaid {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mermaid-diagram {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mermaid-container {
+    margin: 1rem -1rem;
+  }
+  
+  .mermaid-diagram {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .mermaid-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+</style>
+
+{{- end -}}

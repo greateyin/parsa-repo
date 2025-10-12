@@ -28,13 +28,18 @@
       
       <!-- Enhanced Search, Language Switcher and Mobile Menu Actions -->
       <div class="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 interactive-spacing">
-        <!-- Enhanced Search Icon -->
+        <!-- Enhanced Search Widget (Desktop) -->
+        <div class="hidden lg:block">
+          {{ partial "search/search-widget.html" (dict "context" . "compact" true) }}
+        </div>
+        
+        <!-- Enhanced Search Icon (Mobile) -->
         <a href="{{ "/search" | relLangURL }}" 
-           class="touch-target p-2.5 lg:p-3 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-all duration-200 group hover-scale micro-bounce focus-enhanced"
+           class="lg:hidden touch-target p-2.5 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-all duration-200 group hover-scale micro-bounce focus-enhanced"
            aria-label="{{ i18n "searchArticles" | default "Search articles" }}"
            title="{{ i18n "search" | default "Search" }}"
            tabindex="0">
-          <svg class="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform duration-200 micro-wiggle" 
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-200 micro-wiggle" 
                fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>

@@ -1,15 +1,45 @@
 {{/*
-  Configuration Validation Helper
-  Validates theme configuration parameters and provides defaults
+  Enhanced Configuration Validation Helper
+  Validates theme configuration parameters, provides defaults, and comprehensive error handling
+  
+  Features:
+  - Validates all analytics and advertising configurations
+  - Provides sensible defaults for missing values
+  - Comprehensive error messaging and warnings
+  - Format validation for IDs and configuration values
+  - Privacy compliance validation
+  
   Usage: {{ partial "helpers/config-validation.html" . }}
+  
+  Returns: Stores validated configuration in .Page.Store under "validatedConfig" key
 */}}
+
+{{/* Helper function to validate Google Analytics ID format */}}
+{{ $validateGAID := false }}
+{{ $gaIDPattern := "^G-[A-Z0-9]{10}$" }}
+
+{{/* Helper function to validate AdSense client ID format */}}
+{{ $validateAdSenseClient := false }}
+{{ $adSenseClientPattern := "^ca-pub-[0-9]{16}$" }}
+
+{{/* Helper function to validate Facebook Pixel ID format */}}
+{{ $validateFBPixelID := false }}
+{{ $fbPixelIDPattern := "^[0-9]{15,16}$" }}
 
 {{/* Google Analytics Configuration Validation */}}
 {{ $gaConfig := dict }}
-{{ if site.Config.Services.GoogleAnalytics.ID }}
-  {{ $gaConfig = merge $gaConfig (dict "enabled" true "id" site.Config.Services.GoogleAnalytics.ID) }}
+{{ $gaID := site.Config.Services.GoogleAnalytics.ID | default "" }}
+
+{{ if $gaID }}
+  {{/* Validate GA ID format */}}
+  {{ if findRE $gaIDPattern $gaID }}
+    {{ $gaConfig = merge $gaConfig (dict "enabled" true "id" $gaID "valid" true) }}
+  {{ else }}
+    {{ $gaConfig = merge $gaConfig (dict "enabled" false "id" $gaID "valid" false) }}
+    {{ errorf "Invalid Google Analytics ID format: %s. Expected format: G-XXXXXXXXXX (e.g., G-JKSVCT23D1)" $gaID }}
+  {{ end }}
 {{ else }}
-  {{ $gaConfig = merge $gaConfig (dict "enabled" false "id" "") }}
+  {{ $gaConfig = merge $gaConfig (dict "enabled" false "id" "" "valid" true) }}
 {{ end }}
 
 {{/* AdSense Configuration Validation */}}
@@ -28,6 +58,27 @@
 }}
 {{ $adsenseConfig = merge $adsenseDefaults $adsenseConfig }}
 
+{{/* Validate AdSense client ID format if provided */}}
+{{ if and $adsenseConfig.enabled $adsenseConfig.client }}
+  {{ if not (findRE $adSenseClientPattern $adsenseConfig.client) }}
+    {{ errorf "Invalid AdSense client ID format: %s. Expected format: ca-pub-XXXXXXXXXXXXXXXX (16 digits)" $adsenseConfig.client }}
+    {{ $adsenseConfig = merge $adsenseConfig (dict "enabled" false "valid" false) }}
+  {{ else }}
+    {{ $adsenseConfig = merge $adsenseConfig (dict "valid" true) }}
+  {{ end }}
+{{ else if $adsenseConfig.enabled }}
+  {{ $adsenseConfig = merge $adsenseConfig (dict "valid" false) }}
+{{ else }}
+  {{ $adsenseConfig = merge $adsenseConfig (dict "valid" true) }}
+{{ end }}
+
+{{/* Validate AdSense slot IDs if provided */}}
+{{ if and $adsenseConfig.enabled $adsenseConfig.inArticleSlot }}
+  {{ if not (findRE "^[0-9]{10}$" $adsenseConfig.inArticleSlot) }}
+    {{ warnf "AdSense in-article slot ID may be invalid: %s. Expected format: 10 digits" $adsenseConfig.inArticleSlot }}
+  {{ end }}
+{{ end }}
+
 {{/* Facebook Pixel Configuration Validation */}}
 {{ $fbPixelConfig := site.Params.facebookPixel | default dict }}
 {{ $fbPixelDefaults := dict
@@ -42,10 +93,36 @@
 }}
 {{ $fbPixelConfig = merge $fbPixelDefaults $fbPixelConfig }}
 
+{{/* Validate Facebook Pixel ID format if provided */}}
+{{ if and $fbPixelConfig.enabled $fbPixelConfig.pixelId }}
+  {{ if not (findRE $fbPixelIDPattern $fbPixelConfig.pixelId) }}
+    {{ errorf "Invalid Facebook Pixel ID format: %s. Expected format: 15-16 digits" $fbPixelConfig.pixelId }}
+    {{ $fbPixelConfig = merge $fbPixelConfig (dict "enabled" false "valid" false) }}
+  {{ else }}
+    {{ $fbPixelConfig = merge $fbPixelConfig (dict "valid" true) }}
+  {{ end }}
+{{ else if $fbPixelConfig.enabled }}
+  {{ $fbPixelConfig = merge $fbPixelConfig (dict "valid" false) }}
+{{ else }}
+  {{ $fbPixelConfig = merge $fbPixelConfig (dict "valid" true) }}
+{{ end }}
+
 {{/* Google Custom Search Configuration Validation */}}
 {{ $gcsConfig := site.Params.gcs_engine_id | default dict }}
 {{ $gcsDefaults := dict "value" "" }}
 {{ $gcsConfig = merge $gcsDefaults $gcsConfig }}
+
+{{/* Validate Google Custom Search Engine ID format */}}
+{{ if $gcsConfig.value }}
+  {{ if not (findRE "^[a-f0-9]{17}$" $gcsConfig.value) }}
+    {{ warnf "Google Custom Search Engine ID may be invalid: %s. Expected format: 17 character hexadecimal string" $gcsConfig.value }}
+    {{ $gcsConfig = merge $gcsConfig (dict "valid" false) }}
+  {{ else }}
+    {{ $gcsConfig = merge $gcsConfig (dict "valid" true) }}
+  {{ end }}
+{{ else }}
+  {{ $gcsConfig = merge $gcsConfig (dict "valid" true) }}
+{{ end }}
 
 {{/* Mermaid Configuration Validation */}}
 {{ $mermaidConfig := site.Params.mermaid | default dict }}
@@ -55,6 +132,14 @@
 }}
 {{ $mermaidConfig = merge $mermaidDefaults $mermaidConfig }}
 
+{{/* Validate Mermaid theme */}}
+{{ $validMermaidThemes := slice "default" "dark" "forest" "neutral" "base" }}
+{{ if not (in $validMermaidThemes $mermaidConfig.theme) }}
+  {{ warnf "Invalid Mermaid theme: %s. Valid themes: %s. Using 'default' theme." $mermaidConfig.theme (delimit $validMermaidThemes ", ") }}
+  {{ $mermaidConfig = merge $mermaidConfig (dict "theme" "default") }}
+{{ end }}
+{{ $mermaidConfig = merge $mermaidConfig (dict "valid" true) }}
+
 {{/* Privacy Configuration Validation */}}
 {{ $privacyConfig := site.Params.privacy | default dict }}
 {{ $privacyDefaults := dict
@@ -62,6 +147,7 @@
   "cookieConsent" false
 }}
 {{ $privacyConfig = merge $privacyDefaults $privacyConfig }}
+{{ $privacyConfig = merge $privacyConfig (dict "valid" true) }}
 
 {{/* Performance Configuration Validation */}}
 {{ $performanceConfig := site.Params.performance | default dict }}
@@ -70,6 +156,7 @@
   "asyncScripts" true
 }}
 {{ $performanceConfig = merge $performanceDefaults $performanceConfig }}
+{{ $performanceConfig = merge $performanceConfig (dict "valid" true) }}
 
 {{/* Store validated configurations in page context */}}
 {{ .Page.Store.Set "validatedConfig" (dict
@@ -82,15 +169,41 @@
   "performance" $performanceConfig
 ) }}
 
-{{/* Configuration validation warnings */}}
+{{/* Configuration validation warnings and errors */}}
 {{ if and $adsenseConfig.enabled (not $adsenseConfig.client) }}
-  {{ warnf "AdSense is enabled but no client ID is configured. Please set params.adsense.client in your configuration." }}
+  {{ errorf "AdSense is enabled but no client ID is configured. Please set params.adsense.client in your configuration file. Example: params.adsense.client = \"ca-pub-1234567890123456\"" }}
 {{ end }}
 
 {{ if and $fbPixelConfig.enabled (not $fbPixelConfig.pixelId) }}
-  {{ warnf "Facebook Pixel is enabled but no pixel ID is configured. Please set params.facebookPixel.pixelId in your configuration." }}
+  {{ errorf "Facebook Pixel is enabled but no pixel ID is configured. Please set params.facebookPixel.pixelId in your configuration file. Example: params.facebookPixel.pixelId = \"123456789012345\"" }}
 {{ end }}
 
 {{ if and $gcsConfig.value (eq $gcsConfig.value "") }}
-  {{ warnf "Google Custom Search engine ID is empty. Please set params.gcs_engine_id.value in your configuration." }}
+  {{ warnf "Google Custom Search engine ID is empty. Please set params.gcs_engine_id.value in your configuration file if you want to use Google Custom Search." }}
+{{ end }}
+
+{{/* Privacy compliance warnings */}}
+{{ if and (or $gaConfig.enabled $fbPixelConfig.enabled) (not $privacyConfig.cookieConsent) }}
+  {{ warnf "Analytics tracking is enabled but cookie consent is disabled. Consider enabling params.privacy.cookieConsent for GDPR compliance." }}
+{{ end }}
+
+{{/* Performance optimization suggestions */}}
+{{ if and $adsenseConfig.enabled (not $performanceConfig.lazyLoadAds) }}
+  {{ warnf "AdSense is enabled but lazy loading is disabled. Consider enabling params.performance.lazyLoadAds for better performance." }}
+{{ end }}
+
+{{/* Configuration summary for debugging */}}
+{{ if site.IsServer }}
+  {{ $enabledServices := slice }}
+  {{ if $gaConfig.enabled }}{{ $enabledServices = $enabledServices | append "Google Analytics" }}{{ end }}
+  {{ if $adsenseConfig.enabled }}{{ $enabledServices = $enabledServices | append "AdSense" }}{{ end }}
+  {{ if $fbPixelConfig.enabled }}{{ $enabledServices = $enabledServices | append "Facebook Pixel" }}{{ end }}
+  {{ if $gcsConfig.value }}{{ $enabledServices = $enabledServices | append "Google Custom Search" }}{{ end }}
+  {{ if $mermaidConfig.enabled }}{{ $enabledServices = $enabledServices | append "Mermaid Diagrams" }}{{ end }}
+  
+  {{ if $enabledServices }}
+    {{ printf "Theme Analytics Enhancement: Enabled services: %s" (delimit $enabledServices ", ") | safeHTML }}
+  {{ else }}
+    {{ printf "Theme Analytics Enhancement: No external services configured" | safeHTML }}
+  {{ end }}
 {{ end }}

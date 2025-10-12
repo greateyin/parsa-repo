@@ -1,0 +1,83 @@
+{{/*
+  AdSense Head Partial
+  
+  This partial handles the loading of Google AdSense scripts in the document head.
+  It supports both auto ads and manual ad configuration with async loading
+  and performance optimization.
+  
+  Requirements: 2.1, 2.4, 8.1
+*/}}
+
+{{- $adsense := site.Params.adsense -}}
+{{- $privacy := site.Params.privacy | default dict -}}
+{{- $performance := site.Params.performance | default dict -}}
+
+{{- if and $adsense.enabled $adsense.client -}}
+  {{- /* Check Do Not Track preference */ -}}
+  {{- $respectDoNotTrack := $privacy.respectDoNotTrack | default false -}}
+  
+  {{- /* AdSense script loading with async optimization */ -}}
+  <script {{ if $performance.asyncScripts | default true }}async{{ end }} 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense.client }}"
+          crossorigin="anonymous"
+          {{ if $respectDoNotTrack }}data-respect-dnt="true"{{ end }}></script>
+  
+  {{- /* Auto ads configuration */ -}}
+  {{- if $adsense.autoAds -}}
+  <script>
+    {{- if $respectDoNotTrack -}}
+    // Check Do Not Track preference
+    var doNotTrack = false;
+    var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+    var doNotTrack = (dnt == "1" || dnt == "yes");
+    
+    if (!doNotTrack) {
+    {{- end -}}
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "{{ $adsense.client }}",
+        enable_page_level_ads: true
+        {{- if $adsense.autoAdsConfig -}}
+        {{- range $key, $value := $adsense.autoAdsConfig -}}
+        , {{ $key }}: {{ $value | jsonify }}
+        {{- end -}}
+        {{- end -}}
+      });
+    {{- if $respectDoNotTrack -}}
+    }
+    {{- end -}}
+  </script>
+  {{- end -}}
+  
+  {{- /* Preconnect to AdSense domains for performance */ -}}
+  {{- if $performance.asyncScripts | default true -}}
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net">
+  <link rel="preconnect" href="https://www.google.com">
+  {{- end -}}
+  
+  {{- /* Error handling and fallback */ -}}
+  <script>
+    // AdSense error handling
+    window.addEventListener('error', function(e) {
+      if (e.target && e.target.src && e.target.src.includes('googlesyndication.com')) {
+        console.warn('AdSense script failed to load:', e.target.src);
+        // Optional: Track AdSense loading failures
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'adsense_load_error', {
+            'error_message': 'Script load failure',
+            'script_src': e.target.src
+          });
+        }
+      }
+    });
+    
+    // Initialize adsbygoogle array if not already present
+    window.adsbygoogle = window.adsbygoogle || [];
+  </script>
+  
+{{- else -}}
+  {{- /* Debug information when AdSense is not configured */ -}}
+  {{- if hugo.IsServer -}}
+  <!-- AdSense not configured: enabled={{ $adsense.enabled }}, client={{ $adsense.client }} -->
+  {{- end -}}
+{{- end -}}

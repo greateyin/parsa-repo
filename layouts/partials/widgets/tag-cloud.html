@@ -1,0 +1,22 @@
+<!-- Tag Cloud Widget -->
+{{ if .Site.Taxonomies.tags }}
+<div class="bg-card border border-border rounded-lg p-6">
+  <h3 class="text-lg font-semibold mb-4 flex items-center">
+    <svg class="w-5 h-5 mr-2 text-primary" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+    </svg>
+    {{ i18n "tags" | default "Tags" }}
+  </h3>
+  <div class="flex flex-wrap gap-2">
+    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+      {{ $count := len $taxonomy.Pages }}
+      <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" 
+         class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
+         title="{{ $count }} {{ if eq $count 1 }}{{ i18n "article" | default "article" }}{{ else }}{{ i18n "articles" | default "articles" }}{{ end }}">
+        #{{ $name }}
+        <span class="ml-1 text-xs opacity-75">{{ $count }}</span>
+      </a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

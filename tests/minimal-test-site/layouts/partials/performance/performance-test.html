@@ -1,0 +1,40 @@
+{{/*
+  Performance Test Partial
+  
+  Simple test to verify performance optimization features are working
+*/}}
+
+<script>
+// Test performance optimization features
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    console.log('=== Performance Optimization Test ===');
+    
+    // Test async script loader
+    if (window.AsyncScriptLoader) {
+      console.log('✓ AsyncScriptLoader available');
+      console.log('Script loading status:', window.getScriptLoadingStatus());
+    } else {
+      console.log('✗ AsyncScriptLoader not available');
+    }
+    
+    // Test lazy ad loader
+    if (window.LazyAdLoader) {
+      console.log('✓ LazyAdLoader available');
+      console.log('Lazy ad status:', window.getLazyAdStatus());
+    } else {
+      console.log('✗ LazyAdLoader not available');
+    }
+    
+    // Test performance monitor
+    if (window.PerformanceMonitor) {
+      console.log('✓ PerformanceMonitor available');
+      console.log('Performance status:', window.getPerformanceStatus());
+    } else {
+      console.log('✗ PerformanceMonitor not available');
+    }
+    
+    console.log('=== End Performance Test ===');
+  }, 2000);
+});
+</script>

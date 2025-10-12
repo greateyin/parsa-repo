@@ -112,6 +112,13 @@
   <!-- SEO Configuration -->
   {{ partial "head/seo-config.html" . }}
   
+  <!-- Analytics and Advertising Head Scripts -->
+  {{ partial "analytics/analytics-manager.html" . }}
+  {{ partial "advertising/ad-manager.html" . }}
+  
+  <!-- Mermaid Diagram Support -->
+  {{ partial "diagrams/mermaid-loader.html" . }}
+  
   <!-- Additional head content -->
   {{ block "head" . }}{{ end }}
 </head>
@@ -184,6 +191,10 @@
   
   <!-- Performance monitoring -->
   {{ partial "performance/monitoring.html" . }}
+  
+  <!-- Performance Optimization Scripts -->
+  {{ partial "performance/async-script-loader.html" . }}
+  {{ partial "performance/lazy-ad-loader.html" . }}
   
   <!-- Accessibility testing panel (development only) -->
   {{ if not hugo.IsProduction }}

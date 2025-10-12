@@ -189,30 +189,46 @@ Your content here...
 
 ### Shortcodes
 
-The theme includes enhanced shortcodes for rich content:
+The theme includes enhanced versions of Hugo's built-in shortcodes plus custom shortcodes, all designed with privacy, performance, and accessibility in mind:
 
-#### Enhanced Figure
+#### Video Embeds
+```markdown
+{{< youtube id="dQw4w9WgXcQ" title="Video Title" >}}
+{{< vimeo id="147365861" title="Vimeo Video" >}}
+```
+
+#### Social Media (Privacy-Focused)
+```markdown
+{{< twitter user="username" id="1234567890" >}}
+{{< instagram id="BWNjjyYFxVx" >}}
+```
+
+#### Code and Development
+```markdown
+{{< gist username="spf13" id="7896402" >}}
+```
+
+#### Enhanced Content
 ```markdown
 {{< figure src="image.jpg" alt="Description" caption="Image caption" >}}
+{{< alert type="info" title="Note" >}}Important information{{< /alert >}}
 ```
 
-#### YouTube Embed
+#### Diagrams
 ```markdown
-{{< youtube "video-id" >}}
+{{< mermaid >}}
+graph TD
+    A[Start] --> B[End]
+{{< /mermaid >}}
 ```
 
-#### Image Gallery
-```markdown
-{{< gallery >}}
-{{< gallery-image src="image1.jpg" alt="Description 1" >}}
-{{< gallery-image src="image2.jpg" alt="Description 2" >}}
-{{< /gallery >}}
-```
+**Privacy Features:**
+- YouTube uses privacy-enhanced domain (`youtube-nocookie.com`)
+- Social media shortcodes support "simple mode" for maximum privacy
+- All embeds respect Hugo's privacy configuration
+- GDPR-compliant with consent management support
 
-#### Custom Button
-```markdown
-{{< button href="/contact" text="Contact Us" style="primary" >}}
-```
+For complete documentation, see the [Shortcodes Guide](docs/shortcodes.md).
 
 ## 🎨 Customization
 

@@ -1,0 +1,70 @@
+{{- /* Google Analytics 4 Integration Partial */ -}}
+{{- /* Requirements: 1.1, 1.2, 1.3, 1.4, 1.5 */ -}}
+
+{{- $ga := site.Config.Services.GoogleAnalytics -}}
+{{- $gaID := $ga.ID | default site.GoogleAnalyticsID -}}
+{{- $privacy := site.Config.Privacy.GoogleAnalytics | default dict -}}
+{{- $respectDNT := $privacy.RespectDoNotTrack | default true -}}
+{{- $anonymizeIP := $privacy.AnonymizeIP | default true -}}
+
+{{- /* Configuration validation */ -}}
+{{- if not $gaID -}}
+  {{- warnf "Google Analytics: No tracking ID configured. Set GoogleAnalyticsID or services.googleAnalytics.ID in your Hugo configuration." -}}
+{{- else if not (strings.HasPrefix $gaID "G-") -}}
+  {{- warnf "Google Analytics: Invalid tracking ID format '%s'. GA4 tracking IDs should start with 'G-'." $gaID -}}
+{{- else -}}
+
+{{- /* Generate the Google Analytics tracking code */ -}}
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ $gaID }}"></script>
+<script>
+  // Privacy and Do Not Track handling
+  var doNotTrack = false;
+  {{- if $respectDNT }}
+  var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+  var doNotTrack = (dnt == "1" || dnt == "yes");
+  {{- end }}
+  
+  if (!doNotTrack) {
+    // Initialize Google Analytics
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    
+    // Configure GA4 with privacy settings
+    gtag('config', '{{ $gaID }}', {
+      {{- if $anonymizeIP }}
+      'anonymize_ip': true,
+      {{- end }}
+      {{- if $respectDNT }}
+      'client_storage': 'none',
+      {{- end }}
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+    
+    {{- /* Enhanced measurement events */ -}}
+    {{- if $ga.EnableEnhancedMeasurement | default true }}
+    // Enhanced measurement is enabled by default in GA4
+    gtag('config', '{{ $gaID }}', {
+      'enhanced_measurements': {
+        'scrolls': true,
+        'outbound_clicks': true,
+        'site_search': true,
+        'video_engagement': true,
+        'file_downloads': true
+      }
+    });
+    {{- end }}
+  } else {
+    console.log('Google Analytics: Tracking disabled due to Do Not Track setting');
+  }
+</script>
+
+{{- /* Noscript fallback for privacy compliance */ -}}
+<noscript>
+  <img src="https://www.googletagmanager.com/ns.html?id={{ $gaID }}" 
+       style="display:none;visibility:hidden" 
+       alt="Google Analytics" />
+</noscript>
+
+{{- end -}}

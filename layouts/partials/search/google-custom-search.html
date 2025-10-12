@@ -1,0 +1,165 @@
+{{/*
+  Google Custom Search Engine Integration
+  Implements Google Custom Search with fallback to local search
+  Usage: {{ partial "search/google-custom-search.html" . }}
+  
+  Requirements: 3.1, 3.2, 3.4
+  - 3.1: When GCS engine ID is configured, integrate Google Custom Search functionality
+  - 3.2: Provide search input field using configured Google Custom Search Engine
+  - 3.4: Fall back to existing local search functionality when no engine ID provided
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+{{ $gcsId := $config.googleCustomSearch.value }}
+
+{{/* Check if Google Custom Search is configured */}}
+{{ if $gcsId }}
+  {{/* Google Custom Search Implementation */}}
+  <div class="google-custom-search-container">
+    {{/* Custom search element that Google will replace */}}
+    <div class="gcse-search" 
+         data-enableHistory="true" 
+         data-autoCompleteMaxCompletions="5"
+         data-autoCompleteValidLanguages="en"
+         data-enableAutoComplete="true"
+         data-queryParameterName="q"
+         data-resultsUrl="{{ .Site.BaseURL }}search/"
+         data-newWindow="false"
+         data-linkTarget="_self"></div>
+    
+    {{/* Load Google Custom Search script asynchronously */}}
+    <script>
+      (function() {
+        var cx = '{{ $gcsId }}';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+        
+        // Set up error handling for GCS loading failure
+        gcse.onerror = function() {
+          console.warn('Google Custom Search failed to load, falling back to local search');
+          // Hide GCS container and show local search fallback
+          var gcsContainer = document.querySelector('.google-custom-search-container');
+          if (gcsContainer) {
+            gcsContainer.style.display = 'none';
+          }
+          var fallbackContainer = document.querySelector('.local-search-fallback');
+          if (fallbackContainer) {
+            fallbackContainer.style.display = 'block';
+          }
+        };
+        
+        // Monitor GCS initialization
+        var checkGCSReady = function() {
+          if (typeof google !== 'undefined' && google.search && google.search.cse) {
+            console.log('Google Custom Search initialized successfully');
+            // Hide fallback since GCS loaded successfully
+            var fallbackContainer = document.querySelector('.local-search-fallback');
+            if (fallbackContainer) {
+              fallbackContainer.style.display = 'none';
+            }
+          } else {
+            // Retry check after a short delay
+            setTimeout(checkGCSReady, 100);
+          }
+        };
+        
+        // Start monitoring after script loads
+        gcse.onload = function() {
+          setTimeout(checkGCSReady, 100);
+        };
+      })();
+    </script>
+  </div>
+{{ end }}
+
+{{/* Local Search Fallback */}}
+<div class="local-search-fallback" {{ if $gcsId }}style="display: none;"{{ end }}>
+  {{/* Fallback to local search implementation */}}
+  <div class="search-form">
+    <form action="{{ .Site.BaseURL }}search/" method="get">
+      <div class="search-input-group">
+        <input type="search" 
+               name="s" 
+               id="search-query" 
+               placeholder="{{ i18n "search_placeholder" | default "Search..." }}"
+               class="form-control search-input"
+               autocomplete="off"
+               {{ if $gcsId }}aria-label="Local search fallback"{{ else }}aria-label="Search"{{ end }}>
+        <button type="submit" class="btn btn-primary search-button" aria-label="{{ i18n "search_button" | default "Search" }}">
+          <i class="ti-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  {{/* Local search results container */}}
+  <div id="search-results" class="search-results" style="display: none;">
+    <div class="search-results-header">
+      <h3 class="search-results-title">{{ i18n "search_results" | default "Search Results" }}</h3>
+      <div class="search-results-count"></div>
+    </div>
+    <div class="search-results-list"></div>
+  </div>
+  
+  {{/* Load local search scripts only when needed */}}
+  {{ if not $gcsId }}
+    {{/* Load local search dependencies */}}
+    <script src="{{ "plugins/search/fuse.min.js" | relURL }}"></script>
+    <script src="{{ "plugins/search/mark.js" | relURL }}"></script>
+    <script src="{{ "plugins/search/search.js" | relURL }}"></script>
+    
+    {{/* Initialize local search */}}
+    <script>
+      // Set up local search configuration
+      window.localSearchConfig = {
+        indexURL: "{{ .Site.BaseURL }}index.json",
+        baseURL: "{{ .Site.BaseURL }}",
+        summaryInclude: 60,
+        fuseOptions: {
+          shouldSort: true,
+          includeMatches: true,
+          threshold: 0.0,
+          tokenize: true,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            {name: "title", weight: 0.8},
+            {name: "contents", weight: 0.5},
+            {name: "tags", weight: 0.3},
+            {name: "categories", weight: 0.3}
+          ]
+        }
+      };
+    </script>
+  {{ end }}
+</div>
+
+{{/* Accessibility and SEO enhancements */}}
+<script>
+  // Enhance accessibility for search functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add ARIA live region for search results announcements
+    var liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.className = 'sr-only search-announcements';
+    document.body.appendChild(liveRegion);
+    
+    // Announce search method to screen readers
+    var searchMethod = {{ if $gcsId }}'Google Custom Search'{{ else }}'Local Search'{{ end }};
+    liveRegion.textContent = 'Search powered by ' + searchMethod;
+    
+    // Clear announcement after 3 seconds
+    setTimeout(function() {
+      liveRegion.textContent = '';
+    }, 3000);
+  });
+</script>

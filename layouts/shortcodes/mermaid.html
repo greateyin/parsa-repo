@@ -1,0 +1,63 @@
+{{/*
+  Mermaid.js Shortcode
+  
+  This shortcode allows explicit embedding of Mermaid diagrams with optional parameters.
+  
+  Usage:
+  {{< mermaid >}}
+  graph TD
+    A[Start] --> B[Process]
+    B --> C[End]
+  {{< /mermaid >}}
+  
+  With parameters:
+  {{< mermaid class="custom-class" theme="dark" >}}
+  sequenceDiagram
+    Alice->>Bob: Hello Bob, how are you?
+    Bob-->>John: How about you John?
+  {{< /mermaid >}}
+*/}}
+
+{{- $mermaidConfig := site.Params.mermaid | default dict -}}
+{{- $enabled := $mermaidConfig.enabled | default true -}}
+
+{{- if $enabled -}}
+{{/* Get shortcode parameters */}}
+{{- $class := .Get "class" | default "" -}}
+{{- $theme := .Get "theme" | default ($mermaidConfig.theme | default "default") -}}
+{{- $id := .Get "id" | default (printf "mermaid-%d" now.Unix) -}}
+
+{{/* Validate that content is provided */}}
+{{- if not .Inner -}}
+  {{- errorf "Mermaid shortcode requires diagram content. Usage: {{< mermaid >}}diagram content{{< /mermaid >}}" -}}
+{{- end -}}
+
+<div class="mermaid-container my-6 {{ $class }}">
+  <div class="mermaid-diagram bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto">
+    <pre class="mermaid text-center" 
+         id="{{ $id }}"
+         {{- if ne $theme ($mermaidConfig.theme | default "default") }} data-theme="{{ $theme }}"{{ end -}}>
+      {{- .Inner | htmlEscape | safeHTML -}}
+    </pre>
+  </div>
+</div>
+
+{{/* Store that this page has Mermaid diagrams for conditional script loading */}}
+{{- .Page.Store.Set "hasMermaid" true -}}
+
+{{/* Store theme preference if different from global config */}}
+{{- if ne $theme ($mermaidConfig.theme | default "default") -}}
+  {{- $themes := .Page.Store.Get "mermaidThemes" | default slice -}}
+  {{- $themes = $themes | append $theme -}}
+  {{- .Page.Store.Set "mermaidThemes" $themes -}}
+{{- end -}}
+
+{{- else -}}
+{{/* Fallback display when Mermaid is disabled */}}
+<div class="mermaid-disabled my-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+  <p class="text-yellow-800 dark:text-yellow-200 text-sm mb-2">
+    <strong>Mermaid diagram (disabled):</strong>
+  </p>
+  <pre class="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto"><code>{{- .Inner | htmlEscape -}}</code></pre>
+</div>
+{{- end -}}

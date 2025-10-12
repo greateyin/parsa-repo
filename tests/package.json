@@ -6,6 +6,10 @@
   "scripts": {
     "test": "node run-all-tests.js",
     "test:hugo": "node hugo-template-tests.js",
+    "test:analytics": "node analytics-configuration-tests.js",
+    "test:analytics-unit": "node analytics-config-unit-tests.js",
+    "test:facebook-pixel": "node facebook-pixel-unit-tests.js",
+    "test:analytics-all": "node run-analytics-tests.js",
     "test:accessibility": "node accessibility-tests.js",
     "test:performance": "node performance-tests.js",
     "test:visual": "backstop test",

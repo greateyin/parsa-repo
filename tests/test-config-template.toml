@@ -1,0 +1,34 @@
+# Test Configuration Template
+baseURL = "https://example.com"
+languageCode = "en-us"
+title = "Test Site"
+
+# Hugo Modules
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.147.2"
+
+# Taxonomies
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+# Output formats
+[outputs]
+  home = ["HTML"]
+  section = ["HTML"]
+
+# Markup settings
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# Theme parameters
+[params]
+  description = "Test site for analytics configuration"
+  
+  # Author info (as table to avoid conflicts)
+  [params.author]
+    name = "Test Author"

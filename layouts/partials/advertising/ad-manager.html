@@ -1,82 +1,231 @@
 {{/*
-  Advertising Manager
-  Coordinates all advertising services and ad placements
-  Usage: {{ partial "advertising/ad-manager.html" . }}
+  Ad Manager Partial
+  
+  This partial coordinates all advertising services and ad placements.
+  It handles configuration-driven ad positioning, fallback handling,
+  and integration with privacy settings.
+  
+  Parameters:
+  - .position: Specific ad position to render (optional)
+  - .context: Page context for ad targeting
+  
+  Requirements: 2.1, 2.4, 6.2
 */}}
 
-{{/* Load validated configuration */}}
-{{ partial "helpers/config-validation.html" . }}
-{{ $config := .Page.Store.Get "validatedConfig" }}
+{{- $adsense := site.Params.adsense -}}
+{{- $privacy := site.Params.privacy | default dict -}}
+{{- $performance := site.Params.performance | default dict -}}
+{{- $position := .position -}}
+{{- $context := .context | default "general" -}}
 
-{{/* AdSense Integration */}}
-{{ if $config.adsense.enabled }}
-  {{/* AdSense will be loaded conditionally based on consent */}}
-  <script>
-    // Load AdSense only if advertising is allowed
-    if (window.ThemePrivacy && window.ThemePrivacy.canShowAds()) {
-      // AdSense loading will be implemented in task 4
-      console.log('Google AdSense: Ready to load (implementation pending)');
-    } else {
-      console.log('Google AdSense: Blocked by privacy settings');
-    }
-  </script>
-{{ end }}
+{{- if $adsense.enabled -}}
 
-{{/* Ad placement management */}}
-<script>
-  window.ThemeAds = window.ThemeAds || {};
+{{- /* Ad placement configuration */ -}}
+{{- $placements := $adsense.placements | default dict -}}
+
+{{- /* Define ad slots for different positions */ -}}
+{{- $adSlots := dict 
+  "header" ($adsense.headerSlot | default $adsense.inArticleSlot)
+  "sidebar" ($adsense.sidebarSlot | default $adsense.inArticleSlot)
+  "footer" ($adsense.footerSlot | default $adsense.inArticleSlot)
+  "inContent" ($adsense.inArticleSlot)
+  "beforeContent" ($adsense.beforeContentSlot | default $adsense.inArticleSlot)
+  "afterContent" ($adsense.afterContentSlot | default $adsense.inArticleSlot)
+-}}
+
+{{- /* Render specific position or all enabled positions */ -}}
+{{- if $position -}}
+  {{- /* Render single position */ -}}
+  {{- $enabled := index $placements $position -}}
+  {{- $slot := index $adSlots $position -}}
   
-  // Ad placement registry
-  window.ThemeAds.placements = [];
-  
-  // Register an ad placement
-  window.ThemeAds.registerPlacement = function(placement) {
-    window.ThemeAds.placements.push(placement);
-  };
-  
-  // Initialize ads based on privacy settings
-  window.ThemeAds.init = function() {
-    if (!window.ThemePrivacy || !window.ThemePrivacy.canShowAds()) {
-      console.log('Ads blocked by privacy settings');
-      return;
-    }
+  {{- if and $enabled $slot -}}
+    {{- $adConfig := dict 
+      "slot" $slot
+      "position" $position
+      "class" (printf "ad-%s" $position)
+      "lazy" (and ($performance.lazyLoadAds | default true) (ne $position "header"))
+    -}}
     
-    console.log('Ad Manager initialized with', window.ThemeAds.placements.length, 'placements');
-  };
+    {{- partial "advertising/adsense-display.html" $adConfig -}}
+  {{- end -}}
   
-  // Auto-initialize on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', window.ThemeAds.init);
-  } else {
-    window.ThemeAds.init();
-  }
-</script>
-
-{{ if $config.performance.lazyLoadAds }}
-{{/* Lazy loading setup for ads */}}
-<script>
-  // Intersection Observer for lazy loading ads
-  window.ThemeAds.lazyLoader = null;
+{{- else -}}
+  {{- /* Include lazy ad loader */ -}}
+  {{- if $performance.lazyLoadAds | default true -}}
+    {{- partial "performance/lazy-ad-loader.html" . -}}
+  {{- end -}}
   
-  window.ThemeAds.setupLazyLoading = function() {
-    if ('IntersectionObserver' in window) {
-      window.ThemeAds.lazyLoader = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            var adElement = entry.target;
-            // Lazy load implementation will be completed in task 9
-            console.log('Ad element entered viewport:', adElement);
+  {{- /* Initialize ad management system */ -}}
+  <script>
+    // Initialize AdSense Ad Manager
+    window.AdSenseManager = window.AdSenseManager || {
+      config: {
+        client: '{{ $adsense.client }}',
+        autoAds: {{ $adsense.autoAds | default false }},
+        lazyLoad: {{ $performance.lazyLoadAds | default true }},
+        respectDNT: {{ $privacy.respectDoNotTrack | default false }}
+      },
+      placements: {{ $placements | jsonify }},
+      slots: {{ $adSlots | jsonify }},
+      initialized: false,
+      
+      // Initialize the ad manager
+      init: function() {
+        if (this.initialized) return;
+        
+        {{- if $privacy.respectDoNotTrack -}}
+        // Check Do Not Track preference
+        var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+        var doNotTrack = (dnt == "1" || dnt == "yes");
+        
+        if (doNotTrack) {
+          console.log('AdSense: Disabled due to Do Not Track preference');
+          this.hideAllAds();
+          return;
+        }
+        {{- end -}}
+        
+        {{- if $privacy.cookieConsent -}}
+        // Check cookie consent
+        if (typeof window.ThemePrivacy !== 'undefined' && !window.ThemePrivacy.canShowAds()) {
+          console.log('AdSense: Disabled due to privacy settings');
+          this.hideAllAds();
+          return;
+        }
+        {{- end -}}
+        
+        this.initialized = true;
+        this.setupErrorHandling();
+        this.trackAdPerformance();
+        
+        console.log('AdSense Manager initialized with', Object.keys(this.placements).length, 'placement configurations');
+      },
+      
+      // Hide all ads when disabled
+      hideAllAds: function() {
+        var adContainers = document.querySelectorAll('.ad-container');
+        adContainers.forEach(function(container) {
+          container.style.display = 'none';
+        });
+      },
+      
+      // Setup error handling for ads
+      setupErrorHandling: function() {
+        var self = this;
+        
+        // Monitor AdSense errors
+        window.addEventListener('error', function(e) {
+          if (e.target && e.target.src && e.target.src.includes('googlesyndication.com')) {
+            console.warn('AdSense script error:', e.target.src);
+            
+            // Track error in analytics
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'adsense_error', {
+                'error_type': 'script_load',
+                'error_message': e.message || 'Script load failure'
+              });
+            }
           }
         });
-      }, {
-        rootMargin: '50px'
+        
+        // Monitor ad blocking
+        setTimeout(function() {
+          if (typeof adsbygoogle === 'undefined' || !window.adsbygoogle) {
+            console.warn('AdSense may be blocked by ad blocker');
+            
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'adsense_blocked', {
+                'block_type': 'script_unavailable'
+              });
+            }
+          }
+        }, 3000);
+      },
+      
+      // Track ad performance
+      trackAdPerformance: function() {
+        if (typeof gtag === 'undefined') return;
+        
+        // Track ad manager initialization
+        gtag('event', 'adsense_manager_init', {
+          'placements_count': Object.keys(this.placements).length,
+          'auto_ads': this.config.autoAds,
+          'lazy_load': this.config.lazyLoad
+        });
+      },
+      
+      // Mark script as loaded (called by AsyncScriptLoader)
+      markScriptLoaded: function() {
+        console.log('AdSense: Script loaded successfully');
+        
+        // Initialize lazy loading if available
+        if (window.LazyAdLoader) {
+          window.LazyAdLoader.registerLazyAds();
+        }
+      },
+      
+      // Refresh ads (for SPA navigation)
+      refresh: function() {
+        if (!this.initialized) return;
+        
+        try {
+          if (window.adsbygoogle) {
+            window.adsbygoogle.forEach(function(ad) {
+              if (ad && typeof ad.refresh === 'function') {
+                ad.refresh();
+              }
+            });
+          }
+        } catch (e) {
+          console.warn('AdSense refresh failed:', e);
+        }
+      }
+    };
+    
+    // Auto-initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        window.AdSenseManager.init();
       });
+    } else {
+      window.AdSenseManager.init();
     }
-  };
+    
+    // Handle page navigation for SPA
+    window.addEventListener('popstate', function() {
+      if (window.AdSenseManager) {
+        window.AdSenseManager.refresh();
+      }
+    });
+  </script>
   
-  // Initialize lazy loading
-  document.addEventListener('DOMContentLoaded', function() {
-    window.ThemeAds.setupLazyLoading();
-  });
-</script>
-{{ end }}
+  {{- /* Render ads for enabled positions */ -}}
+  {{- range $pos, $enabled := $placements -}}
+    {{- if $enabled -}}
+      {{- $slot := index $adSlots $pos -}}
+      {{- if $slot -}}
+        {{- $adConfig := dict 
+          "slot" $slot
+          "position" $pos
+          "class" (printf "ad-%s" $pos)
+          "lazy" (and ($performance.lazyLoadAds | default true) (ne $pos "header"))
+        -}}
+        
+        <div class="ad-position ad-position-{{ $pos }}" data-ad-position="{{ $pos }}">
+          {{- partial "advertising/adsense-display.html" $adConfig -}}
+        </div>
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  
+{{- end -}}
+
+{{- else -}}
+  {{- /* Fallback when AdSense is disabled */ -}}
+  {{- if hugo.IsServer -}}
+  <div class="ad-manager-disabled">
+    <!-- AdSense Ad Manager: Disabled (adsense.enabled = false) -->
+  </div>
+  {{- end -}}
+{{- end -}}

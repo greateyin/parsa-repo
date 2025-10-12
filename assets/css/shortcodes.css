@@ -1,0 +1,255 @@
+/*
+Enhanced Shortcode Styles
+Consistent styling for all Hugo shortcodes with theme integration
+*/
+
+/* Base shortcode container styles */
+.youtube-embed,
+.vimeo-embed,
+.twitter-embed,
+.instagram-embed,
+.gist-embed,
+.twitter-simple,
+.instagram-simple {
+  margin: 2rem 0;
+  max-width: 100%;
+}
+
+/* Video embed containers */
+.youtube-embed .relative,
+.vimeo-embed .relative {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.youtube-embed:hover .relative,
+.vimeo-embed:hover .relative {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Dark mode support for video embeds */
+@media (prefers-color-scheme: dark) {
+  .youtube-embed .relative,
+  .vimeo-embed .relative {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-color: #475569;
+  }
+}
+
+/* Loading placeholder animations */
+.youtube-embed .animate-pulse,
+.vimeo-embed .animate-pulse,
+.gist-embed .animate-spin {
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Social media simple mode styling */
+.twitter-simple,
+.instagram-simple {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.twitter-simple:hover,
+.instagram-simple:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Button styling for social links */
+.twitter-simple a,
+.instagram-simple a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.twitter-simple a:hover,
+.instagram-simple a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Gist embed styling */
+.gist-embed {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gist-embed .gist-container {
+  min-height: 100px;
+}
+
+/* Override default gist styles for better theme integration */
+.gist-embed .gist {
+  font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace !important;
+}
+
+.gist-embed .gist .gist-file {
+  border: none !important;
+  margin: 0 !important;
+}
+
+.gist-embed .gist .gist-data {
+  background: #ffffff !important;
+  border: none !important;
+}
+
+.gist-embed .gist .highlight {
+  background: #ffffff !important;
+}
+
+.gist-embed .gist .blob-num,
+.gist-embed .gist .blob-code-inner {
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Dark mode gist styling */
+@media (prefers-color-scheme: dark) {
+  .gist-embed .gist .gist-data {
+    background: #1f2937 !important;
+  }
+  
+  .gist-embed .gist .highlight {
+    background: #1f2937 !important;
+  }
+  
+  .gist-embed .gist .pl-c {
+    color: #6b7280 !important;
+  }
+  
+  .gist-embed .gist .pl-k {
+    color: #8b5cf6 !important;
+  }
+  
+  .gist-embed .gist .pl-s {
+    color: #10b981 !important;
+  }
+}
+
+/* Responsive design for all shortcodes */
+@media (max-width: 768px) {
+  .youtube-embed,
+  .vimeo-embed,
+  .twitter-embed,
+  .instagram-embed,
+  .gist-embed,
+  .twitter-simple,
+  .instagram-simple {
+    margin: 1.5rem 0;
+  }
+  
+  .twitter-simple .flex,
+  .instagram-simple .flex {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .twitter-simple svg,
+  .instagram-simple svg {
+    margin: 0 auto 0.5rem auto;
+  }
+}
+
+/* Accessibility improvements */
+.youtube-embed iframe,
+.vimeo-embed iframe {
+  border: none;
+  outline: none;
+}
+
+.youtube-embed iframe:focus,
+.vimeo-embed iframe:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .twitter-simple,
+  .instagram-simple,
+  .gist-embed {
+    border: 2px solid #000000;
+  }
+  
+  .twitter-simple a,
+  .instagram-simple a {
+    border: 1px solid #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .youtube-embed .relative,
+  .vimeo-embed .relative,
+  .twitter-simple,
+  .instagram-simple {
+    transition: none;
+  }
+  
+  .youtube-embed:hover .relative,
+  .vimeo-embed:hover .relative,
+  .twitter-simple:hover,
+  .instagram-simple:hover {
+    transform: none;
+  }
+  
+  .animate-pulse,
+  .animate-spin {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .youtube-embed,
+  .vimeo-embed,
+  .twitter-embed,
+  .instagram-embed {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  .youtube-embed::after,
+  .vimeo-embed::after {
+    content: " (Video: " attr(data-title) ")";
+    font-style: italic;
+    color: #666;
+  }
+  
+  .twitter-simple::after,
+  .instagram-simple::after {
+    content: " (Social media post - view online)";
+    font-style: italic;
+    color: #666;
+  }
+}

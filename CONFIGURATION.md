@@ -1,569 +1,411 @@
-# Configuration Guide
+# Theme Configuration Guide
 
-This guide covers all configuration options available in the Parsa Redesigned Hugo theme.
+This document provides comprehensive configuration instructions for the Parsa Redesigned Hugo theme with analytics and advertising enhancements.
 
-## Table of Contents
+## Quick Start
 
-- [Basic Configuration](#basic-configuration)
-- [Design Settings](#design-settings)
-- [Feature Toggles](#feature-toggles)
-- [SEO Configuration](#seo-configuration)
-- [Social Media](#social-media)
-- [Performance Settings](#performance-settings)
-- [Multilingual Configuration](#multilingual-configuration)
-- [Menu Configuration](#menu-configuration)
-- [Content Configuration](#content-configuration)
-- [Advanced Settings](#advanced-settings)
-
-## Basic Configuration
-
-### Site Information
+### Minimal Configuration
 
 ```toml
 # hugo.toml
 baseURL = "https://yoursite.com"
 languageCode = "en-us"
 title = "Your Site Title"
-theme = "parsa-redesigned"
+
+# Optional: Add Google Analytics
+GoogleAnalyticsID = "G-XXXXXXXXXX"
 
 [params]
-  # Site description for SEO and social sharing
-  description = "Your site description for meta tags and social sharing"
-  
-  # Default author information
+  # Basic site information
+  description = "Your site description"
   author = "Your Name"
-  authorImage = "/images/author.jpg"
-  authorBio = "Brief author biography"
   
-  # Site logo
-  logo = "/images/logo.svg"
-  logoAlt = "Site logo description"
-  
-  # Favicon
+  # Enable Mermaid diagrams (enabled by default)
+  [params.mermaid]
+    enabled = true
+```
+
+### Complete Configuration Template
+
+```toml
+# hugo.toml - Complete configuration example
+baseURL = "https://yoursite.com"
+languageCode = "en-us"
+title = "Your Site Title"
+
+# Google Analytics 4 (optional)
+GoogleAnalyticsID = "G-XXXXXXXXXX"
+
+[params]
+  # Site Information
+  description = "Your site description"
+  author = "Your Name"
+  logo = "/images/logo.png"
   favicon = "/favicon.ico"
+  
+  # Google AdSense Configuration
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-XXXXXXXXXXXXXXXX"
+    inArticleSlot = "XXXXXXXXXX"
+    autoAds = false
+    
+    [params.adsense.placements]
+      sidebar = true
+      footer = true
+      inContent = true
+      
+  # Facebook Pixel Configuration
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "XXXXXXXXXXXXXXX"
+    
+    [params.facebookPixel.events]
+      pageView = true
+      search = true
+      contact = true
+      
+  # Google Custom Search
+  [params.gcs_engine_id]
+    value = "XXXXXXXXXXXXXXXXX"
+    
+  # Mermaid Diagrams
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  # Privacy Settings
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = true
+    
+    [params.privacy.consentBanner]
+      enabled = true
+      message = "We use cookies to improve your experience."
+      
+  # Performance Settings
+  [params.performance]
+    lazyLoadAds = true
+    asyncScripts = true
+    resourceHints = true
 ```
 
-### Hugo Module Configuration
+## Configuration Sections
+
+### 1. Analytics Configuration
+
+#### Google Analytics 4
 
 ```toml
-[module]
-  [module.hugoVersion]
-    extended = true
-    min = "0.147.2"
-    max = ""
-  
-  # Theme as Hugo module
-  [[module.imports]]
-    path = "github.com/yourusername/parsa-redesigned"
+# Basic GA4 setup
+GoogleAnalyticsID = "G-XXXXXXXXXX"
+
+# Privacy settings for GA4
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
 ```
 
-## Design Settings
+**Required:**
+- `GoogleAnalyticsID`: Your GA4 measurement ID (format: G-XXXXXXXXXX)
 
-### Color Scheme
+**Optional Privacy Settings:**
+- `privacy.googleAnalytics.respectDoNotTrack`: Respect browser Do Not Track (default: true)
+- `privacy.googleAnalytics.anonymizeIP`: Anonymize visitor IP addresses (default: true)
+
+### 2. Advertising Configuration
+
+#### Google AdSense
 
 ```toml
-[params.design]
-  # Primary brand colors
-  primaryColor = "#3b82f6"        # Blue-500
-  accentColor = "#8b5cf6"         # Violet-500
+[params.adsense]
+  enabled = true
+  client = "ca-pub-XXXXXXXXXXXXXXXX"
+  inArticleSlot = "XXXXXXXXXX"
+  autoAds = false
+  responsive = true
+  lazyLoad = true
   
-  # Background colors
-  backgroundColor = "#ffffff"      # White
-  cardBackground = "#f9fafb"      # Gray-50
-  
-  # Text colors
-  textColor = "#1f2937"           # Gray-800
-  mutedTextColor = "#6b7280"      # Gray-500
-  linkColor = "#3b82f6"           # Blue-500
-  
-  # Border and shadow colors
-  borderColor = "#e5e7eb"         # Gray-200
-  shadowColor = "rgba(0, 0, 0, 0.1)"
+  [params.adsense.placements]
+    header = false
+    sidebar = true
+    footer = true
+    inContent = true
+    beforeContent = false
+    afterContent = true
 ```
 
-### Typography
+**Configuration Options:**
+- `enabled`: Enable/disable AdSense (boolean)
+- `client`: Your AdSense client ID (format: ca-pub-XXXXXXXXXXXXXXXX)
+- `inArticleSlot`: Slot ID for in-article ads (10 digits)
+- `autoAds`: Enable Google Auto Ads (boolean)
+- `responsive`: Use responsive ad units (boolean, default: true)
+- `lazyLoad`: Enable lazy loading for ads (boolean, default: true)
+- `placements.*`: Enable ads in specific locations (boolean)
+
+#### Facebook Pixel
 
 ```toml
-[params.typography]
-  # Font families
-  headingFont = "Inter, system-ui, sans-serif"
-  bodyFont = "Inter, system-ui, sans-serif"
-  codeFont = "JetBrains Mono, Consolas, monospace"
+[params.facebookPixel]
+  enabled = true
+  pixelId = "XXXXXXXXXXXXXXX"
+  advancedMatching = false
   
-  # Font sizes (Tailwind CSS classes)
-  headingSize = "text-4xl"        # Main headings
-  subheadingSize = "text-2xl"     # Subheadings
-  bodySize = "text-base"          # Body text
-  smallSize = "text-sm"           # Small text
-  
-  # Line heights
-  headingLineHeight = "leading-tight"
-  bodyLineHeight = "leading-relaxed"
+  [params.facebookPixel.events]
+    pageView = true
+    viewContent = false
+    search = true
+    contact = true
+    lead = false
+    completeRegistration = false
 ```
 
-### Layout Settings
+**Configuration Options:**
+- `enabled`: Enable/disable Facebook Pixel (boolean)
+- `pixelId`: Your Facebook Pixel ID (15-16 digits)
+- `advancedMatching`: Enable advanced matching (boolean)
+- `events.*`: Enable specific event tracking (boolean)
+
+### 3. Search Configuration
+
+#### Google Custom Search Engine
 
 ```toml
-[params.layout]
-  # Container settings
-  maxWidth = "max-w-7xl"          # Maximum container width
-  contentWidth = "max-w-4xl"      # Content area width
-  
-  # Grid settings
-  articlesPerRow = 3              # Articles per row on desktop
-  articlesPerRowTablet = 2        # Articles per row on tablet
-  articlesPerRowMobile = 1        # Articles per row on mobile
-  
-  # Spacing
-  sectionSpacing = "py-16"        # Section vertical spacing
-  cardSpacing = "gap-8"           # Card grid spacing
+[params.gcs_engine_id]
+  value = "XXXXXXXXXXXXXXXXX"
+
+# Alternative configuration
+[params.googleCustomSearch]
+  engineId = "XXXXXXXXXXXXXXXXX"
+  enabled = true
+  autoComplete = true
+  enableHistory = true
+  maxCompletions = 5
+  fallbackToLocal = true
 ```
 
-## Feature Toggles
+**Configuration Options:**
+- `gcs_engine_id.value`: Your Google Custom Search Engine ID (17 hex characters)
+- `googleCustomSearch.engineId`: Alternative configuration path
+- `googleCustomSearch.enabled`: Enable/disable custom search (boolean)
+- `googleCustomSearch.autoComplete`: Enable search autocomplete (boolean)
+- `googleCustomSearch.enableHistory`: Enable search history (boolean)
+- `googleCustomSearch.maxCompletions`: Maximum autocomplete suggestions (number)
+- `googleCustomSearch.fallbackToLocal`: Fallback to local search (boolean)
 
-### Core Features
+### 4. Diagram Configuration
+
+#### Mermaid.js Diagrams
 
 ```toml
-[params.features]
-  # Search functionality
-  enableSearch = true
-  searchPlaceholder = "Search articles..."
-  searchMinLength = 2
+[params.mermaid]
+  enabled = true
+  theme = "default"
+  startOnLoad = true
+  securityLevel = "loose"
   
-  # Social sharing
-  enableSocialSharing = true
-  
-  # Animations and transitions
-  enableAnimations = true
-  respectReducedMotion = true
-  
-  # Dark mode (future feature)
-  enableDarkMode = false
-  
-  # Comments (if using external service)
-  enableComments = false
-  commentsProvider = "disqus"     # disqus, utterances, etc.
+  [params.mermaid.flowchart]
+    useMaxWidth = true
+    htmlLabels = true
 ```
 
-### Content Features
+**Configuration Options:**
+- `enabled`: Enable/disable Mermaid diagrams (boolean, default: true)
+- `theme`: Mermaid theme (options: default, dark, forest, neutral, base)
+- `startOnLoad`: Initialize diagrams on page load (boolean)
+- `securityLevel`: Security level for diagram rendering (string)
+- `flowchart.useMaxWidth`: Use maximum available width (boolean)
+- `flowchart.htmlLabels`: Enable HTML labels in flowcharts (boolean)
+
+### 5. Privacy Configuration
+
+#### Privacy and Consent Management
 
 ```toml
-[params.content]
-  # Article features
-  showReadTime = true
-  showWordCount = false
-  showAuthor = true
-  showDate = true
-  showCategories = true
-  showTags = true
+[params.privacy]
+  respectDoNotTrack = true
+  cookieConsent = false
+  anonymizeIP = true
+  disableTracking = false
   
-  # Excerpt settings
-  excerptLength = 160             # Characters
-  showExcerpt = true
-  
-  # Featured articles
-  enableFeatured = true
-  featuredCount = 2               # Number of featured articles on homepage
-  
-  # Related articles
-  enableRelated = true
-  relatedCount = 3                # Number of related articles to show
+  [params.privacy.consentBanner]
+    enabled = false
+    message = "This website uses cookies to ensure you get the best experience."
+    acceptText = "Accept"
+    declineText = "Decline"
+    learnMoreText = "Learn More"
+    learnMoreUrl = "/privacy-policy"
 ```
 
-## SEO Configuration
+**Configuration Options:**
+- `respectDoNotTrack`: Respect browser Do Not Track settings (boolean)
+- `cookieConsent`: Enable cookie consent banner (boolean)
+- `anonymizeIP`: Anonymize IP addresses (boolean)
+- `disableTracking`: Completely disable all tracking (boolean)
+- `consentBanner.*`: Cookie consent banner configuration
 
-### Basic SEO
+### 6. Performance Configuration
 
-```toml
-[params.seo]
-  # Meta tags
-  enableOpenGraph = true
-  enableTwitterCard = true
-  enableJsonLd = true             # Structured data
-  
-  # Default images
-  defaultImage = "/images/og-default.jpg"
-  defaultImageAlt = "Default social sharing image"
-  
-  # Site verification
-  googleSiteVerification = ""     # Google Search Console
-  bingSiteVerification = ""       # Bing Webmaster Tools
-  
-  # Analytics
-  googleAnalytics = ""            # GA4 measurement ID
-  enableGoogleAnalytics = false
-```
-
-### OpenGraph Settings
-
-```toml
-[params.openGraph]
-  siteName = "Your Site Name"
-  locale = "en_US"
-  type = "website"
-  
-  # Facebook
-  facebookAppId = ""              # Facebook App ID
-  facebookAdmins = ""             # Facebook Admin IDs
-  
-  # Default values
-  defaultTitle = "Your Site Title"
-  defaultDescription = "Your site description"
-  defaultImage = "/images/og-default.jpg"
-```
-
-### Twitter Card Settings
-
-```toml
-[params.twitterCard]
-  site = "@yourusername"          # Site Twitter handle
-  creator = "@yourusername"       # Default creator handle
-  
-  # Default card type
-  cardType = "summary_large_image"
-```
-
-## Social Media
-
-### Social Links
-
-```toml
-[params.social]
-  # Social media profiles
-  twitter = "https://twitter.com/yourusername"
-  facebook = "https://facebook.com/yourpage"
-  instagram = "https://instagram.com/yourusername"
-  linkedin = "https://linkedin.com/in/yourprofile"
-  github = "https://github.com/yourusername"
-  youtube = "https://youtube.com/c/yourchannel"
-  
-  # Display settings
-  showInHeader = true             # Show social links in header
-  showInFooter = true             # Show social links in footer
-  openInNewTab = true             # Open links in new tab
-```
-
-### Social Sharing
-
-```toml
-[params.sharing]
-  # Enabled platforms
-  twitter = true
-  facebook = true
-  linkedin = true
-  reddit = false
-  pinterest = false
-  
-  # Sharing options
-  enableCopyLink = true           # Copy link button
-  showShareCount = false          # Show share counts (requires API)
-  
-  # Custom sharing text
-  twitterText = "Check out this article:"
-  facebookText = "Interesting read:"
-```
-
-## Performance Settings
-
-### Asset Optimization
+#### Performance Optimization
 
 ```toml
 [params.performance]
-  # CSS optimization
-  enableCriticalCSS = true        # Inline critical CSS
-  enableCSSMinification = true    # Minify CSS
-  enableCSSPurging = true         # Remove unused CSS
+  lazyLoadAds = true
+  asyncScripts = true
+  resourceHints = true
+  criticalCSS = false
   
-  # JavaScript optimization
-  enableJSMinification = true     # Minify JavaScript
-  enableJSBundling = true         # Bundle JavaScript files
-  
-  # Image optimization
-  enableImageOptimization = true  # Optimize images
-  enableLazyLoading = true        # Lazy load images
-  enableWebP = true               # Use WebP format when supported
-  
-  # Caching
-  enableAssetFingerprinting = true # Add fingerprints to assets
-  cacheMaxAge = "1y"              # Cache duration
-```
-
-### Loading Optimization
-
-```toml
-[params.loading]
-  # Preloading
-  preloadFonts = true             # Preload web fonts
-  preloadCriticalImages = true    # Preload above-fold images
-  
-  # Service Worker (experimental)
-  enableServiceWorker = false     # Enable PWA features
-  
-  # Resource hints
-  enableDNSPrefetch = true        # DNS prefetch for external domains
-  enablePreconnect = true         # Preconnect to external domains
-```
-
-## Multilingual Configuration
-
-### Language Settings
-
-```toml
-defaultContentLanguage = "en"
-defaultContentLanguageInSubdir = false
-
-[languages]
-  [languages.en]
-    languageName = "English"
-    languageCode = "en-US"
-    weight = 1
-    title = "Your Site Title"
-    
-    [languages.en.params]
-      description = "English site description"
-      
-  [languages.zh]
-    languageName = "中文"
-    languageCode = "zh-CN"
-    weight = 2
-    title = "您的网站标题"
-    
-    [languages.zh.params]
-      description = "中文网站描述"
-```
-
-### Translation Files
-
-Create translation files in `i18n/`:
-
-```yaml
-# i18n/en.yaml
-- id: readMore
-  translation: "Read More"
-- id: categories
-  translation: "Categories"
-- id: tags
-  translation: "Tags"
-- id: search
-  translation: "Search"
-- id: noResults
-  translation: "No results found"
-- id: shareArticle
-  translation: "Share this article"
-
-# i18n/zh.yaml
-- id: readMore
-  translation: "閱讀更多"
-- id: categories
-  translation: "分類"
-- id: tags
-  translation: "標籤"
-- id: search
-  translation: "搜索"
-- id: noResults
-  translation: "未找到結果"
-- id: shareArticle
-  translation: "分享這篇文章"
-```
-
-## Menu Configuration
-
-### Main Navigation
-
-```toml
-[menu]
-  [[menu.main]]
-    name = "Home"
-    url = "/"
-    weight = 1
-    
-  [[menu.main]]
-    name = "Categories"
-    url = "/categories/"
-    weight = 2
-    
-  [[menu.main]]
-    name = "Tags"
-    url = "/tags/"
-    weight = 3
-    
-  [[menu.main]]
-    name = "About"
-    url = "/about/"
-    weight = 4
-    
-  [[menu.main]]
-    name = "Contact"
-    url = "/contact/"
-    weight = 5
-```
-
-### Footer Menu
-
-```toml
-  [[menu.footer]]
-    name = "Privacy Policy"
-    url = "/privacy/"
-    weight = 1
-    
-  [[menu.footer]]
-    name = "Terms of Service"
-    url = "/terms/"
-    weight = 2
-    
-  [[menu.footer]]
-    name = "Contact"
-    url = "/contact/"
-    weight = 3
-```
-
-### Language-Specific Menus
-
-```toml
-[languages.en.menu]
-  [[languages.en.menu.main]]
-    name = "Home"
-    url = "/"
-    weight = 1
-
-[languages.zh.menu]
-  [[languages.zh.menu.main]]
-    name = "首页"
-    url = "/"
-    weight = 1
-```
-
-## Content Configuration
-
-### Pagination
-
-```toml
-paginate = 9                      # Articles per page
-paginatePath = "page"             # URL path for pagination
-
-[params.pagination]
-  showPageNumbers = true          # Show page numbers
-  showPrevNext = true             # Show previous/next links
-  maxPages = 5                    # Maximum page numbers to show
-```
-
-### Taxonomies
-
-```toml
-[taxonomies]
-  category = "categories"
-  tag = "tags"
-  author = "authors"
-  series = "series"
-
-[params.taxonomies]
-  # Category settings
-  showCategoryCount = true        # Show article count in categories
-  categoryDescription = true      # Show category descriptions
-  
-  # Tag settings
-  showTagCount = true             # Show article count in tags
-  tagCloudMinSize = "text-sm"     # Minimum tag size
-  tagCloudMaxSize = "text-2xl"    # Maximum tag size
-```
-
-### Archives
-
-```toml
-[params.archives]
-  enableMonthlyArchives = true    # Enable monthly archive pages
-  enableYearlyArchives = true     # Enable yearly archive pages
-  archiveDateFormat = "January 2006" # Archive date format
-```
-
-## Advanced Settings
-
-### Custom CSS and JavaScript
-
-```toml
-[params.custom]
-  # Custom CSS files (relative to assets/css/)
-  customCSS = ["custom.css", "overrides.css"]
-  
-  # Custom JavaScript files (relative to assets/js/)
-  customJS = ["custom.js", "analytics.js"]
-  
-  # External stylesheets
-  externalCSS = [
-    "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-  ]
-  
-  # External scripts
-  externalJS = [
-    "https://cdn.example.com/script.js"
+  preconnectDomains = [
+    "https://www.googletagmanager.com",
+    "https://pagead2.googlesyndication.com",
+    "https://connect.facebook.net",
+    "https://cse.google.com",
+    "https://cdn.jsdelivr.net"
   ]
 ```
 
-### Build Configuration
+**Configuration Options:**
+- `lazyLoadAds`: Enable lazy loading for advertisements (boolean)
+- `asyncScripts`: Load external scripts asynchronously (boolean)
+- `resourceHints`: Add resource hints for external domains (boolean)
+- `criticalCSS`: Inline critical CSS (boolean)
+- `preconnectDomains`: Domains to preconnect (array)
+
+### 7. Security Configuration
+
+#### Security Settings
 
 ```toml
-[build]
-  writeStats = true               # Generate build statistics
-  
-[caches]
-  [caches.getjson]
-    maxAge = "10m"
-  [caches.getcsv]
-    maxAge = "10m"
-  [caches.images]
-    maxAge = "1h"
-  [caches.assets]
-    maxAge = "1h"
+[params.security]
+  contentSecurityPolicy = false
+  subresourceIntegrity = false
+  httpsOnly = true
+  noSniff = true
 ```
 
-### Output Formats
+**Configuration Options:**
+- `contentSecurityPolicy`: Enable CSP headers (boolean)
+- `subresourceIntegrity`: Enable SRI for external resources (boolean)
+- `httpsOnly`: Enforce HTTPS for external resources (boolean)
+- `noSniff`: Add X-Content-Type-Options header (boolean)
 
-```toml
-[outputs]
-  home = ["HTML", "RSS", "JSON"]  # Homepage outputs
-  section = ["HTML", "RSS"]       # Section page outputs
-  page = ["HTML"]                 # Single page outputs
+## Configuration Validation
 
-[outputFormats]
-  [outputFormats.RSS]
-    mediatype = "application/rss"
-    baseName = "feed"             # Creates feed.xml instead of index.xml
+The theme includes automatic configuration validation that will:
+
+1. **Validate ID Formats**: Check that all tracking IDs follow the correct format
+2. **Check Required Fields**: Warn if enabled services are missing required configuration
+3. **Privacy Compliance**: Suggest privacy settings based on enabled tracking
+4. **Performance Optimization**: Recommend performance improvements
+5. **Security Best Practices**: Highlight security considerations
+
+### Validation Messages
+
+The theme will display helpful messages during build:
+
 ```
-
-### Security
-
-```toml
-[security]
-  [security.funcs]
-    getenv = ["^HUGO_", "^CI$"]   # Allowed environment variables
-  
-  [security.http]
-    methods = ["(?i)GET|POST"]    # Allowed HTTP methods
-    urls = [".*"]                 # Allowed URLs for remote resources
+Theme Analytics Enhancement: Enabled services: Google Analytics, AdSense, Mermaid Diagrams
+WARNING: Analytics tracking is enabled but cookie consent is disabled. Consider enabling params.privacy.cookieConsent for GDPR compliance.
+ERROR: AdSense is enabled but no client ID is configured. Please set params.adsense.client in your configuration.
 ```
 
 ## Environment-Specific Configuration
 
-### Development
+### Development Environment
 
 ```toml
-# config/development/hugo.toml
-[params.development]
-  enableLiveReload = true
-  showDrafts = true
-  enableDebugMode = true
-  disableMinification = true
+# Disable tracking in development
+[params.adsense]
+  enabled = false
+
+[params.facebookPixel]
+  enabled = false
+
+[params.privacy]
+  respectDoNotTrack = false
+  cookieConsent = false
+
+[params.performance]
+  asyncScripts = false  # Easier debugging
 ```
 
-### Production
+### Production Environment
 
 ```toml
-# config/production/hugo.toml
-[params.production]
-  enableMinification = true
-  enableFingerprinting = true
-  enableGoogleAnalytics = true
-  disableDebugMode = true
+# Enable all features in production
+[params.adsense]
+  enabled = true
+  client = "ca-pub-XXXXXXXXXXXXXXXX"
+
+[params.facebookPixel]
+  enabled = true
+  pixelId = "XXXXXXXXXXXXXXX"
+
+[params.privacy]
+  respectDoNotTrack = true
+  cookieConsent = true
+
+[params.performance]
+  lazyLoadAds = true
+  asyncScripts = true
+  resourceHints = true
 ```
 
-This configuration guide covers all available options in the Parsa Redesigned theme. Customize these settings according to your needs and site requirements.
+## Migration Guide
+
+### From Basic Theme
+
+If you're upgrading from a basic theme configuration:
+
+1. **Add Analytics**: Configure `GoogleAnalyticsID` if not already set
+2. **Add New Sections**: Copy the new parameter sections from the examples
+3. **Test Gradually**: Enable features one at a time
+4. **Update Privacy Policy**: Ensure your privacy policy reflects new tracking
+
+### From Legacy Configuration
+
+If you have existing analytics configuration:
+
+1. **Google Analytics**: Move from `params.analytics.googleAnalytics` to `GoogleAnalyticsID`
+2. **Cookie Consent**: Migrate from `params.cookies` to `params.privacy.consentBanner`
+3. **Performance**: Update performance settings to new structure
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Invalid ID Format Errors**
+   - Check that IDs follow the correct format (see validation rules)
+   - Remove any extra spaces or characters
+
+2. **Services Not Loading**
+   - Verify that `enabled = true` is set
+   - Check that required IDs are provided
+   - Ensure no ad blockers are interfering
+
+3. **Privacy Compliance Warnings**
+   - Enable `params.privacy.cookieConsent` for GDPR compliance
+   - Set `params.privacy.respectDoNotTrack = true`
+
+4. **Performance Issues**
+   - Enable `params.performance.lazyLoadAds`
+   - Enable `params.performance.asyncScripts`
+   - Consider disabling unused services
+
+### Getting Help
+
+- Check the [Configuration Reference](docs/configuration-reference.md) for detailed parameter documentation
+- Review [Configuration Examples](docs/configuration-examples.md) for use case-specific setups
+- Examine the validation messages in your Hugo build output
+- Test your configuration in a development environment first
+
+## Best Practices
+
+1. **Start Simple**: Begin with basic analytics, add features gradually
+2. **Test Thoroughly**: Verify each service works before adding the next
+3. **Respect Privacy**: Enable cookie consent for GDPR compliance
+4. **Optimize Performance**: Use lazy loading and async scripts
+5. **Monitor Impact**: Check Core Web Vitals after enabling new features
+6. **Keep Updated**: Regularly review and update your configuration
+7. **Document Changes**: Keep track of configuration changes for your team

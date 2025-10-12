@@ -1,0 +1,125 @@
+{{/*
+  AdSense Display Partial
+  
+  This partial handles the rendering of individual AdSense ad units with
+  responsive design, lazy loading, and configurable placement options.
+  
+  Parameters:
+  - .slot: AdSense ad slot ID (required)
+  - .format: Ad format (default: "auto")
+  - .responsive: Enable responsive ads (default: true)
+  - .class: CSS classes for the ad container
+  - .style: Inline styles for the ad unit
+  - .lazy: Enable lazy loading (default: true for below-the-fold)
+  - .position: Ad position for lazy loading detection
+  
+  Requirements: 2.2, 2.3, 2.5, 8.3
+*/}}
+
+{{- $adsense := site.Params.adsense -}}
+{{- $privacy := site.Params.privacy | default dict -}}
+{{- $performance := site.Params.performance | default dict -}}
+
+{{- $slot := .slot -}}
+{{- $format := .format | default "auto" -}}
+{{- $responsive := .responsive | default true -}}
+{{- $class := .class | default "my-4" -}}
+{{- $style := .style | default "" -}}
+{{- $lazy := .lazy | default ($performance.lazyLoadAds | default true) -}}
+{{- $position := .position | default "content" -}}
+
+{{- if and $adsense.enabled $adsense.client $slot -}}
+  {{- /* Generate unique ID for this ad unit */ -}}
+  {{- $adId := printf "adsense-ad-%s-%d" $slot now.UnixNano -}}
+  
+  <div class="ad-container {{ $class }}" 
+       data-ad-position="{{ $position }}"
+       {{ if $lazy }}data-lazy-ad="true"{{ end }}>
+    
+    {{- /* Ad unit container */ -}}
+    <ins class="adsbygoogle"
+         id="{{ $adId }}"
+         style="display:block{{ if $style }};{{ $style }}{{ end }}"
+         data-ad-client="{{ $adsense.client }}"
+         data-ad-slot="{{ $slot }}"
+         data-ad-format="{{ $format }}"
+         {{ if $responsive }}data-full-width-responsive="true"{{ end }}
+         {{ if $lazy }}data-ad-lazy="true"{{ end }}></ins>
+    
+    {{- if $lazy -}}
+    {{- /* Lazy loading handled by LazyAdLoader */ -}}
+    {{- if $privacy.respectDoNotTrack -}}
+    <script>
+      // Check Do Not Track preference for lazy ads
+      (function() {
+        var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+        var doNotTrack = (dnt == "1" || dnt == "yes");
+        
+        if (doNotTrack) {
+          document.getElementById('{{ $adId }}').parentElement.style.display = 'none';
+        }
+      })();
+    </script>
+    {{- end -}}
+    {{- else -}}
+    {{- /* Immediate loading */ -}}
+    <script>
+      {{- if $privacy.respectDoNotTrack -}}
+      // Check Do Not Track preference
+      var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+      var doNotTrack = (dnt == "1" || dnt == "yes");
+      
+      if (!doNotTrack) {
+      {{- end -}}
+        try {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+          
+          // Track ad loading
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'adsense_ad_loaded', {
+              'ad_slot': '{{ $slot }}',
+              'ad_position': '{{ $position }}',
+              'loading_method': 'immediate'
+            });
+          }
+        } catch (e) {
+          console.warn('AdSense ad loading failed:', e);
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'adsense_ad_error', {
+              'ad_slot': '{{ $slot }}',
+              'error_message': e.message
+            });
+          }
+        }
+      {{- if $privacy.respectDoNotTrack -}}
+      } else {
+        document.getElementById('{{ $adId }}').parentElement.style.display = 'none';
+      }
+      {{- end -}}
+    </script>
+    {{- end -}}
+    
+    {{- /* Accessibility and fallback content */ -}}
+    <noscript>
+      <div class="ad-fallback">
+        <p class="text-sm text-gray-500">Advertisement</p>
+      </div>
+    </noscript>
+  </div>
+  
+{{- else -}}
+  {{- /* Debug information when AdSense is not configured */ -}}
+  {{- if hugo.IsServer -}}
+  <div class="ad-container {{ $class }} bg-gray-100 border-2 border-dashed border-gray-300 p-4 text-center">
+    <p class="text-sm text-gray-600">
+      AdSense Ad Placeholder
+      {{- if not $adsense.enabled }} (AdSense disabled){{ end -}}
+      {{- if not $adsense.client }} (No client ID){{ end -}}
+      {{- if not $slot }} (No slot ID){{ end -}}
+    </p>
+    {{- if $slot -}}
+    <p class="text-xs text-gray-500">Slot: {{ $slot }}</p>
+    {{- end -}}
+  </div>
+  {{- end -}}
+{{- end -}}

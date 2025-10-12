@@ -1,0 +1,32 @@
+{{/*
+  Mermaid.js Code Block Render Hook
+  
+  This render hook automatically detects and renders Mermaid diagrams
+  when code blocks use the 'mermaid' language identifier.
+  
+  Usage in markdown:
+  ```mermaid
+  graph TD
+    A[Start] --> B[Process]
+    B --> C[End]
+  ```
+*/}}
+
+{{- $mermaidConfig := site.Params.mermaid | default dict -}}
+{{- $enabled := $mermaidConfig.enabled | default true -}}
+
+{{- if $enabled -}}
+<div class="mermaid-container my-6">
+  <div class="mermaid-diagram bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto">
+    <pre class="mermaid text-center">{{- .Inner | htmlEscape | safeHTML -}}</pre>
+  </div>
+</div>
+
+{{/* Store that this page has Mermaid diagrams for conditional script loading */}}
+{{- .Page.Store.Set "hasMermaid" true -}}
+{{- else -}}
+{{/* Fallback to regular code block if Mermaid is disabled */}}
+<div class="code-block my-6">
+  <pre class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="language-mermaid">{{- .Inner | htmlEscape -}}</code></pre>
+</div>
+{{- end -}}

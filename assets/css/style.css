@@ -10,6 +10,9 @@ VERSION:	Versoin Number
 /*  typography */
 @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Open+Sans:wght@400;600&display=swap");
 
+/* Enhanced shortcode styles */
+@import "shortcodes.css";
+
 body {
   line-height: 1.5;
   font-family: "Open Sans", sans-serif;

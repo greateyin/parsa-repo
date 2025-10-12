@@ -1,0 +1,451 @@
+{{/*
+  Lazy Ad Loader Partial
+  
+  This partial implements advanced lazy loading for advertisements using
+  Intersection Observer API with progressive enhancement and fallbacks.
+  
+  Requirements: 8.3, 8.4
+  
+  Usage: Include in head or before closing body tag
+  {{ partial "performance/lazy-ad-loader.html" . }}
+*/}}
+
+{{- $performance := site.Params.performance | default dict -}}
+{{- $lazyLoadAds := $performance.lazyLoadAds | default true -}}
+{{- $adsense := site.Params.adsense -}}
+
+{{- if and $lazyLoadAds $adsense.enabled -}}
+
+<script>
+(function() {
+  'use strict';
+  
+  // Lazy Ad Loader Configuration
+  window.LazyAdLoader = {
+    config: {
+      rootMargin: '{{ $performance.adLoadMargin | default "100px 0px" }}',
+      threshold: {{ $performance.adLoadThreshold | default 0.1 }},
+      loadDelay: {{ $performance.adLoadDelay | default 100 }},
+      maxRetries: {{ $performance.adMaxRetries | default 3 }},
+      retryDelay: {{ $performance.adRetryDelay | default 2000 }},
+      fallbackDelay: {{ $performance.adFallbackDelay | default 3000 }}
+    },
+    
+    observer: null,
+    observedAds: new Map(),
+    loadedAds: new Set(),
+    failedAds: new Set(),
+    
+    // Initialize the lazy ad loader
+    init: function() {
+      console.log('LazyAdLoader: Initializing lazy ad loading system');
+      
+      // Check for Intersection Observer support
+      if ('IntersectionObserver' in window) {
+        this.setupIntersectionObserver();
+      } else {
+        console.warn('LazyAdLoader: IntersectionObserver not supported, using fallback');
+        this.setupFallback();
+      }
+      
+      // Find and register all lazy ads
+      this.registerLazyAds();
+      
+      // Setup performance monitoring
+      this.setupPerformanceMonitoring();
+    },
+    
+    // Setup Intersection Observer
+    setupIntersectionObserver: function() {
+      var self = this;
+      
+      this.observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            self.loadAd(entry.target);
+          }
+        });
+      }, {
+        rootMargin: this.config.rootMargin,
+        threshold: this.config.threshold
+      });
+      
+      console.log('LazyAdLoader: IntersectionObserver initialized');
+    },
+    
+    // Setup fallback for browsers without IntersectionObserver
+    setupFallback: function() {
+      var self = this;
+      
+      // Use scroll-based detection as fallback
+      var scrollHandler = this.throttle(function() {
+        self.checkVisibleAds();
+      }, 250);
+      
+      window.addEventListener('scroll', scrollHandler);
+      window.addEventListener('resize', scrollHandler);
+      
+      // Also load ads after a delay
+      setTimeout(function() {
+        self.loadAllAds();
+      }, this.config.fallbackDelay);
+      
+      console.log('LazyAdLoader: Fallback scroll detection initialized');
+    },
+    
+    // Register all lazy ads on the page
+    registerLazyAds: function() {
+      var lazyAds = document.querySelectorAll('[data-lazy-ad="true"]');
+      var self = this;
+      
+      lazyAds.forEach(function(adContainer) {
+        var adElement = adContainer.querySelector('.adsbygoogle');
+        if (adElement) {
+          var adId = adElement.id || 'ad-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          if (!adElement.id) adElement.id = adId;
+          
+          var adConfig = {
+            element: adElement,
+            container: adContainer,
+            slot: adElement.getAttribute('data-ad-slot'),
+            position: adContainer.getAttribute('data-ad-position') || 'unknown',
+            retries: 0,
+            registered: Date.now()
+          };
+          
+          self.observedAds.set(adId, adConfig);
+          
+          if (self.observer) {
+            self.observer.observe(adContainer);
+          }
+        }
+      });
+      
+      console.log('LazyAdLoader: Registered', lazyAds.length, 'lazy ads');
+    },
+    
+    // Load an individual ad
+    loadAd: function(container) {
+      var adElement = container.querySelector('.adsbygoogle');
+      if (!adElement) return;
+      
+      var adId = adElement.id;
+      var adConfig = this.observedAds.get(adId);
+      
+      if (!adConfig || this.loadedAds.has(adId) || this.failedAds.has(adId)) {
+        return;
+      }
+      
+      var self = this;
+      
+      // Add loading indicator
+      this.showLoadingIndicator(container);
+      
+      // Delay loading slightly to improve performance
+      setTimeout(function() {
+        self.attemptAdLoad(adConfig);
+      }, this.config.loadDelay);
+      
+      // Stop observing this ad
+      if (this.observer) {
+        this.observer.unobserve(container);
+      }
+    },
+    
+    // Attempt to load an ad with retry logic
+    attemptAdLoad: function(adConfig) {
+      var self = this;
+      
+      try {
+        // Check if AdSense is available
+        if (typeof adsbygoogle === 'undefined') {
+          throw new Error('AdSense script not loaded');
+        }
+        
+        // Push ad to AdSense queue
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        
+        // Mark as loaded
+        this.loadedAds.add(adConfig.element.id);
+        this.hideLoadingIndicator(adConfig.container);
+        
+        // Track successful load
+        this.trackAdEvent('loaded', adConfig);
+        
+        console.log('LazyAdLoader: Successfully loaded ad', adConfig.slot, 'at position', adConfig.position);
+        
+      } catch (error) {
+        console.warn('LazyAdLoader: Failed to load ad', adConfig.slot, ':', error.message);
+        
+        adConfig.retries++;
+        
+        if (adConfig.retries < this.config.maxRetries) {
+          // Retry after delay
+          setTimeout(function() {
+            self.attemptAdLoad(adConfig);
+          }, this.config.retryDelay * adConfig.retries);
+        } else {
+          // Mark as permanently failed
+          this.failedAds.add(adConfig.element.id);
+          this.showErrorIndicator(adConfig.container);
+          this.trackAdEvent('failed', adConfig, error.message);
+        }
+      }
+    },
+    
+    // Check visible ads for fallback mode
+    checkVisibleAds: function() {
+      var self = this;
+      
+      this.observedAds.forEach(function(adConfig, adId) {
+        if (self.loadedAds.has(adId) || self.failedAds.has(adId)) {
+          return;
+        }
+        
+        if (self.isElementVisible(adConfig.container)) {
+          self.loadAd(adConfig.container);
+        }
+      });
+    },
+    
+    // Check if element is visible in viewport
+    isElementVisible: function(element) {
+      var rect = element.getBoundingClientRect();
+      var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      
+      return (
+        rect.top >= -100 && // 100px margin above viewport
+        rect.top <= windowHeight + 100 // 100px margin below viewport
+      );
+    },
+    
+    // Load all remaining ads (fallback)
+    loadAllAds: function() {
+      var self = this;
+      
+      this.observedAds.forEach(function(adConfig, adId) {
+        if (!self.loadedAds.has(adId) && !self.failedAds.has(adId)) {
+          self.loadAd(adConfig.container);
+        }
+      });
+    },
+    
+    // Show loading indicator
+    showLoadingIndicator: function(container) {
+      var indicator = container.querySelector('.ad-loading-indicator');
+      if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.className = 'ad-loading-indicator';
+        indicator.innerHTML = '<div class="ad-spinner"></div><span>Loading advertisement...</span>';
+        container.appendChild(indicator);
+      }
+      indicator.style.display = 'block';
+    },
+    
+    // Hide loading indicator
+    hideLoadingIndicator: function(container) {
+      var indicator = container.querySelector('.ad-loading-indicator');
+      if (indicator) {
+        indicator.style.display = 'none';
+      }
+    },
+    
+    // Show error indicator
+    showErrorIndicator: function(container) {
+      this.hideLoadingIndicator(container);
+      
+      var errorIndicator = container.querySelector('.ad-error-indicator');
+      if (!errorIndicator) {
+        errorIndicator = document.createElement('div');
+        errorIndicator.className = 'ad-error-indicator';
+        errorIndicator.innerHTML = '<span>Advertisement could not be loaded</span>';
+        container.appendChild(errorIndicator);
+      }
+      errorIndicator.style.display = 'block';
+    },
+    
+    // Track ad loading events
+    trackAdEvent: function(eventType, adConfig, errorMessage) {
+      var eventData = {
+        'ad_slot': adConfig.slot,
+        'ad_position': adConfig.position,
+        'loading_method': 'lazy',
+        'retries': adConfig.retries
+      };
+      
+      if (errorMessage) {
+        eventData.error_message = errorMessage;
+      }
+      
+      // Track in Google Analytics
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'adsense_ad_' + eventType, eventData);
+      }
+      
+      // Track in Facebook Pixel
+      if (typeof fbq !== 'undefined') {
+        fbq('trackCustom', 'AdSense' + eventType.charAt(0).toUpperCase() + eventType.slice(1), eventData);
+      }
+    },
+    
+    // Setup performance monitoring
+    setupPerformanceMonitoring: function() {
+      var self = this;
+      
+      // Monitor ad loading performance
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          self.reportPerformanceMetrics();
+        }, 2000);
+      });
+    },
+    
+    // Report performance metrics
+    reportPerformanceMetrics: function() {
+      var totalAds = this.observedAds.size;
+      var loadedAds = this.loadedAds.size;
+      var failedAds = this.failedAds.size;
+      var successRate = totalAds > 0 ? Math.round((loadedAds / totalAds) * 100) : 0;
+      
+      console.log('LazyAdLoader Performance:', {
+        total: totalAds,
+        loaded: loadedAds,
+        failed: failedAds,
+        successRate: successRate + '%'
+      });
+      
+      // Track in analytics
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'lazy_ads_performance', {
+          'total_ads': totalAds,
+          'loaded_ads': loadedAds,
+          'failed_ads': failedAds,
+          'success_rate': successRate
+        });
+      }
+    },
+    
+    // Utility: Throttle function
+    throttle: function(func, limit) {
+      var inThrottle;
+      return function() {
+        var args = arguments;
+        var context = this;
+        if (!inThrottle) {
+          func.apply(context, args);
+          inThrottle = true;
+          setTimeout(function() { inThrottle = false; }, limit);
+        }
+      };
+    },
+    
+    // Get loading status
+    getStatus: function() {
+      return {
+        total: this.observedAds.size,
+        loaded: this.loadedAds.size,
+        failed: this.failedAds.size,
+        pending: this.observedAds.size - this.loadedAds.size - this.failedAds.size,
+        successRate: this.observedAds.size > 0 ? Math.round((this.loadedAds.size / this.observedAds.size) * 100) : 0
+      };
+    }
+  };
+  
+  // Auto-initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      window.LazyAdLoader.init();
+    });
+  } else {
+    window.LazyAdLoader.init();
+  }
+  
+  // Expose status function globally
+  window.getLazyAdStatus = function() {
+    return window.LazyAdLoader.getStatus();
+  };
+  
+})();
+</script>
+
+{{- /* CSS for loading and error indicators */ -}}
+<style>
+.ad-loading-indicator {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.ad-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: ad-spin 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes ad-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.ad-error-indicator {
+  display: none;
+  text-align: center;
+  padding: 15px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  color: #721c24;
+  font-size: 13px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ad-loading-indicator,
+  .ad-error-indicator {
+    padding: 10px;
+    font-size: 12px;
+  }
+  
+  .ad-spinner {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .ad-loading-indicator {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #a0aec0;
+  }
+  
+  .ad-error-indicator {
+    background-color: #742a2a;
+    border-color: #9b2c2c;
+    color: #fed7d7;
+  }
+}
+
+/* Print styles - hide ads */
+@media print {
+  .ad-container,
+  .ad-loading-indicator,
+  .ad-error-indicator {
+    display: none !important;
+  }
+}
+</style>
+
+{{- end -}}

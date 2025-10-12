@@ -1,5 +1,10 @@
 {{ define "main" }}
 <div class="container mx-auto px-4 py-8">
+  <!-- Header Advertisement -->
+  {{ $adsense := .Site.Params.adsense }}
+  {{ if and $adsense.enabled $adsense.placements.header $adsense.headerSlot }}
+    {{ partial "advertising/adsense-display.html" (dict "slot" $adsense.headerSlot "format" "horizontal" "class" "mb-8") }}
+  {{ end }}
   <!-- Page Header -->
   <header class="text-center mb-12">
     {{ if .Data.Singular }}
@@ -99,10 +104,38 @@
   
   <!-- Articles Grid -->
   {{ if .Pages }}
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    {{ range .Paginator.Pages }}
-      {{ partial "content/article-card.html" . }}
-    {{ end }}
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Main Articles Grid -->
+    <div class="flex-1">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
+        {{ range .Paginator.Pages }}
+          {{ partial "content/article-card.html" . }}
+        {{ end }}
+      </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <aside class="lg:w-80 space-y-6">
+      <!-- Sidebar Advertisement -->
+      {{ if and $adsense.enabled $adsense.placements.sidebar $adsense.sidebarSlot }}
+        {{ partial "advertising/adsense-display.html" (dict "slot" $adsense.sidebarSlot "format" "rectangle" "class" "mb-6") }}
+      {{ end }}
+      
+      <!-- Search Widget -->
+      {{ partial "search/search-widget.html" . }}
+      
+      <!-- Category/Tag Specific Content -->
+      {{ if .Data.Singular }}
+        {{ if eq .Data.Singular "category" }}
+          {{ partial "widgets/category-info.html" . }}
+        {{ else if eq .Data.Singular "tag" }}
+          {{ partial "widgets/tag-info.html" . }}
+        {{ end }}
+      {{ end }}
+      
+      <!-- Popular Articles Widget -->
+      {{ partial "widgets/popular-articles.html" . }}
+    </aside>
   </div>
   
   <!-- Pagination -->
@@ -150,17 +183,24 @@
   
   {{ else }}
   <!-- Empty State -->
-  {{ if .Data.Singular }}
-    {{ if eq .Data.Singular "category" }}
-      {{ partial "content/empty-state.html" (dict "context" . "type" "no-category-articles") }}
-    {{ else if eq .Data.Singular "tag" }}
-      {{ partial "content/empty-state.html" (dict "context" . "type" "no-tag-articles") }}
+  <div class="flex-1">
+    {{ if .Data.Singular }}
+      {{ if eq .Data.Singular "category" }}
+        {{ partial "content/empty-state.html" (dict "context" . "type" "no-category-articles") }}
+      {{ else if eq .Data.Singular "tag" }}
+        {{ partial "content/empty-state.html" (dict "context" . "type" "no-tag-articles") }}
+      {{ else }}
+        {{ partial "content/empty-state.html" (dict "context" . "type" "no-articles") }}
+      {{ end }}
     {{ else }}
       {{ partial "content/empty-state.html" (dict "context" . "type" "no-articles") }}
     {{ end }}
-  {{ else }}
-    {{ partial "content/empty-state.html" (dict "context" . "type" "no-articles") }}
+  </div>
   {{ end }}
+  
+  <!-- Footer Advertisement -->
+  {{ if and $adsense.enabled $adsense.placements.footer $adsense.footerSlot }}
+    {{ partial "advertising/adsense-display.html" (dict "slot" $adsense.footerSlot "format" "horizontal" "class" "mt-12") }}
   {{ end }}
 </div>
 {{ end }}

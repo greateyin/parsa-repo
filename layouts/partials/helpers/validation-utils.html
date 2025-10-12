@@ -1,0 +1,69 @@
+{{/*
+  Validation Utilities Helper
+  Provides utility functions for validating configuration values
+  
+  Usage: {{ $isValid := partial "helpers/validation-utils.html" (dict "type" "gaID" "value" "G-JKSVCT23D1") }}
+  
+  Supported validation types:
+  - gaID: Google Analytics ID (G-XXXXXXXXXX)
+  - adsenseClient: AdSense client ID (ca-pub-XXXXXXXXXXXXXXXX)
+  - adsenseSlot: AdSense slot ID (10 digits)
+  - fbPixelID: Facebook Pixel ID (15-16 digits)
+  - gcsEngineID: Google Custom Search Engine ID (17 hex chars)
+  - email: Email address validation
+  - url: URL validation
+  - boolean: Boolean value validation
+*/}}
+
+{{ $validationType := .type }}
+{{ $value := .value }}
+{{ $isValid := false }}
+
+{{ if eq $validationType "gaID" }}
+  {{ $pattern := "^G-[A-Z0-9]{10}$" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "adsenseClient" }}
+  {{ $pattern := "^ca-pub-[0-9]{16}$" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "adsenseSlot" }}
+  {{ $pattern := "^[0-9]{10}$" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "fbPixelID" }}
+  {{ $pattern := "^[0-9]{15,16}$" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "gcsEngineID" }}
+  {{ $pattern := "^[a-f0-9]{17}$" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "email" }}
+  {{ $pattern := "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "url" }}
+  {{ $pattern := "^https?://[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}" }}
+  {{ $isValid = findRE $pattern (string $value) }}
+
+{{ else if eq $validationType "boolean" }}
+  {{ $isValid = or (eq $value true) (eq $value false) }}
+
+{{ else if eq $validationType "mermaidTheme" }}
+  {{ $validThemes := slice "default" "dark" "forest" "neutral" "base" }}
+  {{ $isValid = in $validThemes (string $value) }}
+
+{{ else if eq $validationType "nonEmpty" }}
+  {{ $isValid = and $value (ne (string $value) "") }}
+
+{{ else if eq $validationType "positiveNumber" }}
+  {{ $isValid = and (reflect.IsMap $value | not) (gt ($value | int) 0) }}
+
+{{ else }}
+  {{ errorf "Unknown validation type: %s" $validationType }}
+  {{ $isValid = false }}
+
+{{ end }}
+
+{{ return $isValid }}

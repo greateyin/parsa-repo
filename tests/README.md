@@ -4,13 +4,14 @@ This comprehensive testing suite validates the Hugo theme redesign across multip
 
 ## Overview
 
-The testing suite consists of five main test categories:
+The testing suite consists of six main test categories:
 
 1. **Hugo Template Tests** - Validates Hugo template compilation and rendering
-2. **Performance Tests** - Measures Core Web Vitals and performance metrics
-3. **Accessibility Tests** - Ensures WCAG 2.1 AA compliance
-4. **Cross-Browser Tests** - Validates functionality across different browsers
-5. **Visual Regression Tests** - Ensures visual consistency across viewports
+2. **Analytics Configuration Tests** - Tests analytics configuration parsing, validation, and privacy settings
+3. **Performance Tests** - Measures Core Web Vitals and performance metrics
+4. **Accessibility Tests** - Ensures WCAG 2.1 AA compliance
+5. **Cross-Browser Tests** - Validates functionality across different browsers
+6. **Visual Regression Tests** - Ensures visual consistency across viewports
 
 ## Prerequisites
 
@@ -54,6 +55,20 @@ npm run test:hugo
 ```
 
 Tests Hugo template rendering, content types, taxonomies, and multilingual support.
+
+#### Analytics Configuration Tests
+```bash
+npm run test:analytics
+```
+
+Tests analytics configuration parsing, validation, and privacy settings including:
+- Google Analytics 4 configuration validation
+- Privacy settings and Do Not Track functionality
+- Configuration error handling and warnings
+- Analytics manager coordination
+- Multiple analytics services integration
+
+See [ANALYTICS_TESTS.md](ANALYTICS_TESTS.md) for detailed documentation.
 
 #### Performance Tests
 ```bash
@@ -138,6 +153,7 @@ All test results are saved to the `reports/` directory:
 - `test-summary.html` - Comprehensive HTML report
 - `test-summary.json` - Machine-readable summary
 - `hugo-template-tests.json` - Hugo template test results
+- `analytics-configuration-tests.json` - Analytics configuration test results
 - `performance-tests.json` - Performance test results
 - `accessibility-tests.json` - Accessibility test results
 - `playwright-report/` - Cross-browser test results

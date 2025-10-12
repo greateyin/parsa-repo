@@ -1,5 +1,8 @@
 {{ define "main" }}
-<div class="container mx-auto px-4 py-8 max-w-4xl">
+<div class="container mx-auto px-4 py-8">
+  <div class="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
+    <!-- Main Content -->
+    <div class="flex-1 max-w-4xl">
   <!-- Article Header -->
   <article class="prose prose-lg max-w-none">
     <header class="mb-8 text-center">
@@ -65,7 +68,29 @@
     
     <!-- Article Content -->
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-code:text-primary prose-pre:bg-muted prose-pre:border prose-blockquote:border-l-primary prose-blockquote:bg-muted/50 prose-blockquote:text-foreground">
-      {{ .Content }}
+      {{ $content := .Content }}
+      {{ $adsense := .Site.Params.adsense }}
+      
+      {{ if and $adsense.enabled $adsense.placements.inContent $adsense.inArticleSlot }}
+        <!-- Split content for in-article ad placement -->
+        {{ $contentParts := split $content "</p>" }}
+        {{ $midPoint := div (len $contentParts) 2 }}
+        
+        <!-- First half of content -->
+        {{ range first $midPoint $contentParts }}
+          {{ . | safeHTML }}{{ if ne . (index $contentParts (sub (len $contentParts) 1)) }}</p>{{ end }}
+        {{ end }}
+        
+        <!-- In-Article Advertisement -->
+        {{ partial "advertising/adsense-display.html" (dict "slot" $adsense.inArticleSlot "format" "fluid" "class" "my-8 not-prose") }}
+        
+        <!-- Second half of content -->
+        {{ range after $midPoint $contentParts }}
+          {{ . | safeHTML }}{{ if ne . (index $contentParts (sub (len $contentParts) 1)) }}</p>{{ end }}
+        {{ end }}
+      {{ else }}
+        {{ .Content }}
+      {{ end }}
     </div>
     
     <!-- Tags -->
@@ -91,5 +116,25 @@
     <!-- Related Articles Widget -->
     {{ partial "widgets/related.html" . }}
   </article>
+    </div>
+    
+    <!-- Sidebar -->
+    <aside class="lg:w-80 space-y-6">
+      <!-- Sidebar Advertisement -->
+      {{ $adsense := .Site.Params.adsense }}
+      {{ if and $adsense.enabled $adsense.placements.sidebar $adsense.sidebarSlot }}
+        {{ partial "advertising/adsense-display.html" (dict "slot" $adsense.sidebarSlot "format" "rectangle" "class" "mb-6") }}
+      {{ end }}
+      
+      <!-- Search Widget -->
+      {{ partial "search/search-widget.html" . }}
+      
+      <!-- Tag Cloud Widget -->
+      {{ partial "widgets/tag-cloud.html" . }}
+      
+      <!-- Related Articles Widget (Sidebar Version) -->
+      {{ partial "widgets/related-sidebar.html" . }}
+    </aside>
+  </div>
 </div>
 {{ end }}

@@ -1,0 +1,115 @@
+{
+  "timestamp": "2025-10-12T16:02:03.281Z",
+  "testSuite": "Analytics Configuration Unit Tests",
+  "totalTests": 19,
+  "passed": 19,
+  "failed": 0,
+  "results": [
+    {
+      "name": "GA4 Tracking ID Format Validation - Valid IDs",
+      "passed": true,
+      "message": "Valid IDs correctly identified: 3/3"
+    },
+    {
+      "name": "GA4 Tracking ID Format Validation - Invalid IDs",
+      "passed": true,
+      "message": "Invalid IDs correctly rejected: 5/5"
+    },
+    {
+      "name": "GA4 Configuration Override Handling",
+      "passed": true,
+      "message": "Services config overrides base config: G-OVERRIDE123"
+    },
+    {
+      "name": "GA4 Privacy Settings Extraction",
+      "passed": true,
+      "message": "DNT: true, Anonymize IP: true"
+    },
+    {
+      "name": "GA4 Privacy Default Values",
+      "passed": true,
+      "message": "Default DNT: true, Default Anonymize: true"
+    },
+    {
+      "name": "GA4 Privacy Explicit False Values",
+      "passed": true,
+      "message": "Explicit false DNT: false, Explicit false Anonymize: false"
+    },
+    {
+      "name": "Facebook Pixel ID Validation - Valid IDs",
+      "passed": true,
+      "message": "Valid Pixel IDs correctly identified: 3/3"
+    },
+    {
+      "name": "Facebook Pixel ID Validation - Invalid IDs",
+      "passed": true,
+      "message": "Invalid Pixel IDs correctly rejected: 5/5"
+    },
+    {
+      "name": "Facebook Pixel Event Configuration Parsing",
+      "passed": true,
+      "message": "Enabled: true, Pixel ID: 123456789012345"
+    },
+    {
+      "name": "Facebook Pixel Selective Event Configuration",
+      "passed": true,
+      "message": "PageView: true, ViewContent: false, Search: true, Contact: false, Lead: true"
+    },
+    {
+      "name": "Facebook Pixel Privacy Integration",
+      "passed": true,
+      "message": "DNT Check: true, Cookie Consent: true, Requires Consent: true"
+    },
+    {
+      "name": "Do Not Track Configuration Parsing",
+      "passed": true,
+      "message": "Results: [true, false, true, false, true] - handles boolean, string boolean, and default values"
+    },
+    {
+      "name": "Cookie Consent Configuration Parsing",
+      "passed": true,
+      "message": "Config 1: enabled=true, banner=true, custom=true"
+    },
+    {
+      "name": "IP Anonymization Configuration Parsing",
+      "passed": true,
+      "message": "Results: [true, false, true, false, true] - handles boolean, string boolean, and default values"
+    },
+    {
+      "name": "Do Not Track Detection Logic",
+      "passed": true,
+      "message": "Correct detections: 8/8"
+    },
+    {
+      "name": "Analytics Manager DNT Integration",
+      "passed": true,
+      "message": "Correct DNT handling: 4/4 scenarios"
+    },
+    {
+      "name": "GA Configuration Required Field Validation",
+      "passed": true,
+      "message": "Valid configs: 2/2 expected"
+    },
+    {
+      "name": "Configuration Type Validation and Normalization",
+      "passed": true,
+      "message": "Successfully normalized different data types to boolean values"
+    },
+    {
+      "name": "Default Value Handling",
+      "passed": true,
+      "message": "Default values correctly applied to incomplete configurations"
+    }
+  ],
+  "requirements": {
+    "1.1": "Google Analytics 4 Integration - Configuration parsing and validation",
+    "1.2": "Privacy settings and Do Not Track functionality"
+  },
+  "coverage": {
+    "Configuration Parsing": "Google Analytics and Facebook Pixel configuration extraction and validation",
+    "Privacy Settings": "Do Not Track, IP anonymization, and cookie consent configuration",
+    "Type Validation": "Handling of different data types and string booleans",
+    "Default Values": "Application of default values for incomplete configurations",
+    "DNT Functionality": "Do Not Track detection logic and analytics manager integration"
+  }
+}

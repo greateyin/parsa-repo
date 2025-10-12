@@ -14,6 +14,7 @@ class TestRunner {
     this.reportsDir = path.join(__dirname, 'reports');
     this.results = {
       hugo: null,
+      analytics: null,
       performance: null,
       accessibility: null,
       crossBrowser: null,
@@ -31,6 +32,7 @@ class TestRunner {
       
       // Run all test suites
       await this.runHugoTests();
+      await this.runAnalyticsTests();
       await this.runPerformanceTests();
       await this.runAccessibilityTests();
       await this.runCrossBrowserTests();
@@ -86,6 +88,21 @@ class TestRunner {
     } catch (error) {
       console.error('  ❌ Hugo template tests failed:', error.message);
       this.results.hugo = false;
+    }
+  }
+
+  async runAnalyticsTests() {
+    console.log('\n📊 Running Analytics Configuration Tests...');
+    console.log('-'.repeat(40));
+    
+    try {
+      const AnalyticsConfigurationTests = require('./analytics-configuration-tests');
+      const tester = new AnalyticsConfigurationTests();
+      this.results.analytics = await tester.runAllTests();
+      console.log('  ✅ Analytics configuration tests completed');
+    } catch (error) {
+      console.error('  ❌ Analytics configuration tests failed:', error.message);
+      this.results.analytics = false;
     }
   }
 
@@ -164,6 +181,11 @@ class TestRunner {
           name: 'Hugo Template Rendering',
           passed: this.results.hugo,
           description: 'Tests Hugo template compilation and rendering'
+        },
+        analyticsConfiguration: {
+          name: 'Analytics Configuration',
+          passed: this.results.analytics,
+          description: 'Tests analytics configuration parsing, validation, and privacy settings'
         },
         performance: {
           name: 'Performance & Core Web Vitals',
@@ -259,6 +281,7 @@ rateHTMLSummary(summary) {
     <h2>Detailed Reports</h2>
     <ul>
         <li><a href="hugo-template-tests.json">Hugo Template Tests (JSON)</a></li>
+        <li><a href="analytics-configuration-tests.json">Analytics Configuration Tests (JSON)</a></li>
         <li><a href="performance-tests.json">Performance Tests (JSON)</a></li>
         <li><a href="accessibility-tests.json">Accessibility Tests (JSON)</a></li>
         <li><a href="playwright-report/index.html">Cross-Browser Tests (HTML)</a></li>

@@ -1,351 +1,466 @@
-# Enhanced Shortcodes Documentation
+# Hugo Shortcodes Documentation
 
-The Parsa Redesigned theme includes several enhanced shortcodes that provide modern, accessible, and responsive content features. All shortcodes follow accessibility best practices and include proper ARIA labels and semantic HTML.
+This theme provides enhanced versions of Hugo's built-in shortcodes along with custom shortcodes for rich content creation. All shortcodes are designed with privacy, performance, and accessibility in mind.
 
-## Figure Shortcode
+## Table of Contents
 
-Enhanced image handling with responsive images, WebP support, and accessibility features.
+- [Video Shortcodes](#video-shortcodes)
+  - [YouTube](#youtube)
+  - [Vimeo](#vimeo)
+- [Social Media Shortcodes](#social-media-shortcodes)
+  - [Twitter](#twitter)
+  - [Instagram](#instagram)
+- [Code Shortcodes](#code-shortcodes)
+  - [GitHub Gist](#github-gist)
+- [Content Shortcodes](#content-shortcodes)
+  - [Figure](#figure)
+  - [Alert](#alert)
+  - [Mermaid Diagrams](#mermaid-diagrams)
+- [Privacy Settings](#privacy-settings)
+- [Troubleshooting](#troubleshooting)
 
-### Usage
+## Video Shortcodes
+
+### YouTube
+
+Embed YouTube videos with privacy-enhanced mode and customization options.
+
+#### Basic Usage
+
 ```markdown
-{{< figure src="image.jpg" alt="Description" caption="Image caption" class="custom-class" >}}
+{{< youtube id="dQw4w9WgXcQ" >}}
 ```
 
-### Parameters
-- `src` (required): Image source path
-- `alt` (required): Alt text for accessibility
-- `caption` (optional): Image caption with markdown support
-- `class` (optional): Additional CSS classes
-- `width` (optional): Image width attribute
-- `height` (optional): Image height attribute
-- `loading` (optional): Loading behavior (default: "lazy")
-- `sizes` (optional): Responsive image sizes
+#### Advanced Usage
 
-### Features
-- Automatic WebP conversion when using page resources
-- Responsive image generation (480px, 768px, 1024px)
-- Hover effects with smooth transitions
-- Proper semantic HTML with `<figure>` and `<figcaption>`
-- Lazy loading support
-
-### Example
 ```markdown
-{{< figure 
-  src="architecture-diagram.jpg" 
-  alt="System architecture showing microservices communication" 
-  caption="Our **microservices architecture** enables scalable deployment"
-  class="border shadow-lg" >}}
+{{< youtube id="dQw4w9WgXcQ" title="Video Title" autoplay="false" start="30" class="custom-class" >}}
 ```
 
-## YouTube Shortcode
+#### Parameters
 
-Privacy-focused YouTube embeds with enhanced loading and accessibility.
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `id` | Yes | - | YouTube video ID |
+| `title` | No | "YouTube video" | Video title for accessibility |
+| `autoplay` | No | "false" | Enable autoplay ("true" or "false") |
+| `start` | No | - | Start time in seconds |
+| `class` | No | - | Additional CSS classes |
+| `privacy` | No | "true" | Use privacy-enhanced mode |
 
-### Usage
+#### Privacy Features
+
+- Uses `youtube-nocookie.com` domain by default for enhanced privacy
+- Respects Hugo's privacy configuration
+- Includes structured data for SEO
+- Loading placeholder with smooth transitions
+
+### Vimeo
+
+Embed Vimeo videos with Do Not Track support.
+
+#### Basic Usage
+
 ```markdown
-{{< youtube id="VIDEO_ID" title="Video Title" >}}
+{{< vimeo id="147365861" >}}
 ```
 
-### Parameters
-- `id` (required): YouTube video ID
-- `title` (optional): Video title for accessibility (default: "YouTube video")
-- `autoplay` (optional): Enable autoplay (default: "false")
-- `start` (optional): Start time in seconds
-- `class` (optional): Additional CSS classes
-- `privacy` (optional): Use youtube-nocookie.com (default: "true")
+#### Advanced Usage
 
-### Features
-- Privacy-focused with youtube-nocookie.com by default
-- Loading placeholder with YouTube branding
-- Responsive 16:9 aspect ratio
-- Structured data (JSON-LD) for SEO
-- Lazy loading iframe
-- Accessibility-compliant with proper titles
-
-### Example
 ```markdown
-{{< youtube 
-  id="dQw4w9WgXcQ" 
-  title="Introduction to Hugo Static Site Generator"
-  start="30"
-  autoplay="false" >}}
+{{< vimeo id="147365861" title="Video Title" autoplay="false" class="custom-class" >}}
 ```
 
-## Gallery Shortcode
+#### Parameters
 
-Modern image galleries with lightbox functionality and responsive grid layouts.
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `id` | Yes | - | Vimeo video ID |
+| `title` | No | "Vimeo video" | Video title for accessibility |
+| `autoplay` | No | "false" | Enable autoplay ("true" or "false") |
+| `class` | No | - | Additional CSS classes |
 
-### Usage Method 1: Pattern Matching
+#### Privacy Features
+
+- Enables Do Not Track (DNT) by default
+- Removes branding and user information
+- Respects Hugo's privacy configuration
+
+## Social Media Shortcodes
+
+### Twitter
+
+Embed Twitter posts with privacy options and fallback modes.
+
+#### Basic Usage
+
 ```markdown
-{{< gallery match="images/*" caption="Photo Gallery" columns="3" >}}
+{{< twitter user="username" id="1234567890" >}}
 ```
 
-### Usage Method 2: Individual Images
-```markdown
-{{< gallery caption="My Gallery" columns="2" >}}
-  {{< gallery-image src="image1.jpg" alt="Description 1" caption="Caption 1" >}}
-  {{< gallery-image src="image2.jpg" alt="Description 2" caption="Caption 2" >}}
-{{< /gallery >}}
+#### Parameters
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `user` | No | - | Twitter username (for URL generation) |
+| `id` | Yes | - | Tweet ID |
+| `class` | No | - | Additional CSS classes |
+
+#### Privacy Features
+
+- Respects `privacy.twitter.simple` configuration
+- In simple mode, shows a styled link instead of full embed
+- Enables Do Not Track when configured
+- Graceful fallback for blocked content
+
+#### Simple Mode
+
+When `privacy.twitter.simple = true` in your Hugo config:
+
+```toml
+[privacy]
+  [privacy.twitter]
+    simple = true
+    enableDNT = true
 ```
 
-### Gallery Parameters
-- `match` (optional): Pattern to match page resources (e.g., "images/*")
-- `caption` (optional): Gallery title/caption
-- `columns` (optional): Number of columns (default: "3")
-- `class` (optional): Additional CSS classes
-- `gap` (optional): Grid gap size (default: "4")
+The shortcode will display a styled card with a link to the tweet instead of embedding it.
 
-### Gallery-Image Parameters
-- `src` (required): Image source path
-- `alt` (required): Alt text for accessibility
-- `caption` (optional): Individual image caption
-- `class` (optional): Additional CSS classes
+### Instagram
 
-### Features
-- Responsive grid layout (1 column mobile, 2 tablet, 3+ desktop)
-- Lightbox with keyboard navigation (arrow keys, escape)
-- WebP conversion for page resources
-- Hover effects with zoom icons
-- Touch-friendly navigation
-- Automatic thumbnail generation (400x400)
-- Large image generation (1200px) for lightbox
+Embed Instagram posts with privacy-conscious options.
 
-### Example
+#### Basic Usage
+
 ```markdown
-{{< gallery match="gallery/*" caption="Conference Photos 2024" columns="4" >}}
-
-<!-- Or with individual control -->
-{{< gallery caption="Product Screenshots" >}}
-  {{< gallery-image 
-    src="dashboard.jpg" 
-    alt="Main dashboard interface" 
-    caption="User dashboard with analytics" >}}
-  {{< gallery-image 
-    src="settings.jpg" 
-    alt="Settings panel" 
-    caption="Configuration options" >}}
-{{< /gallery >}}
+{{< instagram id="BWNjjyYFxVx" >}}
 ```
 
-## Alert Shortcode
+#### Advanced Usage
 
-Styled callout boxes for highlighting important information.
-
-### Usage
 ```markdown
-{{< alert type="info" title="Important Note" >}}
-Content with **markdown** support.
-{{< /alert >}}
+{{< instagram id="BWNjjyYFxVx" hidecaption="true" class="custom-class" >}}
 ```
 
-### Parameters
-- `type` (optional): Alert type - "info", "warning", "error", "success" (default: "info")
-- `title` (optional): Alert title
-- `icon` (optional): Custom SVG path for icon
-- `class` (optional): Additional CSS classes
+#### Parameters
 
-### Features
-- Four predefined types with appropriate colors and icons
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `id` | Yes | - | Instagram post ID |
+| `hidecaption` | No | "false" | Hide post caption ("true" or "false") |
+| `class` | No | - | Additional CSS classes |
+
+#### Privacy Features
+
+- Respects `privacy.instagram.simple` configuration
+- Simple mode shows styled link instead of embed
+- Responsive design for mobile devices
+
+## Code Shortcodes
+
+### GitHub Gist
+
+Embed GitHub Gists with enhanced styling and error handling.
+
+#### Basic Usage
+
+```markdown
+{{< gist username="spf13" id="7896402" >}}
+```
+
+#### Advanced Usage
+
+```markdown
+{{< gist username="spf13" id="7896402" file="README.md" class="custom-class" >}}
+```
+
+#### Parameters
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `username` | Yes | - | GitHub username |
+| `id` | Yes | - | Gist ID |
+| `file` | No | - | Specific file from multi-file gist |
+| `class` | No | - | Additional CSS classes |
+
+#### Features
+
+- Loading placeholder with spinner
+- Error handling with fallback link
+- Theme-consistent styling
 - Dark mode support
-- Markdown content support
-- Accessible with proper ARIA roles
 - Responsive design
 
-### Example
+## Content Shortcodes
+
+### Figure
+
+Enhanced figure shortcode with responsive images and WebP support.
+
+#### Basic Usage
+
 ```markdown
-{{< alert type="warning" title="Breaking Change" >}}
-This feature will be **deprecated** in version 2.0. Please migrate to the new API.
-{{< /alert >}}
-
-{{< alert type="success" >}}
-✅ All tests passed successfully!
-{{< /alert >}}
+{{< figure src="image.jpg" alt="Description" >}}
 ```
 
-## Button Shortcode
+#### Advanced Usage
 
-Enhanced buttons with modern styling and accessibility features.
-
-### Usage
 ```markdown
-{{< button href="https://example.com" type="primary" size="lg" target="_blank" >}}
-Button Text
-{{< /button >}}
+{{< figure src="image.jpg" alt="Description" caption="Image caption" width="800" height="600" loading="lazy" class="custom-class" >}}
 ```
 
-### Parameters
-- `href` (optional): Link URL (creates `<a>` tag, otherwise `<button>`)
-- `type` (optional): Button style - "primary", "secondary", "outline", "ghost", "link" (default: "primary")
-- `size` (optional): Button size - "sm", "md", "lg", "xl" (default: "md")
-- `target` (optional): Link target (e.g., "_blank")
-- `rel` (optional): Link relationship (auto-adds "noopener noreferrer" for _blank)
-- `class` (optional): Additional CSS classes
-- `icon` (optional): SVG path for icon
-- `iconPosition` (optional): Icon position - "left", "right" (default: "left")
+#### Parameters
 
-### Features
-- Consistent with modern design systems
-- Proper focus states and accessibility
-- Icon support with positioning
-- Automatic security attributes for external links
-- Responsive sizing
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `src` | Yes | - | Image source path |
+| `alt` | Recommended | - | Alt text for accessibility |
+| `caption` | No | - | Image caption (supports Markdown) |
+| `width` | No | - | Image width |
+| `height` | No | - | Image height |
+| `loading` | No | "lazy" | Loading behavior |
+| `class` | No | - | Additional CSS classes |
+| `sizes` | No | Auto | Responsive sizes attribute |
 
-### Example
-```markdown
-{{< button 
-  href="/docs/getting-started" 
-  type="primary" 
-  size="lg"
-  icon="M9 5l7 7-7 7" 
-  iconPosition="right" >}}
-Get Started
-{{< /button >}}
+#### Features
 
-{{< button type="outline" >}}
-Cancel
-{{< /button >}}
-```
-
-## Code Shortcode
-
-Enhanced code blocks with syntax highlighting and copy functionality.
-
-### Usage
-```markdown
-{{< code lang="javascript" title="example.js" copy="true" >}}
-const hello = "world";
-console.log(hello);
-{{< /code >}}
-```
-
-### Parameters
-- `lang` (optional): Programming language for syntax highlighting (default: "text")
-- `title` (optional): Code block title/filename
-- `copy` (optional): Enable copy button (default: "true")
-- `lineNumbers` (optional): Show line numbers (default: "false")
-- `highlight` (optional): Highlight specific lines
-- `class` (optional): Additional CSS classes
-
-### Features
-- One-click copy to clipboard
-- Syntax highlighting support
-- File title display
-- Copy confirmation feedback
-- Responsive design
-- Proper semantic HTML
-
-### Example
-```markdown
-{{< code lang="python" title="main.py" copy="true" >}}
-def hello_world():
-    print("Hello, World!")
-    return True
-
-if __name__ == "__main__":
-    hello_world()
-{{< /code >}}
-```
-
-## Content Bundles and Page Resources
-
-All shortcodes support Hugo's page bundles and page resources for better organization and performance.
-
-### Page Bundle Structure
-```
-content/
-├── posts/
-│   ├── my-article/
-│   │   ├── index.md          # Article content
-│   │   ├── featured.jpg      # Featured image
-│   │   ├── gallery/          # Gallery images
-│   │   │   ├── photo1.jpg
-│   │   │   ├── photo2.jpg
-│   │   │   └── photo3.jpg
-│   │   └── diagrams/         # Diagrams and charts
-│   │       ├── architecture.png
-│   │       └── workflow.svg
-```
-
-### Using Page Resources
-```markdown
-<!-- Reference images directly from the bundle -->
-{{< figure src="featured.jpg" alt="Article featured image" >}}
-
-<!-- Use pattern matching for galleries -->
-{{< gallery match="gallery/*" caption="Event Photos" >}}
-
-<!-- Reference specific resources -->
-{{< figure src="diagrams/architecture.png" alt="System architecture" >}}
-```
-
-### Benefits
-- Automatic image processing and optimization
-- WebP conversion for better performance
+- Automatic WebP conversion when possible
 - Responsive image generation
-- Better content organization
-- Portable content bundles
-
-## Accessibility Features
-
-All shortcodes include comprehensive accessibility features:
-
-### Required Alt Text
-- Figure and gallery-image shortcodes require `alt` parameters
-- Warnings are generated for missing alt text during build
-
-### Semantic HTML
-- Proper use of `<figure>`, `<figcaption>`, `<button>`, etc.
-- ARIA labels and roles where appropriate
-- Keyboard navigation support
-
-### Focus Management
-- Visible focus indicators
-- Logical tab order
-- Keyboard shortcuts (gallery lightbox)
-
-### Screen Reader Support
-- Descriptive labels and titles
-- Proper heading hierarchy
-- Alternative text for all images
-
-## Performance Optimizations
-
-### Image Processing
-- Automatic WebP conversion
-- Multiple size generation for responsive images
 - Lazy loading by default
-- Proper aspect ratio maintenance
+- Hover effects and transitions
+- Accessibility compliance
 
-### JavaScript
-- Minimal JavaScript footprint
-- Progressive enhancement
-- No external dependencies
-- Efficient event handling
+### Alert
 
-### CSS
-- Tailwind CSS utility classes
-- Minimal custom CSS
-- Responsive design patterns
-- Dark mode support
+Create styled alert boxes for important information.
 
-## Best Practices
+#### Basic Usage
 
-### Image Optimization
-1. Use page bundles for better organization
-2. Provide descriptive alt text for all images
-3. Use appropriate image formats (WebP when possible)
-4. Include captions for context
+```markdown
+{{< alert type="info" >}}
+This is an informational message.
+{{< /alert >}}
+```
 
-### Content Structure
-1. Use semantic shortcodes appropriately
-2. Maintain consistent styling with theme classes
-3. Test accessibility with screen readers
-4. Optimize for mobile devices
+#### Advanced Usage
 
-### Performance
-1. Use lazy loading for images
-2. Minimize JavaScript usage
-3. Leverage Hugo's image processing
-4. Test on various devices and connections
+```markdown
+{{< alert type="warning" title="Important Notice" icon="custom-path" class="custom-class" >}}
+This is a warning message with custom title and icon.
+{{< /alert >}}
+```
 
-This documentation covers all the enhanced shortcodes available in the Parsa Redesigned theme. Each shortcode is designed to provide modern functionality while maintaining excellent performance and accessibility standards.
+#### Parameters
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `type` | No | "info" | Alert type: "info", "warning", "error", "success" |
+| `title` | No | - | Alert title |
+| `icon` | No | Auto | Custom icon SVG path |
+| `class` | No | - | Additional CSS classes |
+
+#### Alert Types
+
+- **info**: Blue styling for general information
+- **warning**: Yellow styling for warnings
+- **error**: Red styling for errors and critical information
+- **success**: Green styling for success messages
+
+### Mermaid Diagrams
+
+Create diagrams using Mermaid.js syntax.
+
+#### Shortcode Usage
+
+```markdown
+{{< mermaid >}}
+graph TD
+    A[Start] --> B{Decision}
+    B -->|Yes| C[Action 1]
+    B -->|No| D[Action 2]
+{{< /mermaid >}}
+```
+
+#### Code Block Usage
+
+````markdown
+```mermaid
+sequenceDiagram
+    participant A as Alice
+    participant B as Bob
+    A->>B: Hello Bob!
+    B->>A: Hello Alice!
+```
+````
+
+#### Supported Diagram Types
+
+- Flowcharts
+- Sequence diagrams
+- Class diagrams
+- State diagrams
+- Entity relationship diagrams
+- User journey diagrams
+- Gantt charts
+- Pie charts
+- Git graphs
+
+#### Configuration
+
+Configure Mermaid in your Hugo config:
+
+```toml
+[params.mermaid]
+  enabled = true
+  theme = "default"  # Options: default, dark, forest, neutral
+```
+
+## Privacy Settings
+
+Configure privacy settings in your Hugo configuration:
+
+```toml
+[privacy]
+  [privacy.youtube]
+    disable = false
+    privacyEnhanced = true
+    
+  [privacy.vimeo]
+    disable = false
+    enableDNT = true
+    
+  [privacy.twitter]
+    disable = false
+    enableDNT = true
+    simple = false  # Set to true for privacy-first mode
+    
+  [privacy.instagram]
+    disable = false
+    simple = false  # Set to true for privacy-first mode
+```
+
+### Privacy Modes
+
+#### Enhanced Privacy Mode
+
+When enabled, shortcodes will:
+- Use privacy-enhanced domains (e.g., youtube-nocookie.com)
+- Enable Do Not Track headers
+- Minimize data collection
+- Respect user privacy preferences
+
+#### Simple Mode
+
+For maximum privacy, enable simple mode for social media shortcodes:
+- Displays styled cards with links instead of embeds
+- No external scripts loaded
+- No tracking or data collection
+- Maintains visual consistency
+
+## Troubleshooting
+
+### Common Issues
+
+#### Shortcode Not Rendering
+
+**Problem**: Shortcode appears as plain text instead of rendering.
+
+**Solutions**:
+1. Check shortcode syntax - ensure proper opening and closing tags
+2. Verify parameter names and values
+3. Ensure the shortcode file exists in `layouts/shortcodes/`
+
+#### Video Not Loading
+
+**Problem**: Video embed shows loading spinner indefinitely.
+
+**Solutions**:
+1. Verify the video ID is correct
+2. Check if the video is publicly accessible
+3. Ensure your site's Content Security Policy allows the embed domain
+4. Check browser console for JavaScript errors
+
+#### Gist Not Displaying
+
+**Problem**: GitHub Gist shows error message or doesn't load.
+
+**Solutions**:
+1. Verify the username and gist ID are correct
+2. Ensure the gist is public
+3. Check network connectivity and firewall settings
+4. Verify JavaScript is enabled in the browser
+
+#### Social Media Embeds Blocked
+
+**Problem**: Twitter or Instagram embeds don't appear.
+
+**Solutions**:
+1. Check if privacy mode is enabled (simple mode)
+2. Verify the post ID is correct and the post is public
+3. Check browser privacy settings and ad blockers
+4. Ensure third-party cookies are allowed if needed
+
+### Content Security Policy
+
+If you're using a Content Security Policy (CSP), add these domains:
+
+```
+script-src: 
+  - https://www.youtube.com
+  - https://player.vimeo.com
+  - https://platform.twitter.com
+  - https://www.instagram.com
+  - https://gist.github.com
+  - https://cdn.jsdelivr.net
+
+frame-src:
+  - https://www.youtube.com
+  - https://www.youtube-nocookie.com
+  - https://player.vimeo.com
+
+connect-src:
+  - https://api.github.com
+```
+
+### Performance Optimization
+
+#### Lazy Loading
+
+All video embeds use lazy loading by default. To disable:
+
+```markdown
+{{< youtube id="VIDEO_ID" loading="eager" >}}
+```
+
+#### Preconnect Hints
+
+Add preconnect hints to your site's head for better performance:
+
+```html
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://player.vimeo.com">
+<link rel="preconnect" href="https://platform.twitter.com">
+```
+
+### Accessibility
+
+All shortcodes include accessibility features:
+- Proper ARIA labels
+- Keyboard navigation support
+- Screen reader compatibility
+- High contrast mode support
+- Reduced motion preferences
+
+### Browser Compatibility
+
+Shortcodes are tested and compatible with:
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+For older browsers, graceful fallbacks are provided.
+
+## Examples and Demos
+
+See the [Shortcode Examples](/blog/shortcode-examples/) page for live demonstrations of all shortcodes in action.

@@ -1,0 +1,68 @@
+{{ define "main" }}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4">{{ .Title | default "Privacy Policy" }}</h1>
+      <p class="text-gray-600">
+        Last updated: {{ .Date.Format "January 2, 2006" }}
+      </p>
+    </header>
+
+    <div class="prose prose-lg max-w-none">
+      {{ if .Content }}
+        {{ .Content }}
+      {{ else }}
+        {{/* Default Privacy Policy Template */}}
+        {{ partial "privacy/privacy-policy-template.html" . }}
+      {{ end }}
+    </div>
+
+    {{/* Interactive Privacy Controls */}}
+    {{ if site.Params.privacy.cookieConsent }}
+    <div class="mt-12 p-6 bg-gray-50 rounded-lg">
+      <h2 class="text-2xl font-semibold mb-4">Manage Your Privacy Settings</h2>
+      <p class="mb-4">You can control how we use cookies and process your data:</p>
+      
+      <div class="flex flex-wrap gap-4">
+        <button onclick="window.ThemePrivacy.showConsentSettings()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors">
+          Cookie Settings
+        </button>
+        
+        <button onclick="window.ThemeGDPR.exportUserData()" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition-colors">
+          Download My Data
+        </button>
+        
+        <button onclick="if(confirm('Are you sure you want to delete all your data? This cannot be undone.')) window.ThemeGDPR.deleteUserData()" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition-colors">
+          Delete My Data
+        </button>
+      </div>
+    </div>
+    {{ end }}
+
+    {{/* Contact Information */}}
+    <div class="mt-8 p-6 border-l-4 border-blue-500 bg-blue-50">
+      <h3 class="text-xl font-semibold mb-2">Contact Us</h3>
+      <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
+      <ul class="mt-2 space-y-1">
+        {{ if site.Params.privacy.contactEmail }}
+        <li><strong>Email:</strong> <a href="mailto:{{ site.Params.privacy.contactEmail }}" class="text-blue-600 hover:underline">{{ site.Params.privacy.contactEmail }}</a></li>
+        {{ else if site.Params.author.email }}
+        <li><strong>Email:</strong> <a href="mailto:{{ site.Params.author.email }}" class="text-blue-600 hover:underline">{{ site.Params.author.email }}</a></li>
+        {{ end }}
+        
+        {{ if site.Params.privacy.contactAddress }}
+        <li><strong>Address:</strong> {{ site.Params.privacy.contactAddress }}</li>
+        {{ end }}
+        
+        {{ if site.Params.privacy.contactPhone }}
+        <li><strong>Phone:</strong> {{ site.Params.privacy.contactPhone }}</li>
+        {{ end }}
+        
+        {{ if site.Params.privacy.dpoEmail }}
+        <li><strong>Data Protection Officer:</strong> <a href="mailto:{{ site.Params.privacy.dpoEmail }}" class="text-blue-600 hover:underline">{{ site.Params.privacy.dpoEmail }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+  </div>
+</div>
+{{ end }}

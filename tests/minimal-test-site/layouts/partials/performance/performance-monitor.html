@@ -1,0 +1,516 @@
+{{/*
+  Performance Monitor Partial
+  
+  This partial implements Core Web Vitals measurement, performance budget
+  validation, and comprehensive performance monitoring for the theme.
+  
+  Requirements: 8.5
+  
+  Usage: Include in head or before closing body tag
+  {{ partial "performance/performance-monitor.html" . }}
+*/}}
+
+{{- $performance := site.Params.performance | default dict -}}
+{{- $monitoring := $performance.monitoring | default dict -}}
+{{- $enabled := $monitoring.enabled | default true -}}
+
+{{- if $enabled -}}
+
+<script>
+(function() {
+  'use strict';
+  
+  // Performance Monitor Configuration
+  window.PerformanceMonitor = {
+    config: {
+      // Core Web Vitals thresholds
+      thresholds: {
+        lcp: {{ $monitoring.lcpThreshold | default 2500 }}, // Largest Contentful Paint (ms)
+        fid: {{ $monitoring.fidThreshold | default 100 }},  // First Input Delay (ms)
+        cls: {{ $monitoring.clsThreshold | default 0.1 }},  // Cumulative Layout Shift
+        fcp: {{ $monitoring.fcpThreshold | default 1800 }}, // First Contentful Paint (ms)
+        ttfb: {{ $monitoring.ttfbThreshold | default 800 }}  // Time to First Byte (ms)
+      },
+      
+      // Performance budget limits
+      budget: {
+        totalSize: {{ $monitoring.budgetTotalSize | default 2000000 }}, // 2MB in bytes
+        scriptSize: {{ $monitoring.budgetScriptSize | default 500000 }}, // 500KB
+        imageSize: {{ $monitoring.budgetImageSize | default 1000000 }}, // 1MB
+        cssSize: {{ $monitoring.budgetCssSize | default 200000 }}, // 200KB
+        fontSize: {{ $monitoring.budgetFontSize | default 300000 }} // 300KB
+      },
+      
+      // Monitoring settings
+      sampleRate: {{ $monitoring.sampleRate | default 1.0 }}, // 100% sampling
+      reportingEndpoint: '{{ $monitoring.reportingEndpoint | default "" }}',
+      enableReporting: {{ $monitoring.enableReporting | default false }},
+      enableConsoleLogging: {{ $monitoring.enableConsoleLogging | default true }}
+    },
+    
+    metrics: {
+      lcp: null,
+      fid: null,
+      cls: null,
+      fcp: null,
+      ttfb: null,
+      loadTime: null,
+      domContentLoaded: null,
+      resourceCounts: {},
+      resourceSizes: {}
+    },
+    
+    observers: {},
+    startTime: performance.now(),
+    
+    // Initialize performance monitoring
+    init: function() {
+      console.log('PerformanceMonitor: Initializing performance monitoring');
+      
+      // Check sampling rate
+      if (Math.random() > this.config.sampleRate) {
+        console.log('PerformanceMonitor: Skipped due to sampling rate');
+        return;
+      }
+      
+      this.measureNavigationTiming();
+      this.measureCoreWebVitals();
+      this.measureResourcePerformance();
+      this.setupPerformanceBudgetMonitoring();
+      this.setupReporting();
+      
+      console.log('PerformanceMonitor: Monitoring initialized');
+    },
+    
+    // Measure navigation timing
+    measureNavigationTiming: function() {
+      var self = this;
+      
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var navigation = performance.getEntriesByType('navigation')[0];
+          if (navigation) {
+            self.metrics.ttfb = navigation.responseStart - navigation.requestStart;
+            self.metrics.domContentLoaded = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+            self.metrics.loadTime = navigation.loadEventEnd - navigation.navigationStart;
+            
+            self.reportMetric('navigation_timing', {
+              ttfb: self.metrics.ttfb,
+              dom_content_loaded: self.metrics.domContentLoaded,
+              load_time: self.metrics.loadTime
+            });
+          }
+        }, 100);
+      });
+    },
+    
+    // Measure Core Web Vitals
+    measureCoreWebVitals: function() {
+      var self = this;
+      
+      // Largest Contentful Paint (LCP)
+      if ('PerformanceObserver' in window) {
+        try {
+          var lcpObserver = new PerformanceObserver(function(list) {
+            var entries = list.getEntries();
+            var lastEntry = entries[entries.length - 1];
+            self.metrics.lcp = lastEntry.startTime;
+            
+            self.reportMetric('lcp', {
+              value: self.metrics.lcp,
+              rating: self.getRating('lcp', self.metrics.lcp),
+              element: lastEntry.element ? lastEntry.element.tagName : 'unknown'
+            });
+          });
+          
+          lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+          this.observers.lcp = lcpObserver;
+        } catch (e) {
+          console.warn('PerformanceMonitor: LCP measurement failed:', e);
+        }
+        
+        // First Contentful Paint (FCP)
+        try {
+          var fcpObserver = new PerformanceObserver(function(list) {
+            var entries = list.getEntries();
+            for (var i = 0; i < entries.length; i++) {
+              if (entries[i].name === 'first-contentful-paint') {
+                self.metrics.fcp = entries[i].startTime;
+                
+                self.reportMetric('fcp', {
+                  value: self.metrics.fcp,
+                  rating: self.getRating('fcp', self.metrics.fcp)
+                });
+                break;
+              }
+            }
+          });
+          
+          fcpObserver.observe({ entryTypes: ['paint'] });
+          this.observers.fcp = fcpObserver;
+        } catch (e) {
+          console.warn('PerformanceMonitor: FCP measurement failed:', e);
+        }
+        
+        // Cumulative Layout Shift (CLS)
+        try {
+          var clsValue = 0;
+          var clsObserver = new PerformanceObserver(function(list) {
+            var entries = list.getEntries();
+            for (var i = 0; i < entries.length; i++) {
+              if (!entries[i].hadRecentInput) {
+                clsValue += entries[i].value;
+              }
+            }
+            
+            self.metrics.cls = clsValue;
+            
+            self.reportMetric('cls', {
+              value: self.metrics.cls,
+              rating: self.getRating('cls', self.metrics.cls)
+            });
+          });
+          
+          clsObserver.observe({ entryTypes: ['layout-shift'] });
+          this.observers.cls = clsObserver;
+        } catch (e) {
+          console.warn('PerformanceMonitor: CLS measurement failed:', e);
+        }
+        
+        // First Input Delay (FID)
+        try {
+          var fidObserver = new PerformanceObserver(function(list) {
+            var entries = list.getEntries();
+            for (var i = 0; i < entries.length; i++) {
+              self.metrics.fid = entries[i].processingStart - entries[i].startTime;
+              
+              self.reportMetric('fid', {
+                value: self.metrics.fid,
+                rating: self.getRating('fid', self.metrics.fid),
+                event_type: entries[i].name
+              });
+              break;
+            }
+          });
+          
+          fidObserver.observe({ entryTypes: ['first-input'] });
+          this.observers.fid = fidObserver;
+        } catch (e) {
+          console.warn('PerformanceMonitor: FID measurement failed:', e);
+        }
+      }
+    },
+    
+    // Measure resource performance
+    measureResourcePerformance: function() {
+      var self = this;
+      
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var resources = performance.getEntriesByType('resource');
+          var resourceSizes = {
+            script: 0,
+            stylesheet: 0,
+            image: 0,
+            font: 0,
+            other: 0,
+            total: 0
+          };
+          
+          var resourceCounts = {
+            script: 0,
+            stylesheet: 0,
+            image: 0,
+            font: 0,
+            other: 0,
+            total: resources.length
+          };
+          
+          resources.forEach(function(resource) {
+            var size = resource.transferSize || resource.encodedBodySize || 0;
+            var type = self.getResourceType(resource);
+            
+            resourceSizes[type] += size;
+            resourceSizes.total += size;
+            resourceCounts[type]++;
+          });
+          
+          self.metrics.resourceSizes = resourceSizes;
+          self.metrics.resourceCounts = resourceCounts;
+          
+          self.reportMetric('resource_performance', {
+            sizes: resourceSizes,
+            counts: resourceCounts
+          });
+          
+          // Check performance budget
+          self.checkPerformanceBudget(resourceSizes);
+        }, 1000);
+      });
+    },
+    
+    // Setup performance budget monitoring
+    setupPerformanceBudgetMonitoring: function() {
+      var self = this;
+      
+      // Monitor resource loading
+      if ('PerformanceObserver' in window) {
+        try {
+          var resourceObserver = new PerformanceObserver(function(list) {
+            var entries = list.getEntries();
+            entries.forEach(function(entry) {
+              var size = entry.transferSize || entry.encodedBodySize || 0;
+              var type = self.getResourceType(entry);
+              
+              // Check individual resource size limits
+              var limit = self.config.budget[type + 'Size'];
+              if (limit && size > limit) {
+                self.reportBudgetViolation('resource_size', {
+                  resource: entry.name,
+                  type: type,
+                  size: size,
+                  limit: limit
+                });
+              }
+            });
+          });
+          
+          resourceObserver.observe({ entryTypes: ['resource'] });
+          this.observers.resource = resourceObserver;
+        } catch (e) {
+          console.warn('PerformanceMonitor: Resource monitoring failed:', e);
+        }
+      }
+    },
+    
+    // Check performance budget
+    checkPerformanceBudget: function(resourceSizes) {
+      var violations = [];
+      
+      // Check total size budget
+      if (resourceSizes.total > this.config.budget.totalSize) {
+        violations.push({
+          type: 'total_size',
+          actual: resourceSizes.total,
+          limit: this.config.budget.totalSize,
+          overage: resourceSizes.total - this.config.budget.totalSize
+        });
+      }
+      
+      // Check individual resource type budgets
+      var budgetTypes = ['script', 'image', 'css', 'font'];
+      budgetTypes.forEach(function(type) {
+        var budgetKey = type + 'Size';
+        var actualSize = resourceSizes[type === 'css' ? 'stylesheet' : type] || 0;
+        var limit = this.config.budget[budgetKey];
+        
+        if (limit && actualSize > limit) {
+          violations.push({
+            type: type + '_size',
+            actual: actualSize,
+            limit: limit,
+            overage: actualSize - limit
+          });
+        }
+      }.bind(this));
+      
+      if (violations.length > 0) {
+        this.reportBudgetViolations(violations);
+      }
+      
+      return violations;
+    },
+    
+    // Get resource type from performance entry
+    getResourceType: function(resource) {
+      var name = resource.name.toLowerCase();
+      
+      if (name.includes('.js') || resource.initiatorType === 'script') {
+        return 'script';
+      } else if (name.includes('.css') || resource.initiatorType === 'css') {
+        return 'stylesheet';
+      } else if (name.match(/\.(jpg|jpeg|png|gif|webp|svg)/) || resource.initiatorType === 'img') {
+        return 'image';
+      } else if (name.match(/\.(woff|woff2|ttf|otf|eot)/) || resource.initiatorType === 'font') {
+        return 'font';
+      } else {
+        return 'other';
+      }
+    },
+    
+    // Get performance rating
+    getRating: function(metric, value) {
+      var thresholds = this.config.thresholds;
+      
+      switch (metric) {
+        case 'lcp':
+          return value <= 2500 ? 'good' : value <= 4000 ? 'needs-improvement' : 'poor';
+        case 'fid':
+          return value <= 100 ? 'good' : value <= 300 ? 'needs-improvement' : 'poor';
+        case 'cls':
+          return value <= 0.1 ? 'good' : value <= 0.25 ? 'needs-improvement' : 'poor';
+        case 'fcp':
+          return value <= 1800 ? 'good' : value <= 3000 ? 'needs-improvement' : 'poor';
+        case 'ttfb':
+          return value <= 800 ? 'good' : value <= 1800 ? 'needs-improvement' : 'poor';
+        default:
+          return 'unknown';
+      }
+    },
+    
+    // Report performance metric
+    reportMetric: function(metricName, data) {
+      if (this.config.enableConsoleLogging) {
+        console.log('PerformanceMonitor:', metricName, data);
+      }
+      
+      // Send to Google Analytics
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'performance_metric', {
+          'metric_name': metricName,
+          'metric_value': data.value || JSON.stringify(data),
+          'metric_rating': data.rating || 'unknown'
+        });
+      }
+      
+      // Send to custom reporting endpoint
+      if (this.config.enableReporting && this.config.reportingEndpoint) {
+        this.sendToReportingEndpoint(metricName, data);
+      }
+    },
+    
+    // Report budget violations
+    reportBudgetViolations: function(violations) {
+      violations.forEach(function(violation) {
+        this.reportBudgetViolation('budget_violation', violation);
+      }.bind(this));
+    },
+    
+    // Report individual budget violation
+    reportBudgetViolation: function(eventName, data) {
+      if (this.config.enableConsoleLogging) {
+        console.warn('PerformanceMonitor: Budget violation -', data);
+      }
+      
+      // Send to Google Analytics
+      if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, {
+          'violation_type': data.type,
+          'actual_size': data.actual || data.size,
+          'limit_size': data.limit,
+          'overage': data.overage
+        });
+      }
+      
+      // Send to custom reporting endpoint
+      if (this.config.enableReporting && this.config.reportingEndpoint) {
+        this.sendToReportingEndpoint(eventName, data);
+      }
+    },
+    
+    // Send data to custom reporting endpoint
+    sendToReportingEndpoint: function(eventName, data) {
+      try {
+        fetch(this.config.reportingEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            event: eventName,
+            data: data,
+            timestamp: Date.now(),
+            url: window.location.href,
+            userAgent: navigator.userAgent
+          })
+        }).catch(function(error) {
+          console.warn('PerformanceMonitor: Failed to send to reporting endpoint:', error);
+        });
+      } catch (error) {
+        console.warn('PerformanceMonitor: Reporting endpoint error:', error);
+      }
+    },
+    
+    // Setup automated reporting
+    setupReporting: function() {
+      var self = this;
+      
+      // Report final metrics when page is about to unload
+      window.addEventListener('beforeunload', function() {
+        self.reportFinalMetrics();
+      });
+      
+      // Report metrics periodically for long-running pages
+      setInterval(function() {
+        self.reportPeriodicMetrics();
+      }, 30000); // Every 30 seconds
+    },
+    
+    // Report final metrics
+    reportFinalMetrics: function() {
+      var summary = {
+        coreWebVitals: {
+          lcp: this.metrics.lcp,
+          fid: this.metrics.fid,
+          cls: this.metrics.cls,
+          fcp: this.metrics.fcp
+        },
+        timing: {
+          ttfb: this.metrics.ttfb,
+          domContentLoaded: this.metrics.domContentLoaded,
+          loadTime: this.metrics.loadTime
+        },
+        resources: {
+          sizes: this.metrics.resourceSizes,
+          counts: this.metrics.resourceCounts
+        }
+      };
+      
+      this.reportMetric('final_performance_summary', summary);
+    },
+    
+    // Report periodic metrics
+    reportPeriodicMetrics: function() {
+      // Only report CLS as it can change over time
+      if (this.metrics.cls !== null) {
+        this.reportMetric('periodic_cls', {
+          value: this.metrics.cls,
+          rating: this.getRating('cls', this.metrics.cls)
+        });
+      }
+    },
+    
+    // Get current performance status
+    getStatus: function() {
+      return {
+        metrics: this.metrics,
+        ratings: {
+          lcp: this.metrics.lcp ? this.getRating('lcp', this.metrics.lcp) : null,
+          fid: this.metrics.fid ? this.getRating('fid', this.metrics.fid) : null,
+          cls: this.metrics.cls ? this.getRating('cls', this.metrics.cls) : null,
+          fcp: this.metrics.fcp ? this.getRating('fcp', this.metrics.fcp) : null,
+          ttfb: this.metrics.ttfb ? this.getRating('ttfb', this.metrics.ttfb) : null
+        },
+        budgetStatus: this.checkPerformanceBudget(this.metrics.resourceSizes || {})
+      };
+    }
+  };
+  
+  // Auto-initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      window.PerformanceMonitor.init();
+    });
+  } else {
+    window.PerformanceMonitor.init();
+  }
+  
+  // Expose status function globally
+  window.getPerformanceStatus = function() {
+    return window.PerformanceMonitor.getStatus();
+  };
+  
+})();
+</script>
+
+{{- end -}}

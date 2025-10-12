@@ -1,0 +1,532 @@
+{{/*
+  Search Widget Component
+  Unified search interface with responsive design and accessibility features
+  Usage: {{ partial "search/search-widget.html" . }}
+  Usage (compact): {{ partial "search/search-widget.html" (dict "context" . "compact" true) }}
+  
+  Requirements: 3.3, 3.5
+  - 3.3: Maintain site's design consistency and responsive layout for search results
+  - 3.5: Ensure responsive design and accessibility compliance across different devices
+*/}}
+
+{{/* Load validated configuration */}}
+{{ $context := .context | default . }}
+{{ $compact := .compact | default false }}
+{{ partial "helpers/config-validation.html" $context }}
+{{ $config := $context.Page.Store.Get "validatedConfig" }}
+{{ $gcsId := $config.googleCustomSearch.value }}
+
+{{ if $compact }}
+<!-- Compact Search Widget for Navbar -->
+<div class="search-widget-compact" role="search" aria-label="{{ i18n "search_widget" | default "Site Search" }}">
+  <form action="{{ "/search" | relLangURL }}" method="get" class="search-form-compact">
+    <div class="search-input-group-compact">
+      <input type="search" 
+             name="q" 
+             class="search-input-compact" 
+             placeholder="{{ i18n "searchPlaceholder" | default "Search..." }}"
+             aria-label="{{ i18n "searchArticles" | default "Search articles" }}"
+             autocomplete="off">
+      <button type="submit" 
+              class="search-button-compact"
+              aria-label="{{ i18n "submitSearch" | default "Submit search" }}">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+{{ else }}
+<div class="search-widget" role="search" aria-label="{{ i18n "search_widget" | default "Site Search" }}">
+  {{/* Search Widget Header */}}
+  <div class="search-widget-header">
+    <h2 class="search-widget-title">
+      <i class="ti-search" aria-hidden="true"></i>
+      {{ i18n "search_title" | default "Search" }}
+    </h2>
+  </div>
+  
+  {{/* Search Widget Body */}}
+  <div class="search-widget-body">
+    {{/* Include the Google Custom Search partial */}}
+    {{ partial "search/google-custom-search.html" . }}
+  </div>
+  
+  {{/* Search Widget Footer - Additional search options */}}
+  <div class="search-widget-footer">
+    <div class="search-tips">
+      <button type="button" 
+              class="btn btn-link search-tips-toggle" 
+              data-toggle="collapse" 
+              data-target="#search-tips-content"
+              aria-expanded="false"
+              aria-controls="search-tips-content">
+        <i class="ti-help-alt" aria-hidden="true"></i>
+        {{ i18n "search_tips" | default "Search Tips" }}
+      </button>
+      
+      <div class="collapse search-tips-content" id="search-tips-content">
+        <div class="search-tips-list">
+          <ul>
+            <li>{{ i18n "search_tip_1" | default "Use quotes for exact phrases" }}</li>
+            <li>{{ i18n "search_tip_2" | default "Use + to require a word" }}</li>
+            <li>{{ i18n "search_tip_3" | default "Use - to exclude a word" }}</li>
+            {{ if $gcsId }}
+            <li>{{ i18n "search_tip_gcs" | default "Powered by Google Custom Search" }}</li>
+            {{ else }}
+            <li>{{ i18n "search_tip_local" | default "Local search across all content" }}</li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}
+
+{{/* Search Widget Styles */}}
+<style>
+  /* Compact search widget styles for navbar */
+  .search-widget-compact {
+    position: relative;
+  }
+  
+  .search-form-compact {
+    margin: 0;
+  }
+  
+  .search-input-group-compact {
+    display: flex;
+    align-items: center;
+    background: var(--muted, #f8f9fa);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    width: 240px;
+  }
+  
+  .search-input-group-compact:focus-within {
+    border-color: var(--primary, #3b82f6);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+  
+  .search-input-compact {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--foreground, #0f172a);
+    outline: none;
+  }
+  
+  .search-input-compact::placeholder {
+    color: var(--muted-foreground, #64748b);
+  }
+  
+  .search-button-compact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--muted-foreground, #64748b);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .search-button-compact:hover {
+    color: var(--primary, #3b82f6);
+  }
+  
+  /* Base search widget styles */
+  .search-widget {
+    background: var(--white);
+    border: 1px solid var(--border-color, #e9ecef);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .search-widget:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Search widget header */
+  .search-widget-header {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color, #e9ecef);
+    padding-bottom: 0.75rem;
+  }
+  
+  .search-widget-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color, #333);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .search-widget-title i {
+    color: var(--primary-color, #007bff);
+  }
+  
+  /* Search widget body */
+  .search-widget-body {
+    margin-bottom: 1rem;
+  }
+  
+  /* Google Custom Search styling */
+  .google-custom-search-container {
+    margin-bottom: 1rem;
+  }
+  
+  /* Override Google's default styles for better integration */
+  .gsc-control-cse {
+    font-family: inherit !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  
+  .gsc-search-box {
+    margin-bottom: 1rem !important;
+  }
+  
+  .gsc-input-box {
+    border: 1px solid var(--border-color, #e9ecef) !important;
+    border-radius: 4px !important;
+    background: var(--white) !important;
+  }
+  
+  .gsc-input {
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    padding: 0.75rem !important;
+    color: var(--text-color, #333) !important;
+  }
+  
+  .gsc-search-button {
+    background: var(--primary-color, #007bff) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 0.75rem 1rem !important;
+    margin-left: 0.5rem !important;
+  }
+  
+  .gsc-search-button:hover {
+    background: var(--primary-color-dark, #0056b3) !important;
+  }
+  
+  /* Local search fallback styling */
+  .local-search-fallback {
+    width: 100%;
+  }
+  
+  .search-form {
+    margin-bottom: 1rem;
+  }
+  
+  .search-input-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  
+  .search-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color, #e9ecef);
+    border-radius: 4px;
+    font-size: 1rem;
+    background: var(--white);
+    color: var(--text-color, #333);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary-color, #007bff);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  .search-button {
+    padding: 0.75rem 1rem;
+    background: var(--primary-color, #007bff);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .search-button:hover {
+    background: var(--primary-color-dark, #0056b3);
+  }
+  
+  .search-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  /* Search results styling */
+  .search-results {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color, #e9ecef);
+  }
+  
+  .search-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .search-results-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color, #333);
+    margin: 0;
+  }
+  
+  .search-results-count {
+    font-size: 0.9rem;
+    color: var(--text-muted, #6c757d);
+  }
+  
+  .search-results-list {
+    space-y: 1rem;
+  }
+  
+  /* Search widget footer */
+  .search-widget-footer {
+    border-top: 1px solid var(--border-color, #e9ecef);
+    padding-top: 1rem;
+  }
+  
+  .search-tips-toggle {
+    font-size: 0.9rem;
+    color: var(--text-muted, #6c757d);
+    text-decoration: none;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .search-tips-toggle:hover {
+    color: var(--primary-color, #007bff);
+    text-decoration: underline;
+  }
+  
+  .search-tips-content {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: var(--light-bg, #f8f9fa);
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #e9ecef);
+  }
+  
+  .search-tips-list ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+  }
+  
+  .search-tips-list li {
+    font-size: 0.9rem;
+    color: var(--text-muted, #6c757d);
+    margin-bottom: 0.25rem;
+  }
+  
+  .search-tips-list li:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .search-widget {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-widget-title {
+      font-size: 1.1rem;
+    }
+    
+    .search-input-group {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .search-button {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .search-results-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .search-widget {
+      padding: 0.75rem;
+      border-radius: 4px;
+    }
+    
+    .search-widget-title {
+      font-size: 1rem;
+    }
+    
+    .search-input {
+      font-size: 0.9rem;
+      padding: 0.625rem;
+    }
+    
+    .search-button {
+      padding: 0.625rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .search-widget {
+      border: 2px solid;
+    }
+    
+    .search-input:focus,
+    .search-button:focus {
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .search-widget,
+    .search-input,
+    .search-button {
+      transition: none;
+    }
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .search-widget {
+      background: var(--dark-bg, #2d3748);
+      border-color: var(--dark-border, #4a5568);
+      color: var(--dark-text, #e2e8f0);
+    }
+    
+    .search-input {
+      background: var(--dark-input-bg, #4a5568);
+      border-color: var(--dark-border, #4a5568);
+      color: var(--dark-text, #e2e8f0);
+    }
+    
+    .search-tips-content {
+      background: var(--dark-light-bg, #4a5568);
+      border-color: var(--dark-border, #4a5568);
+    }
+  }
+  
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+{{/* Search Widget JavaScript for enhanced functionality */}}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize search widget functionality
+    var searchWidget = document.querySelector('.search-widget');
+    if (!searchWidget) return;
+    
+    // Handle search tips toggle
+    var tipsToggle = searchWidget.querySelector('.search-tips-toggle');
+    var tipsContent = searchWidget.querySelector('.search-tips-content');
+    
+    if (tipsToggle && tipsContent) {
+      tipsToggle.addEventListener('click', function() {
+        var isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        
+        if (tipsContent.classList.contains('show')) {
+          tipsContent.classList.remove('show');
+        } else {
+          tipsContent.classList.add('show');
+        }
+      });
+    }
+    
+    // Enhance keyboard navigation
+    var searchInput = searchWidget.querySelector('.search-input');
+    if (searchInput) {
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          var form = this.closest('form');
+          if (form) {
+            form.submit();
+          }
+        }
+      });
+    }
+    
+    // Add loading state for search
+    var searchForm = searchWidget.querySelector('.search-form form');
+    if (searchForm) {
+      searchForm.addEventListener('submit', function() {
+        var button = this.querySelector('.search-button');
+        if (button) {
+          button.innerHTML = '<i class="ti-reload" aria-hidden="true"></i>';
+          button.disabled = true;
+          
+          // Re-enable after 3 seconds as fallback
+          setTimeout(function() {
+            button.innerHTML = '<i class="ti-search" aria-hidden="true"></i>';
+            button.disabled = false;
+          }, 3000);
+        }
+      });
+    }
+    
+    // Announce search widget readiness to screen readers
+    var announcements = document.querySelector('.search-announcements');
+    if (announcements) {
+      setTimeout(function() {
+        announcements.textContent = '{{ i18n "search_ready" | default "Search widget is ready" }}';
+        setTimeout(function() {
+          announcements.textContent = '';
+        }, 2000);
+      }, 500);
+    }
+  });
+</script>

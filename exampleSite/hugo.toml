@@ -62,6 +62,9 @@ defaultContentLanguageInSubdir = false
     style = "github"
     lineNos = true
 
+# Google Analytics (replace with your own ID)
+GoogleAnalyticsID = "G-JKSVCT23D1"
+
 # Theme parameters - Example configuration
 [params]
   # Site information
@@ -148,6 +151,64 @@ defaultContentLanguageInSubdir = false
   # Search
   [params.search]
     placeholder = "Search articles..."
+    
+  # Analytics and Advertising Configuration Examples
+  # Note: These are example configurations - replace with your own IDs
+  
+  # Google AdSense (disabled by default)
+  [params.adsense]
+    enabled = false  # Set to true and add your client ID to enable
+    client = "ca-pub-2970874383549118"  # Replace with your AdSense client ID
+    inArticleSlot = "4383549118"  # Replace with your in-article ad slot ID
+    autoAds = false
+    
+    [params.adsense.placements]
+      sidebar = true
+      footer = true
+      inContent = false
+      
+  # Facebook Pixel (disabled by default)
+  [params.facebookPixel]
+    enabled = false  # Set to true and add your pixel ID to enable
+    pixelId = "123456789012345"  # Replace with your Facebook Pixel ID
+    
+    [params.facebookPixel.events]
+      pageView = true
+      search = true
+      contact = true
+      
+  # Google Custom Search Engine (optional)
+  [params.gcs_engine_id]
+    value = ""  # Add your Google Custom Search Engine ID here
+    
+  # Mermaid Diagrams (enabled by default)
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  # Privacy and Consent Management
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = false  # Enable for GDPR compliance
+    anonymizeIP = true
+    
+    [params.privacy.consentBanner]
+      enabled = false
+      message = "This website uses cookies to enhance your experience."
+      acceptText = "Accept"
+      declineText = "Decline"
+      learnMoreUrl = "/privacy-policy"
+      
+  # Performance Optimization
+  [params.performance]
+    lazyLoadAds = true
+    asyncScripts = true
+    resourceHints = true
+    
+  # Security Settings
+  [params.security]
+    httpsOnly = true
+    noSniff = true
     
 # Navigation menus
 [menu]

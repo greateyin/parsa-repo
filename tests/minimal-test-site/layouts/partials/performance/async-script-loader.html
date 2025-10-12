@@ -1,0 +1,400 @@
+{{/*
+  Async Script Loader Partial
+  
+  This partial implements asynchronous loading for all external scripts
+  with resource hints, preconnect directives, and optimized loading order.
+  
+  Requirements: 8.1, 8.2
+  
+  Usage: Include in head section
+  {{ partial "performance/async-script-loader.html" . }}
+*/}}
+
+{{- $performance := site.Params.performance | default dict -}}
+{{- $asyncScripts := $performance.asyncScripts | default true -}}
+{{- $preconnect := $performance.preconnect | default true -}}
+{{- $resourceHints := $performance.resourceHints | default true -}}
+
+{{- if $asyncScripts -}}
+
+{{- /* Collect all external script sources that need loading */ -}}
+{{- $scriptSources := slice -}}
+{{- $preconnectDomains := slice -}}
+
+{{- /* Google Analytics */ -}}
+{{- $ga := site.Config.Services.GoogleAnalytics -}}
+{{- $gaID := $ga.ID | default site.GoogleAnalyticsID -}}
+{{- if $gaID -}}
+  {{- $scriptSources = $scriptSources | append (dict 
+    "src" (printf "https://www.googletagmanager.com/gtag/js?id=%s" $gaID)
+    "priority" "high"
+    "service" "googleAnalytics"
+    "async" true
+    "crossorigin" "anonymous"
+  ) -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://www.googletagmanager.com" -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://www.google-analytics.com" -}}
+{{- end -}}
+
+{{- /* Facebook Pixel */ -}}
+{{- $fbPixel := site.Params.facebookPixel -}}
+{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+  {{- $scriptSources = $scriptSources | append (dict 
+    "src" "https://connect.facebook.net/en_US/fbevents.js"
+    "priority" "medium"
+    "service" "facebookPixel"
+    "async" true
+    "crossorigin" "anonymous"
+  ) -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://connect.facebook.net" -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://www.facebook.com" -}}
+{{- end -}}
+
+{{- /* Google AdSense */ -}}
+{{- $adsense := site.Params.adsense -}}
+{{- if and $adsense.enabled $adsense.client -}}
+  {{- $scriptSources = $scriptSources | append (dict 
+    "src" (printf "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%s" $adsense.client)
+    "priority" "low"
+    "service" "adSense"
+    "async" true
+    "crossorigin" "anonymous"
+  ) -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://pagead2.googlesyndication.com" -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://googleads.g.doubleclick.net" -}}
+{{- end -}}
+
+{{- /* Google Custom Search */ -}}
+{{- $gcsId := site.Params.gcs_engine_id.value -}}
+{{- if $gcsId -}}
+  {{- $scriptSources = $scriptSources | append (dict 
+    "src" (printf "https://cse.google.com/cse.js?cx=%s" $gcsId)
+    "priority" "low"
+    "service" "googleCustomSearch"
+    "async" true
+    "crossorigin" "anonymous"
+  ) -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://cse.google.com" -}}
+{{- end -}}
+
+{{- /* Mermaid.js */ -}}
+{{- $mermaidConfig := site.Params.mermaid | default dict -}}
+{{- $hasMermaid := .Page.Store.Get "hasMermaid" -}}
+{{- if and ($mermaidConfig.enabled | default true) $hasMermaid -}}
+  {{- $scriptSources = $scriptSources | append (dict 
+    "src" "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"
+    "priority" "medium"
+    "service" "mermaid"
+    "async" true
+    "crossorigin" "anonymous"
+  ) -}}
+  {{- $preconnectDomains = $preconnectDomains | append "https://cdn.jsdelivr.net" -}}
+{{- end -}}
+
+{{- /* Resource Hints and Preconnect Directives */ -}}
+{{- if and $preconnect $resourceHints -}}
+  {{- range $preconnectDomains | uniq -}}
+    <link rel="preconnect" href="{{ . }}" crossorigin>
+  {{- end -}}
+  
+  {{- /* DNS prefetch for additional performance */ -}}
+  {{- range $preconnectDomains | uniq -}}
+    <link rel="dns-prefetch" href="{{ . }}">
+  {{- end -}}
+{{- end -}}
+
+{{- /* Async Script Loading Manager */ -}}
+<script>
+(function() {
+  'use strict';
+  
+  // Async Script Loader Configuration
+  window.AsyncScriptLoader = {
+    config: {
+      timeout: {{ $performance.scriptTimeout | default 10000 }},
+      retryAttempts: {{ $performance.retryAttempts | default 2 }},
+      retryDelay: {{ $performance.retryDelay | default 1000 }},
+      loadingStrategy: '{{ $performance.loadingStrategy | default "priority" }}' // priority, parallel, sequential
+    },
+    
+    scripts: {{ $scriptSources | jsonify }},
+    loadedScripts: {},
+    failedScripts: {},
+    loadingQueue: [],
+    
+    // Initialize the script loader
+    init: function() {
+      console.log('AsyncScriptLoader: Initializing with', this.scripts.length, 'scripts');
+      
+      // Sort scripts by priority
+      this.scripts.sort(function(a, b) {
+        var priorities = { high: 3, medium: 2, low: 1 };
+        return (priorities[b.priority] || 1) - (priorities[a.priority] || 1);
+      });
+      
+      // Start loading based on strategy
+      switch (this.config.loadingStrategy) {
+        case 'sequential':
+          this.loadSequential();
+          break;
+        case 'parallel':
+          this.loadParallel();
+          break;
+        case 'priority':
+        default:
+          this.loadByPriority();
+          break;
+      }
+    },
+    
+    // Load scripts by priority (high first, then medium, then low)
+    loadByPriority: function() {
+      var self = this;
+      var highPriority = this.scripts.filter(function(s) { return s.priority === 'high'; });
+      var mediumPriority = this.scripts.filter(function(s) { return s.priority === 'medium'; });
+      var lowPriority = this.scripts.filter(function(s) { return s.priority === 'low'; });
+      
+      // Load high priority scripts first
+      this.loadScriptGroup(highPriority, function() {
+        // Then medium priority
+        self.loadScriptGroup(mediumPriority, function() {
+          // Finally low priority
+          self.loadScriptGroup(lowPriority);
+        });
+      });
+    },
+    
+    // Load all scripts in parallel
+    loadParallel: function() {
+      var self = this;
+      this.scripts.forEach(function(script) {
+        self.loadScript(script);
+      });
+    },
+    
+    // Load scripts sequentially
+    loadSequential: function() {
+      var self = this;
+      var index = 0;
+      
+      function loadNext() {
+        if (index >= self.scripts.length) return;
+        
+        var script = self.scripts[index++];
+        self.loadScript(script, loadNext);
+      }
+      
+      loadNext();
+    },
+    
+    // Load a group of scripts in parallel, call callback when all complete
+    loadScriptGroup: function(scripts, callback) {
+      var self = this;
+      var completed = 0;
+      var total = scripts.length;
+      
+      if (total === 0) {
+        if (callback) callback();
+        return;
+      }
+      
+      scripts.forEach(function(script) {
+        self.loadScript(script, function() {
+          completed++;
+          if (completed === total && callback) {
+            callback();
+          }
+        });
+      });
+    },
+    
+    // Load individual script with retry logic
+    loadScript: function(scriptConfig, callback) {
+      var self = this;
+      var attempts = 0;
+      
+      function attemptLoad() {
+        attempts++;
+        
+        var script = document.createElement('script');
+        script.src = scriptConfig.src;
+        script.async = scriptConfig.async !== false;
+        
+        if (scriptConfig.crossorigin) {
+          script.crossOrigin = scriptConfig.crossorigin;
+        }
+        
+        // Set up timeout
+        var timeoutId = setTimeout(function() {
+          self.handleScriptError(scriptConfig, 'timeout', attempts, attemptLoad, callback);
+        }, self.config.timeout);
+        
+        script.onload = function() {
+          clearTimeout(timeoutId);
+          self.handleScriptSuccess(scriptConfig, callback);
+        };
+        
+        script.onerror = function() {
+          clearTimeout(timeoutId);
+          self.handleScriptError(scriptConfig, 'error', attempts, attemptLoad, callback);
+        };
+        
+        // Add to document
+        document.head.appendChild(script);
+        
+        console.log('AsyncScriptLoader: Loading', scriptConfig.service, '(' + scriptConfig.priority + ' priority)');
+      }
+      
+      attemptLoad();
+    },
+    
+    // Handle successful script load
+    handleScriptSuccess: function(scriptConfig, callback) {
+      this.loadedScripts[scriptConfig.service] = {
+        src: scriptConfig.src,
+        loadTime: Date.now(),
+        success: true
+      };
+      
+      console.log('AsyncScriptLoader: Successfully loaded', scriptConfig.service);
+      
+      // Track in analytics if available
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'script_loaded', {
+          'script_service': scriptConfig.service,
+          'script_priority': scriptConfig.priority
+        });
+      }
+      
+      // Trigger service-specific initialization
+      this.initializeService(scriptConfig.service);
+      
+      if (callback) callback();
+    },
+    
+    // Handle script loading error
+    handleScriptError: function(scriptConfig, errorType, attempts, retryFn, callback) {
+      console.warn('AsyncScriptLoader: Failed to load', scriptConfig.service, '(' + errorType + ', attempt ' + attempts + ')');
+      
+      if (attempts < this.config.retryAttempts) {
+        // Retry after delay
+        setTimeout(retryFn, this.config.retryDelay * attempts);
+      } else {
+        // Mark as failed
+        this.failedScripts[scriptConfig.service] = {
+          src: scriptConfig.src,
+          error: errorType,
+          attempts: attempts,
+          failTime: Date.now()
+        };
+        
+        console.error('AsyncScriptLoader: Permanently failed to load', scriptConfig.service);
+        
+        // Track failure in analytics if available
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'script_load_failed', {
+            'script_service': scriptConfig.service,
+            'error_type': errorType,
+            'attempts': attempts
+          });
+        }
+        
+        if (callback) callback();
+      }
+    },
+    
+    // Initialize service-specific functionality
+    initializeService: function(service) {
+      switch (service) {
+        case 'googleAnalytics':
+          if (window.analyticsManager) {
+            window.analyticsManager.markServiceLoaded('googleAnalytics');
+          }
+          break;
+          
+        case 'facebookPixel':
+          if (window.analyticsManager) {
+            window.analyticsManager.markServiceLoaded('facebookPixel');
+          }
+          break;
+          
+        case 'adSense':
+          if (window.AdSenseManager) {
+            window.AdSenseManager.markScriptLoaded();
+          }
+          break;
+          
+        case 'mermaid':
+          // Mermaid initialization is handled by mermaid-loader.html
+          break;
+          
+        case 'googleCustomSearch':
+          // GCS initialization is automatic
+          break;
+      }
+    },
+    
+    // Get loading status report
+    getStatus: function() {
+      return {
+        loaded: Object.keys(this.loadedScripts),
+        failed: Object.keys(this.failedScripts),
+        total: this.scripts.length,
+        loadedCount: Object.keys(this.loadedScripts).length,
+        failedCount: Object.keys(this.failedScripts).length
+      };
+    },
+    
+    // Check if a specific service is loaded
+    isLoaded: function(service) {
+      return !!this.loadedScripts[service];
+    },
+    
+    // Check if a specific service failed to load
+    hasFailed: function(service) {
+      return !!this.failedScripts[service];
+    }
+  };
+  
+  // Auto-initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      window.AsyncScriptLoader.init();
+    });
+  } else {
+    window.AsyncScriptLoader.init();
+  }
+  
+  // Expose status check function globally
+  window.getScriptLoadingStatus = function() {
+    return window.AsyncScriptLoader.getStatus();
+  };
+  
+})();
+</script>
+
+{{- /* Performance monitoring for script loading */ -}}
+<script>
+// Monitor script loading performance
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (window.AsyncScriptLoader) {
+      var status = window.AsyncScriptLoader.getStatus();
+      
+      console.log('AsyncScriptLoader Status:', status);
+      
+      // Track overall loading performance
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'async_scripts_complete', {
+          'loaded_count': status.loadedCount,
+          'failed_count': status.failedCount,
+          'total_count': status.total,
+          'success_rate': Math.round((status.loadedCount / status.total) * 100)
+        });
+      }
+    }
+  }, 1000);
+});
+</script>
+
+{{- end -}}

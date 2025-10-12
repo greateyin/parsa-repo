@@ -180,10 +180,66 @@ theme = "parsa-redesigned"
     enable = true
     disqusShortname = "your-disqus-shortname"
     
-  # Analytics
+  # Analytics and Tracking
   [params.analytics]
     googleAnalytics = "G-XXXXXXXXXX"
     googleTagManager = ""
+    
+  # Google AdSense Configuration
+  [params.adsense]
+    enabled = false
+    client = ""  # Format: ca-pub-XXXXXXXXXXXXXXXX
+    inArticleSlot = ""  # Format: 10 digits
+    autoAds = false
+    responsive = true
+    lazyLoad = true
+    
+    # Ad placement configuration
+    [params.adsense.placements]
+      header = false
+      sidebar = false
+      footer = false
+      inContent = false
+      beforeContent = false
+      afterContent = false
+      
+  # Facebook Pixel Configuration
+  [params.facebookPixel]
+    enabled = false
+    pixelId = ""  # Format: 15-16 digits
+    advancedMatching = false
+    
+    # Event tracking configuration
+    [params.facebookPixel.events]
+      pageView = true
+      viewContent = false
+      search = false
+      contact = false
+      lead = false
+      completeRegistration = false
+      
+  # Google Custom Search Engine Configuration
+  [params.gcs_engine_id]
+    value = ""  # Format: 17 character hexadecimal string
+    
+  [params.googleCustomSearch]
+    engineId = ""  # Alternative configuration path
+    enabled = false
+    autoComplete = true
+    enableHistory = true
+    maxCompletions = 5
+    fallbackToLocal = true
+    
+  # Mermaid Diagrams Configuration
+  [params.mermaid]
+    enabled = true
+    theme = "default"  # Options: default, dark, forest, neutral, base
+    startOnLoad = true
+    securityLevel = "loose"
+    
+    [params.mermaid.flowchart]
+      useMaxWidth = true
+      htmlLabels = true
     
   # Search configuration
   [params.search]
@@ -192,12 +248,35 @@ theme = "parsa-redesigned"
     maxResults = 10
     minQueryLength = 2
     
-  # Performance settings
+  # Performance Optimization Settings
   [params.performance]
+    # Legacy settings (maintained for compatibility)
     lazyLoading = true
     webpImages = true
     minifyCSS = true
     minifyJS = true
+    
+    # New analytics and advertising performance settings
+    lazyLoadAds = true
+    asyncScripts = true
+    resourceHints = true
+    criticalCSS = false
+    
+    # Preconnect domains for external services
+    preconnectDomains = [
+      "https://www.googletagmanager.com",
+      "https://pagead2.googlesyndication.com",
+      "https://connect.facebook.net",
+      "https://cse.google.com",
+      "https://cdn.jsdelivr.net"
+    ]
+    
+  # Security Configuration
+  [params.security]
+    contentSecurityPolicy = false
+    subresourceIntegrity = false
+    httpsOnly = true
+    noSniff = true
     
   # Multilingual settings
   [params.i18n]
@@ -218,7 +297,23 @@ theme = "parsa-redesigned"
     title = "Subscribe to our newsletter"
     subtitle = "Get the latest articles delivered to your inbox"
     
-  # Cookie consent
+  # Privacy and Consent Management
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = false
+    anonymizeIP = true
+    disableTracking = false
+    
+    # Cookie consent banner configuration
+    [params.privacy.consentBanner]
+      enabled = false
+      message = "This website uses cookies to ensure you get the best experience."
+      acceptText = "Accept"
+      declineText = "Decline"
+      learnMoreText = "Learn More"
+      learnMoreUrl = "/privacy-policy"
+      
+  # Legacy cookie consent (deprecated - use params.privacy.consentBanner)
   [params.cookies]
     enable = false
     message = "This website uses cookies to ensure you get the best experience."
@@ -336,8 +431,7 @@ theme = "parsa-redesigned"
   [security.http]
     methods = ['(?i)GET|POST']
     urls = ['.*']
-#
- Build configuration for performance
+# Build configuration for performance
 [build]
   writeStats = true
   

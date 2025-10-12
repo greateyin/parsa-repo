@@ -1,0 +1,273 @@
+{{/*
+  GDPR Compliance Helpers
+  Provides utilities for GDPR compliance including data processing notices,
+  privacy policy integration, and user rights management
+  
+  Usage: {{ partial "privacy/gdpr-helpers.html" . }}
+*/}}
+
+{{/* Load validated configuration */}}
+{{ partial "helpers/config-validation.html" . }}
+{{ $config := .Page.Store.Get "validatedConfig" }}
+{{ $privacyConfig := $config.privacy }}
+
+{{/* GDPR Compliance JavaScript Utilities */}}
+<script>
+  // GDPR Compliance Utilities
+  window.ThemeGDPR = window.ThemeGDPR || {
+    version: '1.0.0',
+    
+    // Data processing purposes
+    purposes: {
+      analytics: {
+        name: 'Analytics and Statistics',
+        description: 'We collect anonymous usage data to understand how visitors interact with our website and improve user experience.',
+        legalBasis: 'Legitimate Interest',
+        retention: '26 months',
+        thirdParties: ['Google Analytics']
+      },
+      advertising: {
+        name: 'Advertising and Marketing',
+        description: 'We use cookies to show you relevant advertisements and measure their effectiveness.',
+        legalBasis: 'Consent',
+        retention: '13 months',
+        thirdParties: ['Google AdSense', 'Facebook Pixel']
+      },
+      functional: {
+        name: 'Essential Website Functions',
+        description: 'These are necessary for the website to function properly and cannot be disabled.',
+        legalBasis: 'Legitimate Interest',
+        retention: 'Session',
+        thirdParties: []
+      },
+      performance: {
+        name: 'Performance Optimization',
+        description: 'We collect data about website performance to optimize loading times and user experience.',
+        legalBasis: 'Legitimate Interest',
+        retention: '12 months',
+        thirdParties: []
+      }
+    },
+    
+    // User rights under GDPR
+    userRights: [
+      'Right to be informed',
+      'Right of access',
+      'Right to rectification',
+      'Right to erasure',
+      'Right to restrict processing',
+      'Right to data portability',
+      'Right to object',
+      'Rights related to automated decision making and profiling'
+    ],
+    
+    // Get data processing information
+    getProcessingInfo: function(purpose) {
+      return this.purposes[purpose] || null;
+    },
+    
+    // Get all active processing purposes
+    getActiveProcessing: function() {
+      var self = this;
+      var active = [];
+      
+      Object.keys(this.purposes).forEach(function(purpose) {
+        if (window.ThemePrivacy && window.ThemePrivacy.hasConsent(purpose)) {
+          active.push({
+            purpose: purpose,
+            info: self.purposes[purpose]
+          });
+        }
+      });
+      
+      return active;
+    },
+    
+    // Generate privacy notice
+    generatePrivacyNotice: function() {
+      var active = this.getActiveProcessing();
+      var notice = {
+        timestamp: new Date().toISOString(),
+        purposes: active,
+        userRights: this.userRights,
+        contactInfo: {
+          email: '{{ site.Params.privacy.contactEmail | default site.Params.author.email | default "privacy@example.com" }}',
+          address: '{{ site.Params.privacy.contactAddress | default "" }}'
+        }
+      };
+      
+      return notice;
+    },
+    
+    // Export user data (GDPR Article 20)
+    exportUserData: function() {
+      var data = {
+        timestamp: new Date().toISOString(),
+        website: '{{ site.BaseURL }}',
+        consentData: window.ThemePrivacy ? window.ThemePrivacy.getConsentSummary() : {},
+        processingPurposes: this.getActiveProcessing(),
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+      
+      // Create downloadable JSON file
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'my-data-export-' + new Date().toISOString().split('T')[0] + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      return data;
+    },
+    
+    // Delete user data (GDPR Article 17)
+    deleteUserData: function() {
+      if (window.ThemePrivacy) {
+        window.ThemePrivacy.clearAllConsent();
+      }
+      
+      // Clear any other stored data
+      var keysToRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (key && (key.startsWith('theme-') || key.startsWith('ga-') || key.startsWith('_ga'))) {
+          keysToRemove.push(key);
+        }
+      }
+      
+      keysToRemove.forEach(function(key) {
+        localStorage.removeItem(key);
+      });
+      
+      // Clear cookies (best effort)
+      document.cookie.split(";").forEach(function(c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      
+      alert('Your data has been deleted from this website. You may need to clear your browser cache and cookies for complete removal.');
+      
+      return true;
+    },
+    
+    // Object to processing (GDPR Article 21)
+    objectToProcessing: function(purpose) {
+      if (window.ThemePrivacy) {
+        window.ThemePrivacy.revokeConsent(purpose);
+      }
+      
+      return true;
+    },
+    
+    // Get contact information for data protection
+    getContactInfo: function() {
+      return {
+        email: '{{ site.Params.privacy.contactEmail | default site.Params.author.email | default "privacy@example.com" }}',
+        address: '{{ site.Params.privacy.contactAddress | default "" }}',
+        phone: '{{ site.Params.privacy.contactPhone | default "" }}',
+        dpo: '{{ site.Params.privacy.dpoEmail | default "" }}'
+      };
+    },
+    
+    // Check if GDPR applies (EU visitors)
+    isGDPRApplicable: function() {
+      // Simple timezone-based detection (not 100% accurate but reasonable)
+      var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var euTimezones = [
+        'Europe/Amsterdam', 'Europe/Andorra', 'Europe/Athens', 'Europe/Belgrade',
+        'Europe/Berlin', 'Europe/Brussels', 'Europe/Bucharest', 'Europe/Budapest',
+        'Europe/Copenhagen', 'Europe/Dublin', 'Europe/Helsinki', 'Europe/Istanbul',
+        'Europe/Kiev', 'Europe/Lisbon', 'Europe/Ljubljana', 'Europe/London',
+        'Europe/Luxembourg', 'Europe/Madrid', 'Europe/Malta', 'Europe/Monaco',
+        'Europe/Oslo', 'Europe/Paris', 'Europe/Prague', 'Europe/Riga',
+        'Europe/Rome', 'Europe/Sofia', 'Europe/Stockholm', 'Europe/Tallinn',
+        'Europe/Vienna', 'Europe/Vilnius', 'Europe/Warsaw', 'Europe/Zagreb'
+      ];
+      
+      return euTimezones.includes(timezone);
+    },
+    
+    // Initialize GDPR utilities
+    init: function() {
+      // Add GDPR-specific event listeners
+      if (window.ThemePrivacy) {
+        window.ThemePrivacy.on('consentChanged', function(data) {
+          console.log('GDPR: Consent changed for', data.service, ':', data.granted);
+        });
+      }
+      
+      // Log GDPR applicability (development only)
+      if ({{ site.IsServer }}) {
+        console.log('GDPR Applicable:', this.isGDPRApplicable());
+        console.log('Active Processing:', this.getActiveProcessing());
+      }
+    }
+  };
+  
+  // Auto-initialize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      window.ThemeGDPR.init();
+    });
+  } else {
+    window.ThemeGDPR.init();
+  }
+</script>
+
+{{/* GDPR User Rights Widget */}}
+{{ if $privacyConfig.cookieConsent }}
+<div id="gdpr-user-rights" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; border-radius: 8px; padding: 2rem; max-width: 500px; z-index: 10002; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+  <h3 style="margin-top: 0;">Your Privacy Rights</h3>
+  <p>Under GDPR, you have the following rights regarding your personal data:</p>
+  
+  <div style="margin: 1rem 0;">
+    <button onclick="window.ThemeGDPR.exportUserData()" style="display: block; width: 100%; margin: 0.5rem 0; padding: 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      📥 Download My Data
+    </button>
+    
+    <button onclick="if(confirm('Are you sure you want to delete all your data? This cannot be undone.')) window.ThemeGDPR.deleteUserData()" style="display: block; width: 100%; margin: 0.5rem 0; padding: 0.75rem; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      🗑️ Delete My Data
+    </button>
+    
+    <button onclick="window.ThemePrivacy.showConsentSettings()" style="display: block; width: 100%; margin: 0.5rem 0; padding: 0.75rem; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      ⚙️ Manage Consent
+    </button>
+  </div>
+  
+  <p style="font-size: 0.875rem; color: #666;">
+    For other requests, please contact us at: 
+    <a href="mailto:{{ site.Params.privacy.contactEmail | default site.Params.author.email | default "privacy@example.com" }}">
+      {{ site.Params.privacy.contactEmail | default site.Params.author.email | default "privacy@example.com" }}
+    </a>
+  </p>
+  
+  <button onclick="document.getElementById('gdpr-user-rights').style.display='none'" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+</div>
+
+{{/* Privacy Rights Link */}}
+<div style="position: fixed; bottom: 1rem; right: 1rem; z-index: 9999;">
+  <button onclick="document.getElementById('gdpr-user-rights').style.display='block'" style="background: #6b7280; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.875rem; opacity: 0.8;">
+    🔒 Privacy Rights
+  </button>
+</div>
+{{ end }}
+
+{{/* Data Processing Notice for Footer */}}
+{{ if $privacyConfig.cookieConsent }}
+<script>
+  // Add data processing notice to footer if it exists
+  document.addEventListener('DOMContentLoaded', function() {
+    var footer = document.querySelector('footer');
+    if (footer && window.ThemeGDPR.isGDPRApplicable()) {
+      var notice = document.createElement('div');
+      notice.style.cssText = 'font-size: 0.75rem; color: #666; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; text-align: center;';
+      notice.innerHTML = 'This website processes personal data in accordance with GDPR. <a href="/privacy-policy" style="color: #3b82f6;">Privacy Policy</a> | <a href="#" onclick="window.ThemePrivacy.showConsentSettings(); return false;" style="color: #3b82f6;">Cookie Settings</a>';
+      footer.appendChild(notice);
+    }
+  });
+</script>
+{{ end }}

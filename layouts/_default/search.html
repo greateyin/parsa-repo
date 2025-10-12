@@ -13,8 +13,16 @@
 
     <!-- Search Widget -->
     <div class="relative max-w-2xl mx-auto mb-8">
-      {{ partial "widgets/search.html" . }}
+      {{ partial "search/search-widget.html" . }}
     </div>
+    
+    <!-- Google Custom Search Results -->
+    {{ $gcsId := .Site.Params.gcs_engine_id.value }}
+    {{ if $gcsId }}
+    <div class="max-w-4xl mx-auto mb-8">
+      {{ partial "search/google-custom-search.html" . }}
+    </div>
+    {{ end }}
 
     <!-- Loading state -->
     <div id="search-loading" class="text-center py-8 hidden">
