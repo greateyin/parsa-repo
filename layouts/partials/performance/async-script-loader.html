@@ -23,7 +23,7 @@
 
 {{- /* Google Analytics */ -}}
 {{- $ga := site.Config.Services.GoogleAnalytics -}}
-{{- $gaID := $ga.ID | default site.GoogleAnalyticsID -}}
+{{- $gaID := $ga.ID -}}
 {{- if $gaID -}}
   {{- $scriptSources = $scriptSources | append (dict 
     "src" (printf "https://www.googletagmanager.com/gtag/js?id=%s" $gaID)

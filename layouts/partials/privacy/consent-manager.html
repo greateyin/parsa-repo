@@ -208,7 +208,7 @@
     this.initialized = true;
     
     // Log privacy status (development only)
-    if ({{ site.IsServer }}) {
+    if ({{ hugo.IsServer }}) {
       console.log('Theme Privacy Manager v' + this.version + ' initialized');
       console.log('Configuration:', this.config);
       console.log('Consent Summary:', this.getConsentSummary());

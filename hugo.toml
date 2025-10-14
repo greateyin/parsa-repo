@@ -4,8 +4,8 @@
 # Basic Hugo settings
 baseURL = "https://example.com"
 languageCode = "en-us"
-title = "Parsa Redesigned Demo"
-theme = "parsa-redesigned"
+title = "Parsa Hugo Demo"
+theme = "parsa-hugo"
 
 # Hugo version requirements
 [module]

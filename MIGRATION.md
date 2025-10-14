@@ -1,662 +1,453 @@
-# Migration Guide: Original Parsa to Parsa Redesigned
+# Migration Guide
 
-This guide helps you migrate from the original Parsa Hugo theme to the redesigned version with modern UI and Tailwind CSS.
+This guide helps you migrate from the original Parsa theme or upgrade from earlier versions of Parsa Redesigned to the latest version with analytics and advertising enhancements.
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Pre-Migration Checklist](#pre-migration-checklist)
-- [Configuration Migration](#configuration-migration)
-- [Content Migration](#content-migration)
-- [Template Customizations](#template-customizations)
-- [Asset Migration](#asset-migration)
-- [Testing After Migration](#testing-after-migration)
-- [Troubleshooting](#troubleshooting)
-- [Rollback Plan](#rollback-plan)
+- [From Original Parsa Theme](#from-original-parsa-theme)
+- [From Earlier Parsa Redesigned Versions](#from-earlier-parsa-redesigned-versions)
+- [Configuration Changes](#configuration-changes)
+- [New Features](#new-features)
+- [Breaking Changes](#breaking-changes)
+- [Step-by-Step Migration](#step-by-step-migration)
 
-## Overview
+## From Original Parsa Theme
 
-### What's Changed
+### Major Changes
 
-**Design & Styling:**
-- ❌ Bootstrap 4/5 → ✅ Tailwind CSS 3.x
-- ❌ Traditional layouts → ✅ Modern card-based design
-- ❌ Basic responsive → ✅ Mobile-first responsive design
-- ❌ Limited animations → ✅ Smooth transitions and animations
-- ❌ Standard typography → ✅ Modern typography with gradient effects
+The Parsa Redesigned theme is a complete rewrite with significant improvements:
 
-**Technical Improvements:**
-- ✅ Hugo Pipes integration for asset processing
-- ✅ Critical CSS inlining for performance
-- ✅ Enhanced SEO with OpenGraph and Twitter Cards
-- ✅ Improved accessibility (WCAG 2.1 AA)
-- ✅ Better multilingual support
-- ✅ Modern JavaScript (ES6+)
+1. **CSS Framework**: Bootstrap → Tailwind CSS
+2. **Design**: Traditional → Modern gradient-based design
+3. **Performance**: Basic → Highly optimized with lazy loading
+4. **Analytics**: None → Comprehensive GA4, AdSense, Facebook Pixel
+5. **Diagrams**: None → Full Mermaid.js support
+6. **Privacy**: Basic → GDPR-compliant with consent management
 
-**New Features:**
-- ✅ Enhanced search functionality
-- ✅ Social sharing integration
-- ✅ Performance optimizations
-- ✅ Comprehensive testing suite
-- ✅ Better shortcodes
+### Configuration Migration
 
-### What's Preserved
-
-- ✅ All Hugo functionality and features
-- ✅ Content structure and front matter
-- ✅ URL structure and permalinks
-- ✅ Taxonomy system (categories, tags)
-- ✅ Menu configuration
-- ✅ Multilingual support
-- ✅ Basic shortcodes compatibility
-
-## Pre-Migration Checklist
-
-### 1. Backup Your Site
-
-```bash
-# Create a full backup
-cp -r /path/to/your-hugo-site /path/to/backup-$(date +%Y%m%d)
-
-# Backup your git repository
-git tag pre-migration-backup
-git push origin pre-migration-backup
-```
-
-### 2. Document Current Customizations
-
-Create a list of your current customizations:
-
-```bash
-# List custom templates
-find layouts/ -name "*.html" 2>/dev/null || echo "No custom layouts"
-
-# List custom assets
-find assets/ static/ -type f 2>/dev/null || echo "No custom assets"
-
-# Check configuration
-cat hugo.toml config.toml config.yaml 2>/dev/null | head -50
-```
-
-### 3. Test Current Site
-
-```bash
-# Build current site
-hugo --minify
-
-# Test locally
-hugo server -D
-```
-
-### 4. Check Hugo Version
-
-```bash
-hugo version
-# Ensure you have Hugo Extended v0.147.2 or higher
-```
-
-## Configuration Migration
-
-### 1. Basic Configuration
-
-**Original Parsa (`config.toml`):**
+#### Old Configuration (Original Parsa)
 ```toml
-baseURL = "https://example.com"
-languageCode = "en-us"
-title = "Parsa"
+# hugo.toml - Original Parsa
+baseURL = "https://yoursite.com"
+title = "Your Site"
 theme = "parsa"
 
-# Site parameters
 [params]
   description = "Site description"
   author = "Author Name"
   logo = "images/logo.png"
   
-  # Contact info
-  email = "email@example.com"
-  phone = "+1234567890"
-  address = "123 Street, City"
-  
-  # Social media
-  facebook = "https://facebook.com/username"
-  twitter = "https://twitter.com/username"
-  instagram = "https://instagram.com/username"
-```
-
-**Parsa Redesigned (`hugo.toml`):**
+  # Basic social links
+  [params.social]
+    facebook = "https://facebook.com/yourpage"
+    twitter = "https://twitter.com/yourusername"
+```#
+### New Configuration (Parsa Redesigned)
 ```toml
-baseURL = "https://example.com"
-languageCode = "en-us"
-title = "Parsa Redesigned"
+# hugo.toml - Parsa Redesigned
+baseURL = "https://yoursite.com"
+title = "Your Site"
 theme = "parsa-redesigned"
 
-# Hugo module configuration
-[module]
-  [module.hugoVersion]
-    extended = true
-    min = "0.147.2"
+# Google Analytics 4
+GoogleAnalyticsID = "G-XXXXXXXXXX"
 
-# Site parameters
 [params]
   description = "Site description"
   author = "Author Name"
-  logo = "/images/logo.svg"  # Consider SVG for better quality
+  logo = "images/logo.png"
   
-  # Design settings (new)
-  [params.design]
-    primaryColor = "#3b82f6"
-    accentColor = "#8b5cf6"
+  # Enhanced analytics and advertising
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-XXXXXXXXXXXXXXXX"
+    
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "XXXXXXXXXXXXXXX"
+    
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = true
   
-  # Contact info (restructured)
-  [params.contact]
-    email = "email@example.com"
-    phone = "+1234567890"
-    address = "123 Street, City"
-  
-  # Social media (restructured)
+  # Enhanced social configuration
   [params.social]
-    facebook = "https://facebook.com/username"
-    twitter = "https://twitter.com/username"
-    instagram = "https://instagram.com/username"
-  
-  # New features
-  [params.features]
-    enableSearch = true
-    enableSocialSharing = true
-    enableAnimations = true
-  
-  # SEO settings (new)
-  [params.seo]
-    enableOpenGraph = true
-    enableTwitterCard = true
-    defaultImage = "/images/og-default.jpg"
-
-# Output formats for search (new)
-[outputs]
-  home = ["HTML", "RSS", "JSON"]
+    facebook = "https://facebook.com/yourpage"
+    twitter = "https://twitter.com/yourusername"
+    github = "https://github.com/yourusername"
+    linkedin = "https://linkedin.com/in/yourprofile"
 ```
 
-### 2. Menu Migration
+### Content Migration
 
-**Original:**
-```toml
-[[menu.main]]
-  name = "Home"
-  URL = "/"
-  weight = 1
+#### Front Matter Changes
 
-[[menu.main]]
-  name = "About"
-  URL = "about"
-  weight = 2
-```
-
-**Redesigned:**
-```toml
-[[menu.main]]
-  name = "Home"
-  url = "/"  # Note: lowercase 'url'
-  weight = 1
-
-[[menu.main]]
-  name = "About"
-  url = "/about/"  # Note: leading and trailing slashes
-  weight = 2
-```
-
-### 3. Multilingual Migration
-
-**Original:**
-```toml
-[Languages]
-  [Languages.en]
-    weight = 1
-    languageName = "En"
-    
-  [Languages.fr]
-    weight = 2
-    languageName = "Fr"
-```
-
-**Redesigned:**
-```toml
-[languages]  # Note: lowercase
-  [languages.en]
-    weight = 1
-    languageName = "English"  # Full language names
-    languageCode = "en-US"    # Added language codes
-    
-  [languages.fr]
-    weight = 2
-    languageName = "Français"
-    languageCode = "fr-FR"
-```
-
-## Content Migration
-
-### 1. Front Matter Updates
-
-**Original front matter:**
+**Original Parsa:**
 ```yaml
 ---
 title: "Post Title"
-date: 2023-01-01T00:00:00Z
-image: "images/post.jpg"
+date: 2025-10-13
 author: "Author Name"
+image: "images/post.jpg"
 categories: ["category"]
 tags: ["tag1", "tag2"]
-type: "post"
 ---
 ```
 
-**Enhanced front matter (optional additions):**
+**Parsa Redesigned:**
 ```yaml
 ---
 title: "Post Title"
-date: 2023-01-01T00:00:00Z
-lastmod: 2023-01-01T00:00:00Z  # Added for SEO
-image: "images/post.jpg"
-imageAlt: "Descriptive alt text"  # Added for accessibility
+date: 2025-10-13T10:00:00Z
 author: "Author Name"
+image: "images/post.jpg"
+imageAlt: "Descriptive alt text"
 categories: ["category"]
 tags: ["tag1", "tag2"]
-featured: false  # New: mark as featured article
-draft: false     # Explicit draft status
+featured: false
+draft: false
+description: "SEO-friendly description"
 
 # Enhanced SEO (optional)
-description: "Article description for SEO"
-excerpt: "Brief excerpt for article cards"
-
-# Social sharing (optional)
 og:
-  title: "Custom OpenGraph title"
+  title: "Custom OG title"
   description: "Custom OG description"
-  image: "images/og-specific.jpg"
-
-twitter:
-  card: "summary_large_image"
-  image: "images/twitter-card.jpg"
+  image: "images/og-image.jpg"
 ---
 ```
 
-### 2. Image Path Updates
+#### New Content Features
 
-**Check and update image paths:**
-```bash
-# Find all content files with images
-grep -r "images/" content/ --include="*.md"
+1. **Mermaid Diagrams**: Add diagrams using code blocks or shortcodes
+2. **Enhanced Shortcodes**: Privacy-focused social media embeds
+3. **Better SEO**: Structured data and enhanced meta tags
+4. **Accessibility**: Improved alt text and ARIA labels
 
-# Update paths if needed (example)
-# Old: images/post.jpg
-# New: /images/post.jpg (absolute path recommended)
-```
+### Template Customizations
 
-### 3. Shortcode Migration
+If you customized templates in the original Parsa theme:
 
-**Original shortcodes work, but enhanced versions available:**
+1. **Layout Structure**: Templates use Tailwind CSS classes instead of Bootstrap
+2. **Partial Names**: Some partials have been renamed or restructured
+3. **New Partials**: Analytics, advertising, and diagram partials added
+4. **CSS Classes**: All CSS classes changed from Bootstrap to Tailwind
 
-```markdown
-<!-- Original (still works) -->
-{{< figure src="image.jpg" title="Title" >}}
+#### Common Template Migrations
 
-<!-- Enhanced (recommended) -->
-{{< figure src="image.jpg" alt="Descriptive alt text" caption="Image caption" >}}
-```
-
-## Template Customizations
-
-### 1. Layout Override Migration
-
-**If you have custom layouts, update them for Tailwind CSS:**
-
-**Original Bootstrap layout:**
+**Original Parsa:**
 ```html
-<!-- layouts/_default/single.html -->
 <div class="container">
   <div class="row">
-    <div class="col-lg-8">
-      <article class="card">
-        <div class="card-body">
-          <h1 class="card-title">{{ .Title }}</h1>
-          <div class="card-text">{{ .Content }}</div>
-        </div>
-      </article>
+    <div class="col-md-8">
+      <!-- Content -->
     </div>
   </div>
 </div>
 ```
 
-**Redesigned Tailwind layout:**
+**Parsa Redesigned:**
 ```html
-<!-- layouts/_default/single.html -->
 <div class="container mx-auto px-4">
-  <div class="max-w-4xl mx-auto">
-    <article class="bg-white rounded-lg shadow-lg overflow-hidden">
-      <div class="p-8">
-        <h1 class="text-4xl font-bold mb-6 text-gray-900">{{ .Title }}</h1>
-        <div class="prose prose-lg max-w-none">{{ .Content }}</div>
-      </div>
-    </article>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
+      <!-- Content -->
+    </div>
   </div>
 </div>
 ```
 
-### 2. Partial Template Updates
+## From Earlier Parsa Redesigned Versions
 
-**Update custom partials to use new structure:**
+### Version 1.x to 2.x (Analytics Enhancement)
 
-**Original header partial:**
-```html
-<!-- layouts/partials/header.html -->
-<nav class="navbar navbar-expand-lg">
-  <a class="navbar-brand" href="{{ .Site.BaseURL }}">
-    <img src="{{ .Site.Params.logo }}" alt="logo">
-  </a>
-</nav>
+#### New Configuration Parameters
+
+Add these new sections to your `hugo.toml`:
+
+```toml
+# Google Analytics 4 (if not already configured)
+GoogleAnalyticsID = "G-XXXXXXXXXX"
+
+[params]
+  # New: Google AdSense
+  [params.adsense]
+    enabled = false  # Set to true when ready
+    client = "ca-pub-XXXXXXXXXXXXXXXX"
+    
+  # New: Facebook Pixel
+  [params.facebookPixel]
+    enabled = false  # Set to true when ready
+    pixelId = "XXXXXXXXXXXXXXX"
+    
+  # New: Google Custom Search
+  [params.gcs_engine_id]
+    value = "XXXXXXXXXXXXXXXXX"
+    
+  # New: Mermaid Diagrams
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  # New: Privacy Settings
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = false  # Enable when ready
+    
+  # New: Performance Settings
+  [params.performance]
+    lazyLoadAds = true
+    asyncScripts = true
 ```
 
-**Redesigned header partial:**
-```html
-<!-- layouts/partials/header/navbar.html -->
-<nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
-  <div class="container mx-auto px-4">
-    <div class="flex items-center justify-between h-16">
-      <a href="{{ .Site.BaseURL }}" class="flex items-center">
-        <img src="{{ .Site.Params.logo }}" alt="{{ .Site.Title }}" class="h-8 w-auto">
-      </a>
-    </div>
-  </div>
-</nav>
-```
+#### Backward Compatibility
 
-## Asset Migration
+- All existing configuration parameters continue to work
+- No breaking changes to content or templates
+- New features are opt-in and disabled by default
 
-### 1. CSS Migration
+## Configuration Changes
 
-**Remove Bootstrap dependencies:**
+### Required Changes
+
+1. **Theme Name**: Update theme reference if migrating from original Parsa
+2. **Hugo Version**: Ensure Hugo Extended v0.147.2 or higher
+3. **Node.js**: Install Node.js 16+ for Tailwind CSS processing
+
+### Optional Enhancements
+
+1. **Analytics**: Add Google Analytics 4 configuration
+2. **Advertising**: Configure Google AdSense for monetization
+3. **Marketing**: Set up Facebook Pixel for conversion tracking
+4. **Search**: Enable Google Custom Search for better search experience
+5. **Diagrams**: Enable Mermaid for visual content
+6. **Privacy**: Configure GDPR compliance features
+
+## New Features
+
+### Analytics and Advertising
+
+- **Google Analytics 4**: Modern analytics with privacy controls
+- **Google AdSense**: Intelligent ad placement and optimization
+- **Facebook Pixel**: Conversion tracking and audience building
+- **Performance Monitoring**: Core Web Vitals and optimization
+
+### Content Enhancement
+
+- **Mermaid Diagrams**: Flowcharts, sequence diagrams, and more
+- **Enhanced Shortcodes**: Privacy-focused social media embeds
+- **Better Search**: Google Custom Search with local fallback
+- **SEO Improvements**: Enhanced structured data and meta tags
+
+### Privacy and Compliance
+
+- **GDPR Ready**: Cookie consent management and privacy controls
+- **Do Not Track**: Automatic respect for browser privacy settings
+- **Transparency**: Clear privacy policies and cookie information
+- **User Control**: Granular privacy preference management
+
+## Breaking Changes
+
+### None for Content
+
+- All existing content continues to work without changes
+- Front matter is backward compatible
+- Shortcodes maintain compatibility
+
+### Minimal for Configuration
+
+- No breaking changes to existing configuration parameters
+- New features are additive and optional
+- Default behavior remains the same
+
+### Template Customizations
+
+If you have custom templates:
+
+1. **CSS Classes**: May need updates if using custom CSS
+2. **New Partials**: Analytics and advertising partials available
+3. **Enhanced Features**: New template variables and functions available
+
+## Step-by-Step Migration
+
+### Step 1: Backup Your Site
+
 ```bash
-# Remove old CSS files
-rm -f static/css/bootstrap.min.css
-rm -f static/css/style.css  # If it contains Bootstrap overrides
+# Create a backup of your current site
+cp -r your-hugo-site your-hugo-site-backup
 ```
 
-**Add Tailwind CSS setup:**
+### Step 2: Update Theme
+
+#### From Original Parsa
 ```bash
-# Install Node.js dependencies
-npm init -y
-npm install -D tailwindcss @tailwindcss/typography postcss autoprefixer
+# Remove old theme
+rm -rf themes/parsa
 
-# Create Tailwind config
-npx tailwindcss init -p
+# Add new theme
+git submodule add https://github.com/yourusername/parsa-redesigned.git themes/parsa-redesigned
+
+# Update configuration
+# Change theme = "parsa" to theme = "parsa-redesigned"
 ```
 
-**Create `assets/css/tailwind.css`:**
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom styles */
-@layer components {
-  .btn-primary {
-    @apply bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors;
-  }
-}
-```
-
-### 2. JavaScript Migration
-
-**Update jQuery dependencies:**
-```javascript
-// Old jQuery code
-$(document).ready(function() {
-  $('.navbar-toggler').click(function() {
-    $('.navbar-collapse').toggleClass('show');
-  });
-});
-
-// New vanilla JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-  const toggleButton = document.querySelector('[data-toggle="mobile-menu"]');
-  const mobileMenu = document.querySelector('#mobile-menu');
-  
-  if (toggleButton && mobileMenu) {
-    toggleButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
-    });
-  }
-});
-```
-
-### 3. Image Optimization
-
-**Convert images to modern formats:**
+#### From Earlier Parsa Redesigned
 ```bash
-# Install image optimization tools
-npm install -g @squoosh/cli
-
-# Convert images to WebP
-for img in static/images/*.{jpg,png}; do
-  squoosh-cli --webp '{"quality":80}' "$img"
-done
+# Update existing theme
+cd themes/parsa-redesigned
+git pull origin main
+cd ../..
 ```
 
-## Testing After Migration
+### Step 3: Update Configuration
 
-### 1. Build Test
+1. **Copy example configuration**:
+   ```bash
+   cp themes/parsa-redesigned/exampleSite/hugo.toml hugo.toml.example
+   ```
+
+2. **Merge configurations**:
+   - Compare your current `hugo.toml` with the example
+   - Add new parameter sections as needed
+   - Keep your existing customizations
+
+3. **Test configuration**:
+   ```bash
+   hugo config
+   ```
+
+### Step 4: Install Dependencies
 
 ```bash
-# Clean build
-rm -rf public/
-hugo --minify
-
-# Check for errors
-echo $?  # Should return 0
+# Install Node.js dependencies for Tailwind CSS
+npm install
 ```
 
-### 2. Local Testing
+### Step 5: Test Your Site
 
 ```bash
-# Start development server
+# Test locally
 hugo server -D
 
-# Test in browser
-open http://localhost:1313
+# Check for errors in browser console
+# Verify all pages load correctly
+# Test new features if enabled
 ```
 
-### 3. Content Verification
+### Step 6: Update Content (Optional)
 
-**Check key pages:**
-- [ ] Homepage loads correctly
-- [ ] Article pages display properly
-- [ ] Category pages work
-- [ ] Tag pages work
-- [ ] Search functionality works
-- [ ] Navigation menus work
-- [ ] Mobile responsive design
-- [ ] Social sharing buttons
+1. **Add Mermaid diagrams** to technical posts
+2. **Update front matter** with enhanced SEO fields
+3. **Create privacy policy** using the provided template
+4. **Add cookie policy** if enabling cookie consent
 
-### 4. Performance Testing
+### Step 7: Configure New Services
 
-```bash
-# Install testing tools
-npm install -g lighthouse
+1. **Google Analytics 4**:
+   - Create GA4 property
+   - Add Measurement ID to configuration
+   - Test tracking
 
-# Run Lighthouse audit
-lighthouse http://localhost:1313 --output html --output-path ./lighthouse-report.html
-```
+2. **Google AdSense** (optional):
+   - Apply for AdSense if not approved
+   - Create ad units
+   - Configure ad placements
 
-### 5. Accessibility Testing
+3. **Facebook Pixel** (optional):
+   - Create Facebook Pixel
+   - Add Pixel ID to configuration
+   - Test event tracking
 
-```bash
-# Install accessibility testing
-npm install -g @axe-core/cli
+4. **Google Custom Search** (optional):
+   - Create Custom Search Engine
+   - Add Search Engine ID to configuration
+   - Test search functionality
 
-# Run accessibility audit
-axe http://localhost:1313
-```
+### Step 8: Deploy and Monitor
 
-## Troubleshooting
+1. **Deploy to production**
+2. **Monitor for errors** in analytics dashboards
+3. **Test all functionality** on live site
+4. **Verify privacy compliance** if enabled
+
+## Troubleshooting Migration Issues
 
 ### Common Issues
 
-#### 1. Build Errors
+1. **CSS not loading**: Run `npm install` and rebuild
+2. **Analytics not working**: Check Measurement ID format
+3. **Ads not displaying**: Verify AdSense approval and configuration
+4. **Diagrams not rendering**: Ensure Mermaid is enabled
+5. **Search not working**: Check Custom Search Engine configuration
 
-**Error: "template not found"**
-```bash
-# Check template paths
-find layouts/ -name "*.html" | head -10
+### Getting Help
 
-# Ensure baseof.html exists
-ls layouts/_default/baseof.html
-```
+1. **Check documentation**: Review all documentation files
+2. **Validate configuration**: Use `hugo config` to check syntax
+3. **Test incrementally**: Enable features one at a time
+4. **Check browser console**: Look for JavaScript errors
+5. **Review Hugo build output**: Check for warnings and errors
 
-**Error: "asset not found"**
-```bash
-# Check asset paths
-ls assets/css/tailwind.css
-ls assets/js/main.js
+### Rollback Plan
 
-# Verify Hugo Pipes configuration
-hugo config | grep -A 5 "build"
-```
+If you encounter issues:
 
-#### 2. Styling Issues
+1. **Restore backup**:
+   ```bash
+   rm -rf your-hugo-site
+   mv your-hugo-site-backup your-hugo-site
+   ```
 
-**Tailwind CSS not loading:**
-```bash
-# Check PostCSS configuration
-cat postcss.config.js
-
-# Verify Tailwind config
-cat tailwind.config.js
-
-# Check Hugo Pipes processing
-hugo --debug 2>&1 | grep -i "css\|tailwind"
-```
-
-**Missing styles:**
-```bash
-# Check if Tailwind is purging needed classes
-# Add classes to safelist in tailwind.config.js
-module.exports = {
-  content: ['./layouts/**/*.html', './content/**/*.md'],
-  safelist: [
-    'bg-blue-500',
-    'text-white',
-    // Add other classes that might be purged
-  ]
-}
-```
-
-#### 3. JavaScript Issues
-
-**Scripts not loading:**
-```html
-<!-- Check script loading in baseof.html -->
-{{ $js := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
-<script src="{{ $js.RelPermalink }}" defer></script>
-```
-
-#### 4. Image Issues
-
-**Images not displaying:**
-```bash
-# Check image paths
-ls static/images/
-ls assets/images/
-
-# Verify image processing
-hugo --debug 2>&1 | grep -i "image"
-```
-
-### Performance Issues
-
-**Slow build times:**
-```toml
-# Optimize Hugo configuration
-[caches]
-  [caches.images]
-    maxAge = "1h"
-  [caches.assets]
-    maxAge = "1h"
-
-[build]
-  writeStats = true
-```
-
-**Large bundle sizes:**
-```bash
-# Analyze bundle size
-hugo --minify --templateMetrics
-
-# Check asset sizes
-ls -lh public/css/
-ls -lh public/js/
-```
-
-## Rollback Plan
-
-### 1. Quick Rollback
-
-```bash
-# Restore from backup
-cp -r /path/to/backup-$(date +%Y%m%d)/* /path/to/your-hugo-site/
-
-# Or use git
-git checkout pre-migration-backup
-```
-
-### 2. Partial Rollback
-
-**Keep content, restore theme:**
-```bash
-# Keep content and config, restore old theme
-git checkout HEAD~1 -- themes/
-git checkout HEAD~1 -- hugo.toml
-
-# Rebuild
-hugo server -D
-```
-
-### 3. Gradual Migration
-
-**Migrate in stages:**
-1. First: Update configuration only
-2. Second: Migrate templates
-3. Third: Update assets
-4. Fourth: Add new features
+2. **Identify issue**: Determine what caused the problem
+3. **Fix incrementally**: Address issues one at a time
+4. **Test thoroughly**: Verify fixes before proceeding
 
 ## Post-Migration Checklist
 
-- [ ] All pages load without errors
-- [ ] Navigation works correctly
+- [ ] Site loads correctly in development
+- [ ] All pages render without errors
+- [ ] Analytics tracking works (if enabled)
+- [ ] Ads display correctly (if enabled)
 - [ ] Search functionality works
-- [ ] Social sharing works
-- [ ] Mobile responsive design
-- [ ] Performance meets targets (Lighthouse > 90)
-- [ ] Accessibility compliance (WCAG 2.1 AA)
-- [ ] SEO meta tags present
-- [ ] Analytics tracking works
-- [ ] Contact forms work (if applicable)
-- [ ] Comments work (if applicable)
-- [ ] Multilingual switching works (if applicable)
+- [ ] Mermaid diagrams render (if used)
+- [ ] Privacy controls work (if enabled)
+- [ ] Mobile responsiveness maintained
+- [ ] Performance is acceptable
+- [ ] SEO features working
+- [ ] Social sharing functional
+- [ ] All custom content preserved
 
-## Getting Help
+## Performance Considerations
 
-If you encounter issues during migration:
+### Before Migration
+- Measure current site performance
+- Note Core Web Vitals scores
+- Document loading times
 
-1. **Check the documentation**: [README.md](README.md), [CONFIGURATION.md](CONFIGURATION.md)
-2. **Review troubleshooting**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-3. **Search existing issues**: [GitHub Issues](https://github.com/yourusername/parsa-redesigned/issues)
-4. **Create a new issue**: Include your configuration, error messages, and steps to reproduce
+### After Migration
+- Compare performance metrics
+- Optimize if needed using performance settings
+- Monitor ongoing performance
 
-## Migration Success Tips
+### Optimization Tips
+- Enable lazy loading for ads
+- Use async script loading
+- Configure resource hints
+- Monitor Core Web Vitals
 
-1. **Take it slow**: Migrate one section at a time
-2. **Test frequently**: Build and test after each major change
-3. **Keep backups**: Multiple backup points during migration
-4. **Document changes**: Keep notes of what you modify
-5. **Use version control**: Commit changes in logical chunks
+## Conclusion
 
-This migration guide should help you successfully transition from the original Parsa theme to the redesigned version while preserving your content and customizations.
+Migrating to Parsa Redesigned with analytics enhancements provides significant benefits:
+
+- **Modern Design**: Contemporary, professional appearance
+- **Better Performance**: Optimized loading and Core Web Vitals
+- **Enhanced Analytics**: Comprehensive tracking and insights
+- **Monetization**: Built-in advertising support
+- **Privacy Compliance**: GDPR-ready features
+- **Rich Content**: Mermaid diagrams and enhanced shortcodes
+
+The migration process is designed to be smooth with minimal breaking changes. Take your time, test thoroughly, and don't hesitate to reach out for help if needed.

@@ -15,6 +15,7 @@ class TestRunner {
     this.results = {
       hugo: null,
       analytics: null,
+      search: null,
       performance: null,
       accessibility: null,
       crossBrowser: null,
@@ -33,6 +34,7 @@ class TestRunner {
       // Run all test suites
       await this.runHugoTests();
       await this.runAnalyticsTests();
+      await this.runSearchTests();
       await this.runPerformanceTests();
       await this.runAccessibilityTests();
       await this.runCrossBrowserTests();
@@ -85,6 +87,22 @@ class TestRunner {
       const tester = new HugoTemplateTests();
       this.results.hugo = await tester.runAllTests();
       console.log('  ✅ Hugo template tests completed');
+      
+      // Run template integration tests
+      console.log('\n🔧 Running Template Integration Tests...');
+      const TemplateIntegrationTests = require('./template-integration-tests');
+      const integrationTester = new TemplateIntegrationTests();
+      const integrationResult = await integrationTester.runAllTests();
+      
+      // Run partial integration tests
+      console.log('\n🤝 Running Partial Integration Tests...');
+      const PartialIntegrationTests = require('./partial-integration-tests');
+      const partialTester = new PartialIntegrationTests();
+      const partialResult = await partialTester.runAllTests();
+      
+      // Combine results
+      this.results.hugo = this.results.hugo && integrationResult && partialResult;
+      console.log('  ✅ All Hugo tests completed');
     } catch (error) {
       console.error('  ❌ Hugo template tests failed:', error.message);
       this.results.hugo = false;
@@ -106,14 +124,30 @@ class TestRunner {
     }
   }
 
+  async runSearchTests() {
+    console.log('\n🔍 Running Search Functionality Tests...');
+    console.log('-'.repeat(40));
+    
+    try {
+      const SearchUnitTests = require('./search-unit-tests');
+      const tester = new SearchUnitTests();
+      this.results.search = await tester.runAllTests();
+      console.log('  ✅ Search functionality tests completed');
+    } catch (error) {
+      console.error('  ❌ Search functionality tests failed:', error.message);
+      this.results.search = false;
+    }
+  }
+
   async runPerformanceTests() {
     console.log('\n⚡ Running Performance Tests...');
     console.log('-'.repeat(40));
     
     try {
-      const PerformanceTests = require('./performance-tests');
-      const tester = new PerformanceTests();
-      this.results.performance = await tester.runAllTests();
+      // Run comprehensive performance test suite
+      const PerformanceTestRunner = require('./run-performance-tests');
+      const runner = new PerformanceTestRunner();
+      this.results.performance = await runner.runAllPerformanceTests();
       console.log('  ✅ Performance tests completed');
     } catch (error) {
       console.error('  ❌ Performance tests failed:', error.message);
@@ -186,6 +220,11 @@ class TestRunner {
           name: 'Analytics Configuration',
           passed: this.results.analytics,
           description: 'Tests analytics configuration parsing, validation, and privacy settings'
+        },
+        searchFunctionality: {
+          name: 'Search Functionality',
+          passed: this.results.search,
+          description: 'Tests Google Custom Search integration and local search fallback'
         },
         performance: {
           name: 'Performance & Core Web Vitals',
@@ -282,6 +321,7 @@ rateHTMLSummary(summary) {
     <ul>
         <li><a href="hugo-template-tests.json">Hugo Template Tests (JSON)</a></li>
         <li><a href="analytics-configuration-tests.json">Analytics Configuration Tests (JSON)</a></li>
+        <li><a href="search-unit-tests.json">Search Functionality Tests (JSON)</a></li>
         <li><a href="performance-tests.json">Performance Tests (JSON)</a></li>
         <li><a href="accessibility-tests.json">Accessibility Tests (JSON)</a></li>
         <li><a href="playwright-report/index.html">Cross-Browser Tests (HTML)</a></li>

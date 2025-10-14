@@ -8,295 +8,84 @@
   translation: "Tags"
 - id: relatedArticles
   translation: "Related Articles"
-- id: article
-  translation: "article"
-- id: articles
-  translation: "articles"
-- id: home
-  translation: "Home"
-- id: previous
-  translation: "Previous"
-- id: next
-  translation: "Next"
-- id: noArticlesFound
-  translation: "No articles found"
-- id: noArticlesInCategory
-  translation: "There are no articles in this category yet."
-- id: noArticlesYet
-  translation: "There are no articles published yet."
-- id: backToHome
-  translation: "Back to Home"
-- id: featuredArticles
-  translation: "Featured Articles"
-- id: featuredDescription
-  translation: "Discover our most popular and trending articles"
-- id: latestArticles
-  translation: "Latest Articles"
-- id: latestDescription
-  translation: "Stay updated with our newest content"
-- id: viewAll
-  translation: "View All"
-- id: viewAllArticles
-  translation: "View All Articles"
-- id: browseCategories
-  translation: "Browse Categories"
-- id: categoriesDescription
-  translation: "Explore articles by topic and find what interests you most"
-- id: viewAllCategories
-  translation: "View All Categories"
-- id: emailPlaceholder
-  translation: "Enter your email"
-- id: subscribe
-  translation: "Subscribe"
-- id: shareArticle
-  translation: "Share this article:"
-- id: copyLink
-  translation: "Copy Link"
-- id: navigation
-  translation: "Navigation"
-- id: toggleMenu
-  translation: "Toggle navigation menu"
-- id: closeMenu
-  translation: "Close navigation menu"
-- id: search
-  translation: "Search"
-- id: searchArticles
-  translation: "Search articles"
-- id: featured
-  translation: "Featured"
 - id: readMore
   translation: "Read More"
-- id: more
-  translation: "more"
-- id: featuredImage
-  translation: "Featured Image"
-- id: featured_content
-  translation: "Featured Content"
-- id: featured_articles
-  translation: "Featured Articles"
-- id: featured_description
-  translation: "Discover our most popular and trending articles"
-- id: latest_articles
-  translation: "Latest Articles"
-- id: latest_description
-  translation: "Stay updated with our newest content"
-- id: view_all
-  translation: "View All"
-- id: view_all_articles
-  translation: "View All Articles"
-- id: explore_content
-  translation: "Explore Content"
-
-# Language switching
-- id: language
-  translation: "Language"
-- id: switchLanguage
-  translation: "Switch Language"
-- id: currentLanguage
-  translation: "Current Language"
-- id: availableLanguages
-  translation: "Available Languages"
-- id: selectLanguage
-  translation: "Select Language"
-
-# Date and time formatting
-- id: publishedOn
-  translation: "Published on"
-- id: updatedOn
-  translation: "Updated on"
-- id: readingTime
-  translation: "Reading time"
-- id: minutes
-  translation: "minutes"
-- id: minute
-  translation: "minute"
-- id: seconds
-  translation: "seconds"
-- id: second
-  translation: "second"
-
-# Content metadata
+- id: categories
+  translation: "Categories"
+- id: category
+  translation: "Category"
 - id: author
   translation: "Author"
-- id: authors
-  translation: "Authors"
-- id: by
-  translation: "by"
-- id: in
-  translation: "in"
-- id: on
-  translation: "on"
-- id: at
-  translation: "at"
-- id: and
-  translation: "and"
+- id: publishedOn
+  translation: "Published on"
+- id: lastUpdated
+  translation: "Last updated"
 
-# Accessibility
-- id: mainContent
-  translation: "Main content"
-- id: siteNavigation
-  translation: "Site navigation"
-- id: pageNavigation
-  translation: "Page navigation"
-- id: skipToNavigation
-  translation: "Skip to navigation"
-- id: skipToFooter
-  translation: "Skip to footer"
-- id: openInNewWindow
-  translation: "Opens in new window"
-- id: externalLink
-  translation: "External link"
-- id: mainNavigation
-  translation: "Main navigation"
-- id: primaryNavigation
-  translation: "Primary navigation"
-- id: mobileNavigation
-  translation: "Mobile navigation"
-- id: articleMetadata
-  translation: "Article metadata"
-- id: siteSearch
-  translation: "Site search"
-- id: searchLabel
-  translation: "Search articles"
-- id: searchDescription
-  translation: "Type to search articles. Use arrow keys to navigate suggestions."
-- id: pageLoaded
-  translation: "Page loaded"
-- id: noSearchResults
-  translation: "No search results found for"
-- id: oneSearchResult
-  translation: "1 search result found for"
-- id: searchResultsFound
-  translation: "search results found for"
+# Navigation
+- id: home
+  translation: "Home"
+- id: about
+  translation: "About"
+- id: contact
+  translation: "Contact"
+- id: blog
+  translation: "Blog"
+- id: search
+  translation: "Search"
+- id: searchPlaceholder
+  translation: "Search articles..."
+
+# Pagination
+- id: newer
+  translation: "Newer"
+- id: older
+  translation: "Older"
+- id: page
+  translation: "Page"
+- id: of
+  translation: "of"
+
+# Comments and social
+- id: comments
+  translation: "Comments"
+- id: share
+  translation: "Share"
+- id: shareArticle
+  translation: "Share this article"
+
+# Forms
+- id: name
+  translation: "Name"
+- id: email
+  translation: "Email"
+- id: message
+  translation: "Message"
+- id: send
+  translation: "Send"
+- id: required
+  translation: "Required"
 
 # Error messages
 - id: pageNotFound
   translation: "Page Not Found"
 - id: pageNotFoundMessage
-  translation: "The page you are looking for doesn't exist or has been moved."
-- id: goHome
-  translation: "Go Home"
-- id: tryAgain
-  translation: "Try Again"
-- id: errorOccurred
-  translation: "An error occurred"
+  translation: "The page you are looking for doesn't exist."
+- id: backToHome
+  translation: "Back to Home"
 
-# Loading states
-- id: loading
-  translation: "Loading"
-- id: loadingContent
-  translation: "Loading content"
-- id: pleaseWait
-  translation: "Please wait"
+# Privacy and cookies
+- id: privacyPolicy
+  translation: "Privacy Policy"
+- id: cookieConsent
+  translation: "This website uses cookies to enhance your experience."
+- id: acceptCookies
+  translation: "Accept"
+- id: declineCookies
+  translation: "Decline"
+- id: learnMore
+  translation: "Learn More"
 
-# Pagination
-- id: page
-  translation: "Page"
-- id: of
-  translation: "of"
-- id: firstPage
-  translation: "First page"
-- id: lastPage
-  translation: "Last page"
-- id: previousPage
-  translation: "Previous page"
-- id: nextPage
-  translation: "Next page"
-- id: currentPage
-  translation: "Current page"
-
-# Content actions
-- id: showMore
-  translation: "Show more"
-- id: showLess
-  translation: "Show less"
-- id: expand
-  translation: "Expand"
-- id: collapse
-  translation: "Collapse"
-- id: close
-  translation: "Close"
-- id: open
-  translation: "Open"
-- id: toggle
-  translation: "Toggle"
-
-# Typography and formatting
-- id: emphasis
-  translation: "Emphasis"
-- id: strong
-  translation: "Strong"
-- id: quote
-  translation: "Quote"
-- id: citation
-  translation: "Citation"
-- id: code
-  translation: "Code"
-- id: link
-  translation: "Link"
-# Search related translations
-- id: searchTitle
-  translation: "Search Articles"
-- id: searchDescription
-  translation: "Find the content you're looking for"
-- id: searchPlaceholder
-  translation: "Search articles..."
-- id: searchResults
-  translation: "Search Results"
-- id: searching
-  translation: "Searching..."
-- id: noResultsTitle
-  translation: "No results found"
-- id: noResultsMessage
-  translation: "Try adjusting your search terms or browse our categories."
-- id: searchSuggestions
-  translation: "Suggestions:"
-- id: searchTip1
-  translation: "Check your spelling"
-- id: searchTip2
-  translation: "Try different keywords"
-- id: searchTip3
-  translation: "Use more general terms"
-- id: recentArticles
-  translation: "Recent Articles"
-- id: resultsFound
-  translation: "results found for"
-- id: resultFound
-  translation: "result found for"
-# Category and Tag related translations
-- id: categories
-  translation: "Categories"
-- id: category
-  translation: "category"
-- id: viewArticles
-  translation: "View Articles"
-- id: noCategoriesFound
-  translation: "No categories found"
-- id: noCategoriesYet
-  translation: "No categories have been created yet."
-- id: noTagsFound
-  translation: "No tags found"
-- id: noTagsYet
-  translation: "No tags have been created yet."
-- id: browseByCategory
-  translation: "Browse by Category"
-- id: browseByTag
-  translation: "Browse by Tag"
-- id: allCategories
-  translation: "All Categories"
-- id: allTags
-  translation: "All Tags"
-- id: articlesInCategory
-  translation: "Articles in this category"
-- id: articlesWithTag
-  translation: "Articles with this tag"
-- id: noArticlesInThisCategory
-  translation: "There are no articles in the \"%s\" category yet."
-- id: noArticlesWithThisTag
-  translation: "There are no articles tagged with \"%s\" yet."
-- id: tagsDescription
-  translation: "Discover content through our tag cloud and find articles that match your interests"# Social s
-haring translations
+# Social sharing
 - id: shareOnTwitter
   translation: "Share on Twitter"
 - id: shareOnFacebook
@@ -304,65 +93,20 @@ haring translations
 - id: shareOnLinkedIn
   translation: "Share on LinkedIn"
 - id: linkCopied
-  translation: "Copied!"# 
-Footer translations
+  translation: "Copied!"
+
+# Footer
 - id: footer_navigation
   translation: "Navigation"
 - id: footer_categories
   translation: "Categories"
 - id: footer_connect
   translation: "Connect"
-- id: footer_rights
-  translation: "All rights reserved."
-- id: footer_powered_by
-  translation: "Powered by"
-- id: footer_and
-  translation: "and"
-- id: newsletter_title
-  translation: "Stay Updated"
-- id: newsletter_placeholder
-  translation: "Enter your email"
-- id: newsletter_subscribe
-  translation: "Subscribe"
+- id: footer_copyright
+  translation: "All rights reserved"
 
-# Related articles translations
-- id: related_articles
-  translation: "Related Articles"
-- id: related_articles_description
-  translation: "Discover more content you might find interesting"
-- id: reading_time_min
-  translation: "min read"
-
-# Fallback content translations
-- id: defaultExcerpt
-  translation: "Read more about %s and discover interesting insights."
-- id: defaultAuthor
-  translation: "Anonymous"
-- id: defaultImageAlt
-  translation: "Featured image for %s"
-- id: uncategorized
-  translation: "Uncategorized"
-- id: untitled
-  translation: "Untitled"
-- id: defaultDescription
-  translation: "Learn more about %s"
-- id: imageLoadError
-  translation: "Image failed to load"
-- id: contentUnavailable
-  translation: "Content temporarily unavailable"
-- id: contentUnavailableMessage
-  translation: "The content you're looking for is temporarily unavailable. Please try again later."
-- id: noContentFound
-  translation: "No content found"
-- id: noContentMessage
-  translation: "There is no content available at the moment."
-- id: noTaggedArticles
-  translation: "There are no articles with this tag yet."
-- id: searchNoJSMessage
-  translation: "JavaScript is required for search functionality. Please enable JavaScript or browse our categories."
-- id: browseTags
-  translation: "Browse Tags"
-- id: enhancedExperienceAvailable
-  translation: "Enhanced Experience Available"
-- id: enableJavaScriptMessage
-  translation: "Enable JavaScript for enhanced features like search, animations, and interactive elements."
+# Analytics and advertising
+- id: advertisement
+  translation: "Advertisement"
+- id: sponsored
+  translation: "Sponsored"

@@ -397,8 +397,17 @@ If you have existing analytics configuration:
 
 - Check the [Configuration Reference](docs/configuration-reference.md) for detailed parameter documentation
 - Review [Configuration Examples](docs/configuration-examples.md) for use case-specific setups
+- Follow the [Setup Guides](docs/setup-guides.md) for step-by-step service configuration
+- Consult the [Troubleshooting Guide](docs/troubleshooting.md) for common issues and solutions
 - Examine the validation messages in your Hugo build output
 - Test your configuration in a development environment first
+
+### Additional Resources
+
+- [Setup Guides](docs/setup-guides.md) - Step-by-step setup instructions for each service
+- [Troubleshooting Guide](docs/troubleshooting.md) - Solutions for common configuration issues
+- [Configuration Examples](docs/configuration-examples.md) - Real-world configuration examples
+- [Performance Optimization](docs/performance-optimization.md) - Performance tuning guidelines
 
 ## Best Practices
 

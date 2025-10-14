@@ -6,12 +6,20 @@
   "scripts": {
     "test": "node run-all-tests.js",
     "test:hugo": "node hugo-template-tests.js",
+    "test:template-integration": "node template-integration-tests.js",
+    "test:partial-integration": "node partial-integration-tests.js",
+    "test:integration-all": "node run-integration-tests.js",
     "test:analytics": "node analytics-configuration-tests.js",
     "test:analytics-unit": "node analytics-config-unit-tests.js",
     "test:facebook-pixel": "node facebook-pixel-unit-tests.js",
+    "test:config-management": "node configuration-management-unit-tests.js",
     "test:analytics-all": "node run-analytics-tests.js",
+    "test:search": "node search-unit-tests.js",
     "test:accessibility": "node accessibility-tests.js",
     "test:performance": "node performance-tests.js",
+    "test:analytics-performance": "node analytics-performance-tests.js",
+    "test:core-web-vitals": "node core-web-vitals-tests.js",
+    "test:performance-all": "node run-performance-tests.js",
     "test:visual": "backstop test",
     "test:cross-browser": "playwright test",
     "test:lighthouse": "lighthouse-ci autorun",
@@ -23,16 +31,16 @@
     "approve": "backstop approve"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.12.0",
     "@playwright/test": "^1.40.0",
+    "axe-core": "^4.8.3",
+    "backstopjs": "^6.2.2",
+    "cheerio": "^1.1.2",
+    "fs-extra": "^11.3.2",
+    "glob": "^10.4.5",
     "lighthouse": "^11.3.0",
-    "lighthouse-ci": "^0.12.0",
     "pa11y": "^7.0.0",
     "pa11y-ci": "^3.1.0",
-    "backstopjs": "^6.2.2",
-    "axe-core": "^4.8.3",
-    "puppeteer": "^21.5.2",
-    "cheerio": "^1.0.0-rc.12",
-    "fs-extra": "^11.1.1",
-    "glob": "^10.3.10"
+    "puppeteer": "^21.5.2"
   }
 }

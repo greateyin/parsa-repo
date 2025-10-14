@@ -1,157 +1,91 @@
-# Chinese translations (Traditional Chinese)
-# 基礎導航和內容
+# 繁體中文翻譯
+# 基本導航和內容
 - id: skipToContent
-  translation: "跳轉到主要內容"
+  translation: "跳到主要內容"
 - id: minRead
   translation: "分鐘閱讀"
 - id: tags
   translation: "標籤"
 - id: relatedArticles
   translation: "相關文章"
-- id: article
-  translation: "篇文章"
-- id: articles
-  translation: "篇文章"
-- id: home
-  translation: "首頁"
-- id: previous
-  translation: "上一頁"
-- id: next
-  translation: "下一頁"
-- id: noArticlesFound
-  translation: "未找到文章"
-- id: noArticlesInCategory
-  translation: "此分類下暫無文章。"
-- id: noArticlesYet
-  translation: "暫無已發佈的文章。"
-- id: backToHome
-  translation: "返回首頁"
-- id: featuredArticles
-  translation: "精選文章"
-- id: featuredDescription
-  translation: "發現我們最受歡迎和熱門的文章"
-- id: latestArticles
-  translation: "最新文章"
-- id: latestDescription
-  translation: "獲取我們最新的內容更新"
-- id: viewAll
-  translation: "查看全部"
-- id: viewAllArticles
-  translation: "查看所有文章"
-- id: browseCategories
-  translation: "瀏覽分類"
-- id: categoriesDescription
-  translation: "按主題探索文章，找到您最感興趣的內容"
-- id: viewAllCategories
-  translation: "查看所有分類"
-- id: emailPlaceholder
-  translation: "輸入您的郵箱"
-- id: subscribe
-  translation: "訂閱"
-- id: shareArticle
-  translation: "分享文章："
-- id: copyLink
-  translation: "複製連結"
-- id: navigation
-  translation: "導航"
-- id: toggleMenu
-  translation: "切換導航選單"
-- id: closeMenu
-  translation: "關閉導航選單"
-- id: search
-  translation: "搜尋"
-- id: searchArticles
-  translation: "搜尋文章"
-- id: featured
-  translation: "精選"
 - id: readMore
   translation: "閱讀更多"
-- id: more
-  translation: "更多"
-- id: featuredImage
-  translation: "精選圖片"
-- id: featured_content
-  translation: "精選內容"
-- id: featured_articles
-  translation: "精選文章"
-- id: featured_description
-  translation: "發現我們最受歡迎和熱門的文章"
-- id: latest_articles
-  translation: "最新文章"
-- id: latest_description
-  translation: "獲取我們最新的內容更新"
-- id: view_all
-  translation: "查看全部"
-- id: view_all_articles
-  translation: "查看所有文章"
-- id: explore_content
-  translation: "探索內容"
-
-# Search related translations
-- id: searchTitle
-  translation: "搜尋文章"
-- id: searchDescription
-  translation: "找到您要尋找的內容"
-- id: searchPlaceholder
-  translation: "搜尋文章..."
-- id: searchResults
-  translation: "搜尋結果"
-- id: searching
-  translation: "搜尋中..."
-- id: noResultsTitle
-  translation: "未找到結果"
-- id: noResultsMessage
-  translation: "請嘗試調整搜尋詞或瀏覽我們的分類。"
-- id: searchSuggestions
-  translation: "建議："
-- id: searchTip1
-  translation: "檢查拼寫"
-- id: searchTip2
-  translation: "嘗試不同的關鍵詞"
-- id: searchTip3
-  translation: "使用更通用的詞彙"
-- id: recentArticles
-  translation: "最新文章"
-- id: resultsFound
-  translation: "個結果，搜尋詞："
-- id: resultFound
-  translation: "個結果，搜尋詞："
-
-# Category and Tag related translations
 - id: categories
   translation: "分類"
 - id: category
-  translation: "個分類"
-- id: viewArticles
-  translation: "查看文章"
-- id: noCategoriesFound
-  translation: "未找到分類"
-- id: noCategoriesYet
-  translation: "暫無已創建的分類。"
-- id: noTagsFound
-  translation: "未找到標籤"
-- id: noTagsYet
-  translation: "暫無已創建的標籤。"
-- id: browseByCategory
-  translation: "按分類瀏覽"
-- id: browseByTag
-  translation: "按標籤瀏覽"
-- id: allCategories
-  translation: "所有分類"
-- id: allTags
-  translation: "所有標籤"
-- id: articlesInCategory
-  translation: "此分類下的文章"
-- id: articlesWithTag
-  translation: "包含此標籤的文章"
-- id: noArticlesInThisCategory
-  translation: "「%s」分類下暫無文章。"
-- id: noArticlesWithThisTag
-  translation: "暫無標記為「%s」的文章。"
-- id: tagsDescription
-  translation: "通過我們的標籤雲發現內容，找到符合您興趣的文章"
+  translation: "分類"
+- id: author
+  translation: "作者"
+- id: publishedOn
+  translation: "發布於"
+- id: lastUpdated
+  translation: "最後更新"
 
-# Social sharing translations
+# 導航
+- id: home
+  translation: "首頁"
+- id: about
+  translation: "關於"
+- id: contact
+  translation: "聯絡"
+- id: blog
+  translation: "部落格"
+- id: search
+  translation: "搜尋"
+- id: searchPlaceholder
+  translation: "搜尋文章..."
+
+# 分頁
+- id: newer
+  translation: "較新"
+- id: older
+  translation: "較舊"
+- id: page
+  translation: "頁面"
+- id: of
+  translation: "共"
+
+# 評論和社交
+- id: comments
+  translation: "評論"
+- id: share
+  translation: "分享"
+- id: shareArticle
+  translation: "分享這篇文章"
+
+# 表單
+- id: name
+  translation: "姓名"
+- id: email
+  translation: "電子郵件"
+- id: message
+  translation: "訊息"
+- id: send
+  translation: "發送"
+- id: required
+  translation: "必填"
+
+# 錯誤訊息
+- id: pageNotFound
+  translation: "找不到頁面"
+- id: pageNotFoundMessage
+  translation: "您尋找的頁面不存在。"
+- id: backToHome
+  translation: "回到首頁"
+
+# 隱私和 Cookie
+- id: privacyPolicy
+  translation: "隱私政策"
+- id: cookieConsent
+  translation: "本網站使用 Cookie 來提升您的體驗。"
+- id: acceptCookies
+  translation: "接受"
+- id: declineCookies
+  translation: "拒絕"
+- id: learnMore
+  translation: "了解更多"
+
+# 社交分享
 - id: shareOnTwitter
   translation: "在 Twitter 上分享"
 - id: shareOnFacebook
@@ -161,155 +95,18 @@
 - id: linkCopied
   translation: "已複製！"
 
-# 語言切換
-- id: language
-  translation: "語言"
-- id: switchLanguage
-  translation: "切換語言"
-- id: currentLanguage
-  translation: "當前語言"
-- id: availableLanguages
-  translation: "可用語言"
-- id: selectLanguage
-  translation: "選擇語言"
-
-# 日期和時間格式
-- id: publishedOn
-  translation: "發佈於"
-- id: updatedOn
-  translation: "更新於"
-- id: readingTime
-  translation: "閱讀時間"
-- id: minutes
-  translation: "分鐘"
-- id: minute
-  translation: "分鐘"
-- id: seconds
-  translation: "秒"
-- id: second
-  translation: "秒"
-
-# 內容元數據
-- id: author
-  translation: "作者"
-- id: authors
-  translation: "作者"
-- id: by
-  translation: "由"
-- id: in
-  translation: "在"
-- id: on
-  translation: "於"
-- id: at
-  translation: "在"
-- id: and
-  translation: "和"
-
-# 無障礙訪問
-- id: mainContent
-  translation: "主要內容"
-- id: siteNavigation
-  translation: "網站導航"
-- id: pageNavigation
-  translation: "頁面導航"
-- id: skipToNavigation
-  translation: "跳轉到導航"
-- id: skipToFooter
-  translation: "跳轉到頁腳"
-- id: openInNewWindow
-  translation: "在新視窗中開啟"
-- id: externalLink
-  translation: "外部連結"
-
-# 錯誤信息
-- id: pageNotFound
-  translation: "頁面未找到"
-- id: pageNotFoundMessage
-  translation: "您要查找的頁面不存在或已被移動。"
-- id: goHome
-  translation: "返回首頁"
-- id: tryAgain
-  translation: "重試"
-- id: errorOccurred
-  translation: "發生錯誤"
-
-# 載入狀態
-- id: loading
-  translation: "載入中"
-- id: loadingContent
-  translation: "正在載入內容"
-- id: pleaseWait
-  translation: "請稍候"
-
-# 分頁
-- id: page
-  translation: "第"
-- id: of
-  translation: "頁，共"
-- id: firstPage
-  translation: "首頁"
-- id: lastPage
-  translation: "末頁"
-- id: previousPage
-  translation: "上一頁"
-- id: nextPage
-  translation: "下一頁"
-- id: currentPage
-  translation: "當前頁"
-
-# 內容操作
-- id: showMore
-  translation: "顯示更多"
-- id: showLess
-  translation: "顯示更少"
-- id: expand
-  translation: "展開"
-- id: collapse
-  translation: "收起"
-- id: close
-  translation: "關閉"
-- id: open
-  translation: "開啟"
-- id: toggle
-  translation: "切換"
-
-# 排版和格式
-- id: emphasis
-  translation: "強調"
-- id: strong
-  translation: "重要"
-- id: quote
-  translation: "引用"
-- id: citation
-  translation: "引文"
-- id: code
-  translation: "程式碼"
-- id: link
-  translation: "連結"# F
-ooter translations
+# 頁尾
 - id: footer_navigation
   translation: "導航"
 - id: footer_categories
   translation: "分類"
 - id: footer_connect
   translation: "聯繫我們"
-- id: footer_rights
-  translation: "版權所有。"
-- id: footer_powered_by
-  translation: "技術支援"
-- id: footer_and
-  translation: "和"
-- id: newsletter_title
-  translation: "訂閱更新"
-- id: newsletter_placeholder
-  translation: "輸入您的郵箱"
-- id: newsletter_subscribe
-  translation: "訂閱"
+- id: footer_copyright
+  translation: "版權所有"
 
-# Related articles translations
-- id: related_articles
-  translation: "相關文章"
-- id: related_articles_description
-  translation: "發現更多您可能感興趣的內容"
-- id: reading_time_min
-  translation: "分鐘閱讀"
+# 分析和廣告
+- id: advertisement
+  translation: "廣告"
+- id: sponsored
+  translation: "贊助"

@@ -10,8 +10,10 @@
 */}}
 
 {{/* Load validated configuration */}}
-{{ $context := .context | default . }}
-{{ $compact := .compact | default false }}
+{{ $context := . }}
+{{ if isset . "context" }}{{ $context = .context }}{{ end }}
+{{ $compact := false }}
+{{ if isset . "compact" }}{{ $compact = .compact }}{{ end }}
 {{ partial "helpers/config-validation.html" $context }}
 {{ $config := $context.Page.Store.Get "validatedConfig" }}
 {{ $gcsId := $config.googleCustomSearch.value }}

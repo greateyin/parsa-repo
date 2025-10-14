@@ -12,20 +12,16 @@
 {{- $respectDoNotTrack := $privacy.respectDoNotTrack | default true -}}
 
 {{- if and $fbPixel.enabled $fbPixel.pixelId -}}
-  {{- $doNotTrack := false -}}
-  {{- if $respectDoNotTrack -}}
-    {{- $doNotTrack = true -}}
-  {{- end -}}
 
 <!-- Facebook Pixel Code -->
 <script>
-  {{- if $respectDoNotTrack -}}
+  {{- if $respectDoNotTrack }}
   // Check for Do Not Track preference
   var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
   var doNotTrack = (dnt == "1" || dnt == "yes");
   
   if (!doNotTrack) {
-  {{- end -}}
+  {{- end }}
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -38,26 +34,21 @@
     // Initialize Facebook Pixel
     fbq('init', '{{ $fbPixel.pixelId }}');
     
-    {{- /* Standard Event Tracking */ -}}
-    {{- if $fbPixel.events.pageView | default true -}}
+    {{- if $fbPixel.events.pageView | default true }}
     fbq('track', 'PageView');
-    {{- end -}}
+    {{- end }}
     
-    {{- if $fbPixel.events.viewContent -}}
-    // Track ViewContent event for blog posts and articles
-    {{- if eq .Type "blog" -}}
+    {{- if and $fbPixel.events.viewContent (eq .Type "blog") }}
     fbq('track', 'ViewContent', {
       content_type: 'article',
       content_ids: ['{{ .Permalink }}'],
       content_name: '{{ .Title | htmlEscape }}',
       content_category: '{{ with .Section }}{{ . }}{{ end }}'
     });
-    {{- end -}}
-    {{- end -}}
+    {{- end }}
     
-    {{- /* Custom Event Tracking Configuration */ -}}
-    {{- if $fbPixel.events.search -}}
-    // Search event tracking (will be triggered by search interactions)
+    {{- if $fbPixel.events.search }}
+    // Search event tracking function
     window.fbPixelTrackSearch = function(searchTerm) {
       if (typeof fbq !== 'undefined') {
         fbq('track', 'Search', {
@@ -65,61 +56,57 @@
         });
       }
     };
-    {{- end -}}
+    {{- end }}
     
-    {{- if $fbPixel.events.contact -}}
-    // Contact event tracking (will be triggered by contact form submissions)
+    {{- if $fbPixel.events.contact }}
+    // Contact event tracking function
     window.fbPixelTrackContact = function() {
       if (typeof fbq !== 'undefined') {
         fbq('track', 'Contact');
       }
     };
-    {{- end -}}
+    {{- end }}
     
-    {{- if $fbPixel.events.lead -}}
-    // Lead event tracking (will be triggered by newsletter signups)
+    {{- if $fbPixel.events.lead }}
+    // Lead event tracking function
     window.fbPixelTrackLead = function() {
       if (typeof fbq !== 'undefined') {
         fbq('track', 'Lead');
       }
     };
-    {{- end -}}
+    {{- end }}
     
-    {{- /* Custom Events from Configuration */ -}}
-    {{- range $fbPixel.customEvents -}}
-    {{- if .enabled -}}
+    {{- range $fbPixel.customEvents }}
+    {{- if .enabled }}
     // Custom event: {{ .name }}
     window.fbPixelTrack{{ .name | title }} = function(customData) {
       if (typeof fbq !== 'undefined') {
         fbq('trackCustom', '{{ .name }}', customData || {});
       }
     };
-    {{- end -}}
-    {{- end -}}
+    {{- end }}
+    {{- end }}
     
-  {{- if $respectDoNotTrack -}}
+  {{- if $respectDoNotTrack }}
   } else {
-    // Do Not Track is enabled - Facebook Pixel tracking disabled
     console.log('Facebook Pixel: Tracking disabled due to Do Not Track preference');
   }
-  {{- end -}}
+  {{- end }}
 </script>
 
 <!-- Facebook Pixel Noscript -->
 <noscript>
-  {{- if not $respectDoNotTrack -}}
+  {{- if not $respectDoNotTrack }}
   <img height="1" width="1" style="display:none"
        src="https://www.facebook.com/tr?id={{ $fbPixel.pixelId }}&ev=PageView&noscript=1"/>
-  {{- end -}}
+  {{- end }}
 </noscript>
 
-{{- /* GDPR Compliance and Cookie Consent Integration */ -}}
-{{- if $privacy.cookieConsent -}}
+{{- if $privacy.cookieConsent }}
 <script>
-  // Wait for cookie consent before initializing Facebook Pixel
+  // GDPR Compliance and Cookie Consent Integration
   document.addEventListener('cookieConsentGiven', function(event) {
     if (event.detail && event.detail.analytics) {
-      // Re-initialize Facebook Pixel after consent
       if (typeof fbq !== 'undefined') {
         fbq('consent', 'grant');
       }
@@ -132,12 +119,11 @@
     }
   });
 </script>
-{{- end -}}
+{{- end }}
 
-{{- else -}}
-{{- /* Debug information when Facebook Pixel is not configured */ -}}
-{{- if hugo.IsServer -}}
+{{- else }}
+{{- if hugo.IsServer }}
 <!-- Facebook Pixel: Not configured or disabled -->
 <!-- To enable: Set params.facebookPixel.enabled = true and params.facebookPixel.pixelId in your configuration -->
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}

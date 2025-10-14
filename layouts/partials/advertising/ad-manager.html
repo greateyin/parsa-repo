@@ -15,8 +15,10 @@
 {{- $adsense := site.Params.adsense -}}
 {{- $privacy := site.Params.privacy | default dict -}}
 {{- $performance := site.Params.performance | default dict -}}
-{{- $position := .position -}}
-{{- $context := .context | default "general" -}}
+{{- $position := "head" -}}
+{{- $context := "general" -}}
+{{- if isset . "position" }}{{ $position = .position }}{{ end }}
+{{- if isset . "context" }}{{ $context = .context }}{{ end }}
 
 {{- if $adsense.enabled -}}
 

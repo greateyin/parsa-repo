@@ -4,6 +4,7 @@ A completely redesigned version of the popular Parsa Hugo theme, featuring moder
 
 ## ✨ Features
 
+### Core Features
 - **Modern Design**: Contemporary UI with gradient backgrounds and card-based layouts
 - **Tailwind CSS**: Utility-first CSS framework with JIT compilation
 - **Responsive Design**: Mobile-first approach with optimized layouts for all devices
@@ -12,8 +13,21 @@ A completely redesigned version of the popular Parsa Hugo theme, featuring moder
 - **Multilingual Support**: Built-in i18n support for English and Chinese
 - **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
 - **Social Sharing**: Integrated social sharing buttons for major platforms
-- **Search Functionality**: Fast client-side search with modern interface
 - **Hugo Standards**: Follows official Hugo theme development standards
+
+### Analytics & Advertising
+- **Google Analytics 4**: Comprehensive website analytics with privacy controls
+- **Google AdSense**: Intelligent ad placement with lazy loading and responsive units
+- **Facebook Pixel**: Conversion tracking and audience building for marketing
+- **Google Custom Search**: Enhanced search functionality with autocomplete
+- **Privacy Compliance**: GDPR-ready with cookie consent management
+- **Performance Monitoring**: Core Web Vitals tracking and optimization
+
+### Content Enhancement
+- **Mermaid Diagrams**: Automatic rendering of flowcharts, sequence diagrams, and more
+- **Enhanced Shortcodes**: Privacy-focused social media embeds and rich content
+- **Search Functionality**: Dual-mode search with Google Custom Search and local fallback
+- **Diagram Support**: Full Mermaid.js integration with theme customization
 
 ## 🚀 Quick Start
 
@@ -90,6 +104,29 @@ theme = "parsa-redesigned"
   # Site information
   description = "Your site description"
   author = "Your Name"
+  
+  # Analytics and Advertising
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-XXXXXXXXXXXXXXXX"
+    inArticleSlot = "XXXXXXXXXX"
+    
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "XXXXXXXXXXXXXXX"
+    
+  [params.gcs_engine_id]
+    value = "XXXXXXXXXXXXXXXXX"
+    
+  # Mermaid Diagrams
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  # Privacy Settings
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = true
   
   # Feature toggles
   enableSearch = true
@@ -221,6 +258,18 @@ graph TD
     A[Start] --> B[End]
 {{< /mermaid >}}
 ```
+
+You can also use Mermaid code blocks for automatic diagram rendering:
+
+````markdown
+```mermaid
+sequenceDiagram
+    participant A as User
+    participant B as Server
+    A->>B: Request
+    B-->>A: Response
+```
+````
 
 **Privacy Features:**
 - YouTube uses privacy-enhanced domain (`youtube-nocookie.com`)
@@ -407,11 +456,26 @@ npm run test:cross-browser
 
 ## 📚 Documentation
 
-- [Configuration Guide](CONFIGURATION.md) - Detailed configuration options
+### Configuration and Setup
+- [Configuration Guide](CONFIGURATION.md) - Complete configuration options and examples
+- [Configuration Reference](docs/configuration-reference.md) - Detailed parameter documentation
+- [Setup Guides](docs/setup-guides.md) - Step-by-step service setup instructions
+- [Configuration Examples](docs/configuration-examples.md) - Real-world configuration examples
+
+### Features and Usage
+- [Shortcodes Guide](docs/shortcodes.md) - Available shortcodes and usage examples
+- [Analytics & Advertising](exampleSite/content/blog/analytics-advertising-showcase.md) - Analytics and advertising integration
+- [Mermaid Diagrams](exampleSite/content/blog/mermaid-diagrams-showcase.md) - Diagram creation and customization
+
+### Migration and Troubleshooting
 - [Migration Guide](MIGRATION.md) - Migrating from original Parsa theme
-- [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions
+- [Feature Comparison](docs/feature-comparison.md) - Version comparison and compatibility matrix
+- [Troubleshooting Guide](docs/troubleshooting.md) - Common issues and solutions
 - [Performance Guide](docs/performance-optimization.md) - Performance optimization tips
-- [Shortcodes Guide](docs/shortcodes.md) - Available shortcodes and usage
+
+### Privacy and Compliance
+- [Privacy Policy Template](exampleSite/content/privacy-policy.md) - GDPR-compliant privacy policy
+- [Cookie Policy Template](exampleSite/content/cookie-policy.md) - Comprehensive cookie policy
 
 ## 🤝 Contributing
 

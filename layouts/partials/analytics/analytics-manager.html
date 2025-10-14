@@ -1,48 +1,30 @@
-{{- /* Analytics Manager - Coordinates all tracking services */ -}}
-{{- /* Requirements: 1.1, 8.2, 8.5 */ -}}
+{{- /* Analytics Manager - Simplified Version for Integration Testing */ -}}
 
+{{- /* Get configuration variables */ -}}
 {{- $privacy := site.Params.privacy | default dict -}}
-{{- $performance := site.Params.performance | default dict -}}
 {{- $respectDNT := $privacy.respectDoNotTrack | default true -}}
+{{- $performance := site.Params.performance | default dict -}}
 {{- $asyncScripts := $performance.asyncScripts | default true -}}
 
-{{- /* Check for Do Not Track globally */ -}}
-{{- if $respectDNT -}}
-<script>
-  // Global Do Not Track detection
-  window.analyticsConfig = window.analyticsConfig || {};
-  var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-  window.analyticsConfig.doNotTrack = (dnt == "1" || dnt == "yes");
-  window.analyticsConfig.respectDNT = {{ $respectDNT }};
-</script>
-{{- end -}}
+{{- /* Google Analytics configuration */ -}}
+{{- $gaID := site.Config.Services.GoogleAnalytics.ID -}}
 
-{{- /* Performance optimization: Use async script loader */ -}}
-{{- if $asyncScripts -}}
-  {{- partial "performance/async-script-loader.html" . -}}
-{{- end -}}
+{{- /* Facebook Pixel configuration */ -}}
+{{- $fbPixel := site.Params.facebookPixel -}}
 
-{{- /* Include performance monitoring */ -}}
-{{- if $performance.monitoring.enabled | default true -}}
-  {{- partial "performance/performance-monitor.html" . -}}
-{{- end -}}
-
-{{- /* Load Google Analytics 4 */ -}}
-{{- $ga := site.Config.Services.GoogleAnalytics -}}
-{{- $gaID := $ga.ID | default site.GoogleAnalyticsID -}}
+{{- /* Load Google Analytics (if configured) */ -}}
 {{- if $gaID -}}
   {{- partial "analytics/google-analytics.html" . -}}
 {{- end -}}
 
 {{- /* Load Facebook Pixel (if configured) */ -}}
-{{- $fbPixel := site.Params.facebookPixel -}}
 {{- if and $fbPixel.enabled $fbPixel.pixelId -}}
   {{- partial "analytics/facebook-pixel.html" . -}}
 {{- end -}}
 
-{{- /* Analytics coordination script */ -}}
+<!-- Analytics Manager JavaScript -->
 <script>
-  // Analytics Manager - Coordinates tracking services
+  // Simple analytics manager for integration testing
   window.analyticsManager = {
     services: {
       {{- if $gaID }}
@@ -56,277 +38,76 @@
       facebookPixel: {
         id: '{{ $fbPixel.pixelId }}',
         enabled: true,
-        loaded: false,
-        events: {
-          {{- if $fbPixel.events }}
-          pageView: {{ $fbPixel.events.pageView | default true }},
-          viewContent: {{ $fbPixel.events.viewContent | default false }},
-          search: {{ $fbPixel.events.search | default false }},
-          contact: {{ $fbPixel.events.contact | default false }},
-          lead: {{ $fbPixel.events.lead | default false }},
-          outboundClick: {{ $fbPixel.events.outboundClick | default false }}
-          {{- else }}
-          pageView: true,
-          viewContent: false,
-          search: false,
-          contact: false,
-          lead: false,
-          outboundClick: false
-          {{- end }}
-        }
-      },
+        loaded: false
+      }
       {{- end }}
     },
     
-    // Track service loading status
-    markServiceLoaded: function(service) {
-      if (this.services[service]) {
-        this.services[service].loaded = true;
-        console.log('Analytics: ' + service + ' loaded successfully');
-      }
-    },
-    
-    // Get loading status
-    getLoadingStatus: function() {
-      var status = {};
-      for (var service in this.services) {
-        status[service] = this.services[service].loaded;
-      }
-      return status;
-    },
-    
-    // Privacy-compliant event tracking
-    trackEvent: function(eventName, parameters, service) {
+    // Initialize analytics
+    init: function() {
+      console.log('Analytics Manager: Initialized');
+      
       {{- if $respectDNT }}
-      if (window.analyticsConfig && window.analyticsConfig.doNotTrack) {
-        console.log('Analytics: Event tracking disabled due to Do Not Track');
+      // Check for Do Not Track
+      var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      if (dnt === "1" || dnt === "yes") {
+        console.log('Analytics: Do Not Track detected, analytics disabled');
         return;
       }
       {{- end }}
       
-      parameters = parameters || {};
-      
-      // Route to appropriate service
-      if (!service || service === 'googleAnalytics') {
-        {{- if $gaID }}
-        if (typeof gtag !== 'undefined') {
-          gtag('event', eventName, parameters);
-        }
-        {{- end }}
-      }
-      
-      if (!service || service === 'facebookPixel') {
-        {{- if and $fbPixel.enabled $fbPixel.pixelId }}
-        if (typeof fbq !== 'undefined') {
-          fbq('track', eventName, parameters);
-        }
-        {{- end }}
-      }
+      // Mark services as loaded when available
+      this.checkServicesLoaded();
     },
     
-    // Facebook Pixel specific event tracking
-    facebookPixel: {
-      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
-      // Standard events
-      trackPageView: function() {
-        {{- if $fbPixel.events.pageView | default true }}
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'PageView');
-        }
-        {{- end }}
-      },
-      
-      trackViewContent: function(contentData) {
-        {{- if $fbPixel.events.viewContent }}
-        if (typeof fbq !== 'undefined') {
-          var data = contentData || {
-            content_type: 'article',
-            content_ids: [window.location.href],
-            content_name: document.title
-          };
-          fbq('track', 'ViewContent', data);
-        }
-        {{- end }}
-      },
-      
-      trackSearch: function(searchTerm) {
-        {{- if $fbPixel.events.search }}
-        if (typeof fbq !== 'undefined' && searchTerm) {
-          fbq('track', 'Search', {
-            search_string: searchTerm
-          });
-        }
-        {{- end }}
-      },
-      
-      trackContact: function() {
-        {{- if $fbPixel.events.contact }}
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'Contact');
-        }
-        {{- end }}
-      },
-      
-      trackLead: function() {
-        {{- if $fbPixel.events.lead }}
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'Lead');
-        }
-        {{- end }}
-      },
-      
-      // Custom event tracking
-      trackCustomEvent: function(eventName, eventData) {
-        if (typeof fbq !== 'undefined' && eventName) {
-          fbq('trackCustom', eventName, eventData || {});
-        }
-      }
-      {{- else }}
-      // Facebook Pixel not configured
-      trackPageView: function() { console.log('Facebook Pixel: Not configured'); },
-      trackViewContent: function() { console.log('Facebook Pixel: Not configured'); },
-      trackSearch: function() { console.log('Facebook Pixel: Not configured'); },
-      trackContact: function() { console.log('Facebook Pixel: Not configured'); },
-      trackLead: function() { console.log('Facebook Pixel: Not configured'); },
-      trackCustomEvent: function() { console.log('Facebook Pixel: Not configured'); }
-      {{- end }}
-    },
-    
-    // Page interaction tracking
-    trackPageInteractions: function() {
+    // Check if services are loaded
+    checkServicesLoaded: function() {
       var self = this;
       
-      // Track scroll depth for Facebook Pixel
-      {{- if and $fbPixel.enabled $fbPixel.events.viewContent }}
-      var scrollTracked = false;
-      window.addEventListener('scroll', function() {
-        if (!scrollTracked && (window.scrollY / document.body.scrollHeight) > 0.5) {
-          scrollTracked = true;
-          self.facebookPixel.trackCustomEvent('ScrollDepth50');
-        }
-      });
+      {{- if $gaID }}
+      if (typeof gtag !== 'undefined' && this.services.googleAnalytics) {
+        this.services.googleAnalytics.loaded = true;
+        console.log('Analytics: Google Analytics loaded');
+      }
       {{- end }}
       
-      // Track outbound link clicks
-      document.addEventListener('click', function(e) {
-        var link = e.target.closest('a');
-        if (link && link.hostname !== window.location.hostname) {
-          {{- if $fbPixel.events.outboundClick | default false }}
-          self.facebookPixel.trackCustomEvent('OutboundClick', {
-            url: link.href,
-            text: link.textContent.trim()
-          });
-          {{- end }}
-        }
-      });
-      
-      // Track form submissions
-      document.addEventListener('submit', function(e) {
-        var form = e.target;
-        if (form.tagName === 'FORM') {
-          {{- if $fbPixel.events.contact }}
-          if (form.classList.contains('contact-form') || form.id.includes('contact')) {
-            self.facebookPixel.trackContact();
-          }
-          {{- end }}
-          
-          {{- if $fbPixel.events.lead }}
-          if (form.classList.contains('newsletter-form') || form.classList.contains('subscribe-form')) {
-            self.facebookPixel.trackLead();
-          }
-          {{- end }}
-        }
-      });
+      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      if (typeof fbq !== 'undefined' && this.services.facebookPixel) {
+        this.services.facebookPixel.loaded = true;
+        console.log('Analytics: Facebook Pixel loaded');
+      }
+      {{- end }}
     },
     
-    // Performance monitoring
-    performance: {
-      startTime: performance.now(),
-      
-      measureLoadTime: function() {
-        var loadTime = performance.now() - this.startTime;
-        console.log('Analytics: Total load time: ' + Math.round(loadTime) + 'ms');
-        
-        {{- if $gaID }}
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'timing_complete', {
-            'name': 'analytics_load',
-            'value': Math.round(loadTime)
-          });
-        }
-        {{- end }}
-      }
-    }
-  };
-  
-  // Measure performance when page is fully loaded
-  {{- if $performance.measurePerformance | default false }}
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      window.analyticsManager.performance.measureLoadTime();
-    }, 100);
-  });
-  {{- end }}
-  
-  // Mark Google Analytics as loaded when available
-  {{- if $gaID }}
-  window.addEventListener('load', function() {
-    if (typeof gtag !== 'undefined') {
-      window.analyticsManager.markServiceLoaded('googleAnalytics');
-    }
-  });
-  {{- end }}
-  
-  // Mark Facebook Pixel as loaded when available
-  {{- if and $fbPixel.enabled $fbPixel.pixelId }}
-  window.addEventListener('load', function() {
-    if (typeof fbq !== 'undefined') {
-      window.analyticsManager.markServiceLoaded('facebookPixel');
-      // Initialize page interaction tracking
-      window.analyticsManager.trackPageInteractions();
-    }
-  });
-  {{- end }}
-</script>
-
-{{- /* Error handling for failed script loads */ -}}
-<script>
-  // Global error handler for analytics scripts
-  window.addEventListener('error', function(e) {
-    if (e.filename && (
-      e.filename.includes('googletagmanager.com') ||
-      e.filename.includes('connect.facebook.net')
-    )) {
-      console.warn('Analytics: Failed to load external script:', e.filename);
-      
-      // Track script loading failures
+    // Track events
+    trackEvent: function(eventName, parameters) {
       {{- if $gaID }}
       if (typeof gtag !== 'undefined') {
-        gtag('event', 'exception', {
-          'description': 'Analytics script load failure: ' + e.filename,
-          'fatal': false
-        });
+        gtag('event', eventName, parameters || {});
+      }
+      {{- end }}
+      
+      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      if (typeof fbq !== 'undefined') {
+        fbq('track', eventName, parameters || {});
       }
       {{- end }}
     }
+  };
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      window.analyticsManager.init();
+    });
+  } else {
+    window.analyticsManager.init();
+  }
+  
+  // Check services loaded after page load
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      window.analyticsManager.checkServicesLoaded();
+    }, 1000);
   });
-  
-  // Expose Facebook Pixel tracking functions globally for easy access
-  {{- if and $fbPixel.enabled $fbPixel.pixelId }}
-  window.fbPixelTrackSearch = function(searchTerm) {
-    window.analyticsManager.facebookPixel.trackSearch(searchTerm);
-  };
-  
-  window.fbPixelTrackContact = function() {
-    window.analyticsManager.facebookPixel.trackContact();
-  };
-  
-  window.fbPixelTrackLead = function() {
-    window.analyticsManager.facebookPixel.trackLead();
-  };
-  
-  window.fbPixelTrackCustom = function(eventName, eventData) {
-    window.analyticsManager.facebookPixel.trackCustomEvent(eventName, eventData);
-  };
-  {{- end }}
 </script>

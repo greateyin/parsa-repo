@@ -1,0 +1,148 @@
+{
+  "timestamp": "2025-10-13T03:48:30.050Z",
+  "testSuite": "AdSense Integration Unit Tests",
+  "totalTests": 27,
+  "passed": 0,
+  "failed": 27,
+  "results": [
+    {
+      "name": "Valid AdSense Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Auto Ads Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Ad Placement Configuration Parsing",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Invalid AdSense Configuration Handling",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Missing AdSense Configuration Handling",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Multiple Ad Placements Generation",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Conditional Ad Placement Logic",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Ad Slot Assignment Logic",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Ad Container Generation",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Responsive Ad Unit Configuration",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Mobile Ad Optimization",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Viewport-Specific Ad Formats",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Required Field Validation",
+      "passed": false,
+      "message": "Validation results: 0/4 configurations handled correctly"
+    },
+    {
+      "name": "Data Type Validation",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Default Value Handling",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Configuration Normalization",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Script Loading Fallback",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Ad Blocking Detection",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Network Failure Handling",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Graceful Degradation",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Do Not Track Integration",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Cookie Consent Integration",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Privacy Settings Validation",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Async Script Loading",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Lazy Loading Implementation",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Resource Hints",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    },
+    {
+      "name": "Performance Monitoring",
+      "passed": false,
+      "message": "Build failed: Command failed: hugo --minify --destination public --quiet --themesDir ../.."
+    }
+  ],
+  "requirements": {
+    "2.1": "Google AdSense Integration - Configuration parsing, script loading, and ad placement",
+    "2.5": "Responsive ad units and mobile optimization - Responsive behavior and viewport adaptation"
+  }
+}

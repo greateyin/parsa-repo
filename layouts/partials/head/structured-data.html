@@ -71,11 +71,12 @@
 
 <!-- Article Schema -->
 {{ else if .IsPage }}
+  {{ $description := .Description | default (.Summary | truncate 160) }}
   {{ $articleSchema := dict
     "@context" "https://schema.org"
     "@type" "Article"
     "headline" .Title
-    "description" (with .Description . | default (.Summary | truncate 160))
+    "description" $description
     "url" .Permalink
     "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
     "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
@@ -150,7 +151,7 @@
     "@id" .Permalink
     "url" .Permalink
     "name" .Title
-    "description" (with .Description . | default (.Summary | truncate 160))
+    "description" $description
     "inLanguage" .Site.Language.Lang
     "isPartOf" (dict "@type" "WebSite" "url" .Site.BaseURL "name" .Site.Title)
   }}
@@ -159,7 +160,7 @@
   {{ $structuredData = $articleSchema }}
 
 <!-- Blog Posting Schema for blog posts -->
-{{ if in .Section "blog" "post" "posts" }}
+{{ if in (slice "blog" "post" "posts") .Section }}
   {{ $structuredData = $structuredData | merge (dict "@type" "BlogPosting") }}
 {{ end }}
 

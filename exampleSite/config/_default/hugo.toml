@@ -1,9 +1,0 @@
-# default config
-baseurl = "/"
-languageCode = "en-us"
-title = "Parsa Hugo | Personal Blog Template"
-theme = "parsa-hugo"
-summaryLength = "10"
-pagination.pagerSize = 6
-# google analytics
-googleAnalytics = "" # example : UA-123-45

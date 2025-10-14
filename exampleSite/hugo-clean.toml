@@ -1,0 +1,98 @@
+# Clean Hugo Configuration for Integration Testing
+baseURL = "https://example.com"
+languageCode = "en-us"
+title = "Parsa Hugo - Integration Test"
+theme = "parsa-hugo"
+
+# Content settings
+[pagination]
+  pagerSize = 9
+  path = "page"
+
+summaryLength = 30
+defaultContentLanguage = "en"
+
+# Disable modules completely
+disableKinds = []
+
+# Google Analytics
+GoogleAnalyticsID = "G-JKSVCT23D1"
+
+# Theme parameters - Full integration enabled
+[params]
+  description = "Integration test site with all features enabled"
+  author = "Integration Test"
+  
+  # Google AdSense (enabled for testing)
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-2970874383549118"
+    inArticleSlot = "4383549118"
+    autoAds = true
+    
+    [params.adsense.placements]
+      header = true
+      sidebar = true
+      footer = true
+      inContent = true
+
+  # Facebook Pixel (enabled for testing)
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "123456789012345"
+    
+    [params.facebookPixel.events]
+      pageView = true
+      viewContent = true
+      search = true
+      contact = true
+
+  # Google Custom Search Engine
+  [params.gcs_engine_id]
+    value = "3164aa570fbbb474a"
+
+  # Mermaid Diagrams
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+
+  # Privacy and Consent Management
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = true
+    anonymizeIP = true
+    
+    [params.privacy.consentBanner]
+      enabled = true
+      message = "This website uses cookies to enhance your experience and provide analytics."
+      acceptText = "Accept All"
+      declineText = "Decline"
+      learnMoreUrl = "/privacy-policy"
+
+  # Performance Optimization
+  [params.performance]
+    lazyLoadAds = true
+    asyncScripts = true
+    resourceHints = true
+
+  # Security Settings
+  [params.security]
+    httpsOnly = true
+    noSniff = true
+
+# Navigation menus
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+    
+  [[menu.main]]
+    name = "Blog"
+    url = "/blog/"
+    weight = 2
+    
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 3

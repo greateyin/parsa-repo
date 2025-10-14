@@ -1,10 +1,10 @@
 # Theme metadata following Hugo theme standards
-name = "Parsa Redesigned"
+name = "Parsa Hugo"
 license = "MIT"
-licenselink = "https://github.com/username/parsa-redesigned/blob/main/LICENSE"
+licenselink = "https://github.com/username/parsa-hugo/blob/main/LICENSE"
 description = "A modern, redesigned version of the Parsa Hugo theme with Tailwind CSS and contemporary design elements"
-homepage = "https://github.com/username/parsa-redesigned"
-demosite = "https://parsa-redesigned-demo.netlify.app"
+homepage = "https://github.com/username/parsa-hugo"
+demosite = "https://parsa-hugo-demo.netlify.app"
 
 # Theme tags for discoverability
 tags = [
@@ -25,9 +25,9 @@ min_version = "0.147.2"
 
 # Author information
 [author]
-  name = "Parsa Redesigned Team"
+  name = "Parsa Hugo Team"
   homepage = "https://github.com/username"
-  email = "contact@parsa-redesigned.com"
+  email = "contact@parsa-hugo.com"
 
 # Original theme attribution
 [original]

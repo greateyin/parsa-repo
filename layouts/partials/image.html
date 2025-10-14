@@ -1,0 +1,27 @@
+{{/*
+  Image Partial
+  
+  Renders an optimized image with proper attributes and responsive handling.
+  
+  Parameters:
+  - Src: Image source path
+  - Alt: Alt text for accessibility
+  - Class: CSS classes to apply
+  - Width: Optional width
+  - Height: Optional height
+*/}}
+
+{{- $src := .Src -}}
+{{- $alt := .Alt | default "Image" -}}
+{{- $class := .Class | default "" -}}
+{{- $width := .Width -}}
+{{- $height := .Height -}}
+
+{{- if $src -}}
+<img src="{{ $src | relURL }}" 
+     alt="{{ $alt }}" 
+     {{- if $class }} class="{{ $class }}"{{ end }}
+     {{- if $width }} width="{{ $width }}"{{ end }}
+     {{- if $height }} height="{{ $height }}"{{ end }}
+     loading="lazy">
+{{- end -}}

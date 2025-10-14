@@ -1,4 +1,4 @@
-module github.com/username/parsa-redesigned
+module github.com/username/parsa-hugo
 
 go 1.21
 

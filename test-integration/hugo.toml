@@ -1,0 +1,22 @@
+baseURL = "https://example.com"
+languageCode = "en-us"
+title = "Integration Test"
+theme = "parsa-hugo"
+
+# Google Analytics
+GoogleAnalyticsID = "G-JKSVCT23D1"
+
+[params]
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-2970874383549118"
+    
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "123456789012345"
+    
+  [params.gcs_engine_id]
+    value = "3164aa570fbbb474a"
+    
+  [params.mermaid]
+    enabled = true

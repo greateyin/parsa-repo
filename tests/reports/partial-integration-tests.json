@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-10-13T13:33:17.810Z",
+  "testType": "Partial Integration Tests",
+  "description": "Tests integration and interaction between all template partials",
+  "totalTests": 8,
+  "passed": 3,
+  "failed": 5,
+  "results": [
+    {
+      "name": "Required Partials Present",
+      "passed": false,
+      "message": "0/4 required partials found"
+    },
+    {
+      "name": "Optional Enhancement Partials",
+      "passed": false,
+      "message": "0/4 optional partials found"
+    },
+    {
+      "name": "Configuration Structure",
+      "passed": true,
+      "message": "Configuration sections: AdSense=true, Privacy=true"
+    },
+    {
+      "name": "Privacy Configuration",
+      "passed": true,
+      "message": "Privacy settings configured"
+    },
+    {
+      "name": "Performance Optimizations",
+      "passed": false,
+      "message": "0/3 partials have performance optimizations"
+    },
+    {
+      "name": "Resource Hints",
+      "passed": false,
+      "message": "Resource hints missing"
+    },
+    {
+      "name": "Privacy Compliance",
+      "passed": false,
+      "message": "0/2 partials implement privacy features"
+    },
+    {
+      "name": "GDPR Compliance Features",
+      "passed": true,
+      "message": "GDPR compliance features configured"
+    }
+  ]
+}

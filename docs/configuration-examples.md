@@ -1,79 +1,108 @@
 # Configuration Examples
 
-This document provides practical configuration examples for different use cases and scenarios.
+This document provides real-world configuration examples for different types of websites and use cases.
 
 ## Table of Contents
 
-- [Basic Blog Setup](#basic-blog-setup)
-- [Commercial Website](#commercial-website)
-- [Privacy-Focused Site](#privacy-focused-site)
-- [High-Performance Setup](#high-performance-setup)
-- [Development Environment](#development-environment)
-- [Multi-language Site](#multi-language-site)
+- [Personal Blog](#personal-blog)
+- [Business Website](#business-website)
 - [Documentation Site](#documentation-site)
-- [E-commerce Integration](#e-commerce-integration)
+- [News/Magazine Site](#newsmagazine-site)
+- [E-commerce Blog](#e-commerce-blog)
+- [Privacy-Focused Site](#privacy-focused-site)
+- [High-Traffic Site](#high-traffic-site)
+- [Development Environment](#development-environment)
 
-## Basic Blog Setup
+## Personal Blog
 
-Perfect for personal blogs with basic analytics and minimal advertising.
+Configuration for a personal blog with basic analytics and minimal advertising.
 
 ```toml
-# hugo.toml
+# hugo.toml - Personal Blog Configuration
 baseURL = "https://myblog.com"
 languageCode = "en-us"
 title = "My Personal Blog"
+theme = "parsa-redesigned"
 
 # Basic Google Analytics
 GoogleAnalyticsID = "G-JKSVCT23D1"
 
 [params]
-  # Enable Mermaid for technical diagrams
+  # Site information
+  description = "Personal thoughts and experiences"
+  author = "John Doe"
+  
+  # Minimal AdSense (optional)
+  [params.adsense]
+    enabled = false  # Disable for personal blog
+    
+  # No Facebook Pixel for personal use
+  [params.facebookPixel]
+    enabled = false
+    
+  # Enable Mermaid for technical posts
   [params.mermaid]
     enabled = true
     theme = "default"
-  
-  # Basic privacy settings
+    
+  # Privacy-first approach
   [params.privacy]
     respectDoNotTrack = true
-    cookieConsent = false
+    cookieConsent = false  # Simple setup
     anonymizeIP = true
-  
-  # Performance optimization
+    
+  # Basic performance optimization
   [params.performance]
-    lazyLoadAds = true
+    lazyLoadAds = false  # No ads to lazy load
     asyncScripts = true
+    resourceHints = true
+
+# Privacy settings for GA
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
 ```
 
-## Commercial Website
+## Business Website
 
-Full-featured setup for business websites with comprehensive tracking and advertising.
+Configuration for a business website with comprehensive tracking and advertising.
 
 ```toml
-# hugo.toml
-baseURL = "https://mycompany.com"
+# hugo.toml - Business Website Configuration
+baseURL = "https://mybusiness.com"
 languageCode = "en-us"
-title = "My Company"
+title = "My Business - Professional Services"
+theme = "parsa-redesigned"
 
 # Google Analytics for business insights
-GoogleAnalyticsID = "G-BUSINESS123"
+GoogleAnalyticsID = "G-BUSINESSID123"
 
 [params]
-  # Google AdSense for monetization
+  # Business information
+  description = "Professional services and business solutions"
+  author = "Business Name"
+  
+  # Full AdSense integration
   [params.adsense]
     enabled = true
     client = "ca-pub-1234567890123456"
     inArticleSlot = "1234567890"
-    autoAds = true
+    autoAds = false
+    responsive = true
+    lazyLoad = true
     
     [params.adsense.placements]
-      header = false
       sidebar = true
       footer = true
       inContent = true
-      beforeContent = false
       afterContent = true
-  
-  # Facebook Pixel for advertising
+      
+    [params.adsense.slots]
+      sidebar = "1234567891"
+      footer = "1234567892"
+      afterContent = "1234567893"
+      
+  # Facebook Pixel for marketing
   [params.facebookPixel]
     enabled = true
     pixelId = "123456789012345"
@@ -85,17 +114,17 @@ GoogleAnalyticsID = "G-BUSINESS123"
       search = true
       contact = true
       lead = true
-  
+      
   # Google Custom Search
   [params.gcs_engine_id]
-    value = "3164aa570fbbb474a"
-  
-  # Mermaid for business diagrams
+    value = "1234567890abcdef1"
+    
+  # Mermaid for business processes
   [params.mermaid]
     enabled = true
     theme = "neutral"
-  
-  # Privacy compliance
+    
+  # GDPR compliance
   [params.privacy]
     respectDoNotTrack = true
     cookieConsent = true
@@ -103,13 +132,177 @@ GoogleAnalyticsID = "G-BUSINESS123"
     
     [params.privacy.consentBanner]
       enabled = true
-      message = "We use cookies to improve your experience and for marketing purposes."
+      message = "We use cookies to improve your experience and analyze site usage."
       acceptText = "Accept All"
       declineText = "Decline"
       learnMoreText = "Privacy Policy"
       learnMoreUrl = "/privacy-policy"
-  
+      
   # Performance optimization
+  [params.performance]
+    lazyLoadAds = true
+    asyncScripts = true
+    resourceHints = true
+    
+    preconnectDomains = [
+      "https://www.googletagmanager.com",
+      "https://pagead2.googlesyndication.com",
+      "https://connect.facebook.net"
+    ]
+
+# Privacy settings
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
+```
+
+## Documentation Site
+
+Configuration for a technical documentation site with diagrams and search.
+
+```toml
+# hugo.toml - Documentation Site Configuration
+baseURL = "https://docs.myproject.com"
+languageCode = "en-us"
+title = "Project Documentation"
+theme = "parsa-redesigned"
+
+# Minimal analytics for docs
+GoogleAnalyticsID = "G-DOCSANALYTICS"
+
+[params]
+  # Documentation information
+  description = "Comprehensive project documentation"
+  author = "Development Team"
+  
+  # No advertising on documentation
+  [params.adsense]
+    enabled = false
+    
+  # No Facebook Pixel for docs
+  [params.facebookPixel]
+    enabled = false
+    
+  # Enhanced search for documentation
+  [params.gcs_engine_id]
+    value = "docs1234567890abc"
+    
+  [params.googleCustomSearch]
+    engineId = "docs1234567890abc"
+    enabled = true
+    autoComplete = true
+    enableHistory = true
+    maxCompletions = 8
+    fallbackToLocal = true
+    placeholder = "Search documentation..."
+    
+  # Extensive Mermaid support
+  [params.mermaid]
+    enabled = true
+    theme = "neutral"
+    startOnLoad = true
+    securityLevel = "loose"
+    
+    [params.mermaid.flowchart]
+      useMaxWidth = true
+      htmlLabels = true
+      curve = "basis"
+      
+    [params.mermaid.sequence]
+      diagramMarginX = 50
+      diagramMarginY = 10
+      
+  # Minimal privacy requirements
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = false  # Docs don't need consent
+    anonymizeIP = true
+    
+  # Performance for documentation
+  [params.performance]
+    lazyLoadAds = false
+    asyncScripts = true
+    resourceHints = true
+    criticalCSS = true  # Faster loading for docs
+
+# Privacy settings
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
+  disable = false
+```
+
+## News/Magazine Site
+
+Configuration for a news or magazine site with comprehensive tracking.
+
+```toml
+# hugo.toml - News/Magazine Site Configuration
+baseURL = "https://mynews.com"
+languageCode = "en-us"
+title = "Daily News Magazine"
+theme = "parsa-redesigned"
+
+# Analytics for news site
+GoogleAnalyticsID = "G-NEWSSITE12345"
+
+[params]
+  # News site information
+  description = "Latest news and current events"
+  author = "Editorial Team"
+  
+  # Comprehensive AdSense setup
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-9876543210987654"
+    inArticleSlot = "9876543210"
+    autoAds = true  # Good for news sites
+    responsive = true
+    lazyLoad = true
+    
+    [params.adsense.placements]
+      header = true
+      sidebar = true
+      footer = true
+      inContent = true
+      beforeContent = true
+      afterContent = true
+      
+  # Facebook Pixel for social media
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "987654321098765"
+    advancedMatching = true
+    
+    [params.facebookPixel.events]
+      pageView = true
+      viewContent = true
+      search = true
+      
+  # Search for news articles
+  [params.gcs_engine_id]
+    value = "news567890abcdef1"
+    
+  # Limited Mermaid (not common in news)
+  [params.mermaid]
+    enabled = false
+    
+  # GDPR compliance for news
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = true
+    anonymizeIP = true
+    
+    [params.privacy.consentBanner]
+      enabled = true
+      message = "We use cookies for analytics and advertising. By continuing, you agree to our cookie policy."
+      acceptText = "Accept"
+      declineText = "Manage Preferences"
+      learnMoreText = "Cookie Policy"
+      learnMoreUrl = "/cookie-policy"
+      position = "bottom"
+      
+  # High-performance settings
   [params.performance]
     lazyLoadAds = true
     asyncScripts = true
@@ -121,392 +314,57 @@ GoogleAnalyticsID = "G-BUSINESS123"
       "https://connect.facebook.net",
       "https://cse.google.com"
     ]
-  
-  # Security settings
-  [params.security]
-    httpsOnly = true
-    noSniff = true
+    
+    [params.performance.lazyLoading]
+      images = true
+      iframes = true
+      ads = true
+      threshold = "100px"
+
+# Privacy settings
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
 ```
 
-## Privacy-Focused Site
+## E-commerce Blog
 
-Minimal tracking with strong privacy protections, ideal for privacy-conscious organizations.
+Configuration for an e-commerce blog with conversion tracking.
 
 ```toml
-# hugo.toml
-baseURL = "https://privacyfirst.org"
+# hugo.toml - E-commerce Blog Configuration
+baseURL = "https://blog.mystore.com"
 languageCode = "en-us"
-title = "Privacy First Organization"
+title = "Store Blog - Product Reviews & Tips"
+theme = "parsa-redesigned"
 
-# No Google Analytics - privacy first!
-# GoogleAnalyticsID = ""
-
-[params]
-  # No advertising
-  [params.adsense]
-    enabled = false
-  
-  # No Facebook tracking
-  [params.facebookPixel]
-    enabled = false
-  
-  # Local search only
-  [params.gcs_engine_id]
-    value = ""
-  
-  # Mermaid for diagrams (privacy-friendly)
-  [params.mermaid]
-    enabled = true
-    theme = "default"
-  
-  # Strong privacy settings
-  [params.privacy]
-    respectDoNotTrack = true
-    cookieConsent = true
-    anonymizeIP = true
-    disableTracking = false  # Allow minimal tracking if consented
-    
-    [params.privacy.consentBanner]
-      enabled = true
-      message = "This site respects your privacy. We only use essential cookies."
-      acceptText = "Accept Essential"
-      declineText = "Decline All"
-      learnMoreText = "Privacy Policy"
-      learnMoreUrl = "/privacy-policy"
-  
-  # Performance without tracking
-  [params.performance]
-    lazyLoadAds = false  # No ads to lazy load
-    asyncScripts = true
-    resourceHints = false  # No external tracking domains
-    criticalCSS = true
-  
-  # Enhanced security
-  [params.security]
-    contentSecurityPolicy = true
-    subresourceIntegrity = true
-    httpsOnly = true
-    noSniff = true
-
-# Privacy-focused Hugo settings
-[privacy]
-  [privacy.googleAnalytics]
-    respectDoNotTrack = true
-    anonymizeIP = true
-  [privacy.youtube]
-    privacyEnhanced = true
-```
-
-## High-Performance Setup
-
-Optimized for speed and Core Web Vitals compliance.
-
-```toml
-# hugo.toml
-baseURL = "https://fastsite.com"
-languageCode = "en-us"
-title = "Lightning Fast Site"
-
-# Minimal analytics
-GoogleAnalyticsID = "G-PERFORMANCE1"
+# Enhanced analytics for e-commerce
+GoogleAnalyticsID = "G-ECOMMERCE123"
 
 [params]
-  # Selective advertising with performance focus
+  # E-commerce blog information
+  description = "Product reviews, shopping tips, and lifestyle content"
+  author = "Store Team"
+  
+  # Strategic AdSense placement
   [params.adsense]
     enabled = true
-    client = "ca-pub-9876543210987654"
-    autoAds = false  # Manual control for better performance
-    
-    [params.adsense.placements]
-      header = false
-      sidebar = false
-      footer = true  # Only footer ads
-      inContent = false
-      beforeContent = false
-      afterContent = false
-  
-  # No Facebook Pixel for better performance
-  [params.facebookPixel]
-    enabled = false
-  
-  # Local search for speed
-  [params.gcs_engine_id]
-    value = ""
-  
-  # Mermaid with performance settings
-  [params.mermaid]
-    enabled = true
-    theme = "default"
-    startOnLoad = false  # Manual initialization
-  
-  # Basic privacy
-  [params.privacy]
-    respectDoNotTrack = true
-    cookieConsent = false  # Reduce banner impact
-    anonymizeIP = true
-  
-  # Maximum performance optimization
-  [params.performance]
-    lazyLoadAds = true
-    asyncScripts = true
-    resourceHints = true
-    criticalCSS = true
-    
-    preconnectDomains = [
-      "https://www.googletagmanager.com",
-      "https://pagead2.googlesyndication.com"
-    ]
-  
-  # Security without performance impact
-  [params.security]
-    httpsOnly = true
-    noSniff = true
-    contentSecurityPolicy = false  # Can impact performance
-    subresourceIntegrity = false   # Can impact performance
-
-# Hugo performance settings
-[caches]
-  [caches.getjson]
-    maxAge = "10m"
-  [caches.getcsv]
-    maxAge = "10m"
-  [caches.images]
-    maxAge = "1h"
-```
-
-## Development Environment
-
-Configuration for local development and testing.
-
-```toml
-# hugo.toml
-baseURL = "http://localhost:1313"
-languageCode = "en-us"
-title = "Development Site"
-
-# No analytics in development
-# GoogleAnalyticsID = ""
-
-[params]
-  # Disabled advertising in development
-  [params.adsense]
-    enabled = false
-  
-  # Disabled tracking in development
-  [params.facebookPixel]
-    enabled = false
-  
-  # Local search only
-  [params.gcs_engine_id]
-    value = ""
-  
-  # Mermaid for testing diagrams
-  [params.mermaid]
-    enabled = true
-    theme = "default"
-  
-  # Development-friendly privacy
-  [params.privacy]
-    respectDoNotTrack = false
-    cookieConsent = false
-    anonymizeIP = false
-  
-  # Development performance settings
-  [params.performance]
-    lazyLoadAds = false
-    asyncScripts = false  # Easier debugging
-    resourceHints = false
-    criticalCSS = false
-  
-  # Relaxed security for development
-  [params.security]
-    contentSecurityPolicy = false
-    subresourceIntegrity = false
-    httpsOnly = false
-    noSniff = false
-
-# Development Hugo settings
-[server]
-  [[server.headers]]
-    for = "/**"
-    [server.headers.values]
-      X-Frame-Options = "DENY"
-      X-XSS-Protection = "1; mode=block"
-```
-
-## Multi-language Site
-
-Configuration for international websites with multiple languages.
-
-```toml
-# hugo.toml
-baseURL = "https://global-site.com"
-defaultContentLanguage = "en"
-defaultContentLanguageInSubdir = true
-
-# Global Google Analytics
-GoogleAnalyticsID = "G-GLOBAL12345"
-
-[languages]
-  [languages.en]
-    languageName = "English"
-    weight = 1
-    title = "Global Company"
-  
-  [languages.es]
-    languageName = "Español"
-    weight = 2
-    title = "Empresa Global"
-  
-  [languages.fr]
-    languageName = "Français"
-    weight = 3
-    title = "Entreprise Mondiale"
-
-[params]
-  # Global AdSense configuration
-  [params.adsense]
-    enabled = true
-    client = "ca-pub-5555555555555555"
-    autoAds = true
-  
-  # Facebook Pixel for global campaigns
-  [params.facebookPixel]
-    enabled = true
-    pixelId = "555555555555555"
-    
-    [params.facebookPixel.events]
-      pageView = true
-      viewContent = true
-      search = true
-  
-  # Language-specific search engines
-  [params.gcs_engine_id]
-    value = "global1234567890abc"
-  
-  # Mermaid with international support
-  [params.mermaid]
-    enabled = true
-    theme = "neutral"
-  
-  # GDPR-compliant privacy settings
-  [params.privacy]
-    respectDoNotTrack = true
-    cookieConsent = true
-    anonymizeIP = true
-    
-    [params.privacy.consentBanner]
-      enabled = true
-      # Messages will be localized in i18n files
-      message = "cookie_consent_message"
-      acceptText = "accept"
-      declineText = "decline"
-      learnMoreText = "learn_more"
-      learnMoreUrl = "/privacy-policy"
-  
-  # Performance optimization
-  [params.performance]
-    lazyLoadAds = true
-    asyncScripts = true
-    resourceHints = true
-```
-
-## Documentation Site
-
-Optimized for technical documentation with diagrams and search.
-
-```toml
-# hugo.toml
-baseURL = "https://docs.company.com"
-languageCode = "en-us"
-title = "Company Documentation"
-
-# Analytics for documentation insights
-GoogleAnalyticsID = "G-DOCS1234567"
-
-[params]
-  # No advertising on documentation
-  [params.adsense]
-    enabled = false
-  
-  # No Facebook tracking for docs
-  [params.facebookPixel]
-    enabled = false
-  
-  # Enhanced search for documentation
-  [params.gcs_engine_id]
-    value = "docs1234567890abcdef"
-  
-  [params.googleCustomSearch]
-    engineId = "docs1234567890abcdef"
-    enabled = true
-    autoComplete = true
-    enableHistory = true
-    maxCompletions = 10
-    fallbackToLocal = true
-  
-  # Mermaid for technical diagrams
-  [params.mermaid]
-    enabled = true
-    theme = "neutral"
-    
-    [params.mermaid.flowchart]
-      useMaxWidth = true
-      htmlLabels = true
-  
-  # Privacy for enterprise
-  [params.privacy]
-    respectDoNotTrack = true
-    cookieConsent = false  # Internal docs
-    anonymizeIP = true
-  
-  # Performance for documentation
-  [params.performance]
-    lazyLoadAds = false  # No ads
-    asyncScripts = true
-    resourceHints = true
-    criticalCSS = true
-  
-  # Security for enterprise
-  [params.security]
-    contentSecurityPolicy = true
-    subresourceIntegrity = true
-    httpsOnly = true
-    noSniff = true
-```
-
-## E-commerce Integration
-
-Configuration for online stores with comprehensive tracking.
-
-```toml
-# hugo.toml
-baseURL = "https://mystore.com"
-languageCode = "en-us"
-title = "My Online Store"
-
-# Enhanced ecommerce tracking
-GoogleAnalyticsID = "G-ECOM1234567"
-
-[params]
-  # Strategic ad placement for e-commerce
-  [params.adsense]
-    enabled = true
-    client = "ca-pub-7777777777777777"
+    client = "ca-pub-5555666677778888"
+    inArticleSlot = "5555666677"
     autoAds = false  # Manual control for e-commerce
+    responsive = true
+    lazyLoad = true
     
     [params.adsense.placements]
-      header = false
       sidebar = true
-      footer = false
-      inContent = false
-      beforeContent = false
+      footer = false  # Avoid competing with store CTA
+      inContent = true
       afterContent = true
-  
-  # Facebook Pixel for e-commerce tracking
+      
+  # Comprehensive Facebook Pixel
   [params.facebookPixel]
     enabled = true
-    pixelId = "777777777777777"
+    pixelId = "555566667777888"
     advancedMatching = true
     
     [params.facebookPixel.events]
@@ -515,31 +373,39 @@ GoogleAnalyticsID = "G-ECOM1234567"
       search = true
       contact = true
       lead = true
-      completeRegistration = true
-  
-  # Product search integration
+      addToCart = true  # E-commerce specific
+      initiateCheckout = true
+      purchase = true
+      
+  # Product search capability
   [params.gcs_engine_id]
-    value = "store1234567890abcdef"
-  
-  # Mermaid for process diagrams
+    value = "shop1234567890abc"
+    
+  # Mermaid for product comparisons
   [params.mermaid]
     enabled = true
-    theme = "base"
-  
+    theme = "default"
+    
   # E-commerce privacy compliance
   [params.privacy]
     respectDoNotTrack = true
     cookieConsent = true
-    anonymizeIP = false  # Need accurate location for shipping
+    anonymizeIP = false  # Need full data for e-commerce
     
     [params.privacy.consentBanner]
       enabled = true
-      message = "We use cookies to enhance your shopping experience and for marketing."
-      acceptText = "Accept All"
+      message = "We use cookies to personalize content and ads, and analyze traffic for better shopping experiences."
+      acceptText = "Accept All Cookies"
       declineText = "Essential Only"
-      learnMoreText = "Cookie Policy"
-      learnMoreUrl = "/cookie-policy"
-  
+      learnMoreText = "Cookie Settings"
+      learnMoreUrl = "/cookie-preferences"
+      
+    [params.privacy.cookieCategories]
+      necessary = true
+      analytics = true
+      marketing = true
+      preferences = true
+      
   # E-commerce performance optimization
   [params.performance]
     lazyLoadAds = true
@@ -550,59 +416,303 @@ GoogleAnalyticsID = "G-ECOM1234567"
       "https://www.googletagmanager.com",
       "https://pagead2.googlesyndication.com",
       "https://connect.facebook.net",
-      "https://cse.google.com",
-      "https://checkout.stripe.com",
-      "https://js.stripe.com"
+      "https://www.google-analytics.com"
     ]
+
+# Enhanced privacy for e-commerce
+[privacy.googleAnalytics]
+  respectDoNotTrack = false  # Need data for e-commerce insights
+  anonymizeIP = false
+```
+
+## Privacy-Focused Site
+
+Configuration for a privacy-focused website with minimal tracking.
+
+```toml
+# hugo.toml - Privacy-Focused Site Configuration
+baseURL = "https://privacyfirst.com"
+languageCode = "en-us"
+title = "Privacy First Blog"
+theme = "parsa-redesigned"
+
+# No Google Analytics - privacy first
+# GoogleAnalyticsID = ""  # Commented out
+
+[params]
+  # Privacy-focused information
+  description = "Privacy-focused content and digital rights advocacy"
+  author = "Privacy Advocate"
   
-  # E-commerce security
+  # No advertising
+  [params.adsense]
+    enabled = false
+    
+  # No Facebook Pixel
+  [params.facebookPixel]
+    enabled = false
+    
+  # Local search only
+  [params.gcs_engine_id]
+    value = ""  # Empty - use local search
+    
+  [params.googleCustomSearch]
+    enabled = false
+    fallbackToLocal = true
+    
+  # Mermaid for privacy diagrams
+  [params.mermaid]
+    enabled = true
+    theme = "neutral"
+    
+  # Maximum privacy settings
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = false  # No tracking = no consent needed
+    anonymizeIP = true
+    disableTracking = true  # Disable all tracking
+    
+  # Performance without tracking
+  [params.performance]
+    lazyLoadAds = false  # No ads
+    asyncScripts = true
+    resourceHints = false  # No external domains
+    criticalCSS = true
+    serviceWorker = true  # Local caching
+
+# Disable all privacy-invasive features
+[privacy]
+  [privacy.googleAnalytics]
+    disable = true
+  [privacy.youtube]
+    privacyEnhanced = true
+  [privacy.twitter]
+    enableDNT = true
+  [privacy.instagram]
+    simple = true
+```
+
+## High-Traffic Site
+
+Configuration optimized for high-traffic websites with performance focus.
+
+```toml
+# hugo.toml - High-Traffic Site Configuration
+baseURL = "https://hightraffic.com"
+languageCode = "en-us"
+title = "High Traffic Website"
+theme = "parsa-redesigned"
+
+# Analytics for high traffic
+GoogleAnalyticsID = "G-HIGHTRAFFIC1"
+
+[params]
+  # High-traffic site information
+  description = "Popular content site with millions of visitors"
+  author = "Content Team"
+  
+  # Optimized AdSense for high traffic
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-1111222233334444"
+    inArticleSlot = "1111222233"
+    autoAds = false  # Manual control for optimization
+    responsive = true
+    lazyLoad = true
+    
+    [params.adsense.placements]
+      sidebar = true
+      footer = true
+      inContent = true
+      afterContent = true
+      
+  # Facebook Pixel with sampling
+  [params.facebookPixel]
+    enabled = true
+    pixelId = "111122223333444"
+    
+    [params.facebookPixel.events]
+      pageView = true
+      viewContent = false  # Reduce load
+      search = true
+      
+  # Custom search for large content base
+  [params.gcs_engine_id]
+    value = "traffic567890abcd"
+    
+  # Minimal Mermaid usage
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  # Balanced privacy for high traffic
+  [params.privacy]
+    respectDoNotTrack = true
+    cookieConsent = true
+    anonymizeIP = true
+    
+    [params.privacy.consentBanner]
+      enabled = true
+      message = "We use cookies to optimize your experience."
+      acceptText = "OK"
+      declineText = "Opt Out"
+      
+  # Maximum performance optimization
+  [params.performance]
+    lazyLoadAds = true
+    asyncScripts = true
+    resourceHints = true
+    criticalCSS = true
+    serviceWorker = true
+    
+    preconnectDomains = [
+      "https://www.googletagmanager.com",
+      "https://pagead2.googlesyndication.com",
+      "https://connect.facebook.net"
+    ]
+    
+    [params.performance.lazyLoading]
+      images = true
+      iframes = true
+      ads = true
+      threshold = "200px"  # Aggressive lazy loading
+      
+    [params.performance.caching]
+      staticAssets = "1y"
+      htmlPages = "1h"
+      apiResponses = "5m"
+      
+  # Security for high-traffic sites
   [params.security]
     contentSecurityPolicy = true
     subresourceIntegrity = true
     httpsOnly = true
     noSniff = true
 
-# E-commerce specific privacy settings
-[privacy]
-  [privacy.googleAnalytics]
-    respectDoNotTrack = true
-    anonymizeIP = false  # Need location data for e-commerce
-  [privacy.youtube]
-    privacyEnhanced = true
+# Optimized privacy settings
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
 ```
 
-## Configuration Validation
+## Development Environment
 
-All configurations above will be automatically validated by the theme's configuration validation system. The system will:
+Configuration for development and testing environments.
 
-1. **Validate ID Formats**: Ensure all tracking IDs follow the correct format
-2. **Check Required Fields**: Warn if enabled services are missing required configuration
-3. **Privacy Compliance**: Suggest privacy settings based on enabled tracking
-4. **Performance Optimization**: Recommend performance improvements
-5. **Security Best Practices**: Highlight security considerations
+```toml
+# hugo.toml - Development Environment Configuration
+baseURL = "http://localhost:1313"
+languageCode = "en-us"
+title = "Development Site"
+theme = "parsa-redesigned"
 
-### Example Validation Output
+# Test Analytics ID (or disable)
+GoogleAnalyticsID = "G-TESTANALYTICS"
 
+[params]
+  # Development information
+  description = "Development and testing environment"
+  author = "Developer"
+  
+  # Test AdSense configuration
+  [params.adsense]
+    enabled = true
+    client = "ca-pub-0000000000000000"  # Test publisher ID
+    inArticleSlot = "0000000000"
+    autoAds = false
+    testMode = true  # Enable test mode
+    responsive = true
+    lazyLoad = false  # Easier debugging
+    
+    [params.adsense.placements]
+      sidebar = true
+      inContent = true
+      
+  # Disabled Facebook Pixel in development
+  [params.facebookPixel]
+    enabled = false  # Avoid test data
+    
+  # Test search engine
+  [params.gcs_engine_id]
+    value = ""  # Use local search in development
+    
+  # Full Mermaid for testing
+  [params.mermaid]
+    enabled = true
+    theme = "default"
+    
+  # Relaxed privacy for development
+  [params.privacy]
+    respectDoNotTrack = false  # Easier testing
+    cookieConsent = false
+    anonymizeIP = false
+    
+  # Development performance settings
+  [params.performance]
+    lazyLoadAds = false  # Easier debugging
+    asyncScripts = false  # Synchronous for debugging
+    resourceHints = false
+    criticalCSS = false
+
+# Development privacy settings
+[privacy.googleAnalytics]
+  respectDoNotTrack = false
+  anonymizeIP = false
+  disable = false  # Keep enabled for testing
 ```
-Theme Analytics Enhancement: Enabled services: Google Analytics, AdSense, Facebook Pixel, Google Custom Search, Mermaid Diagrams
-WARNING: Analytics tracking is enabled but cookie consent is disabled. Consider enabling params.privacy.cookieConsent for GDPR compliance.
-INFO: AdSense lazy loading is enabled for better performance.
+
+## Configuration Tips
+
+### Environment-Specific Configurations
+
+Use Hugo's environment feature to maintain different configurations:
+
+```bash
+# Development
+hugo server -D --environment development
+
+# Staging
+hugo --environment staging
+
+# Production
+hugo --environment production
 ```
 
-## Testing Your Configuration
+Create environment-specific config files:
+- `config/_default/hugo.toml` - Base configuration
+- `config/development/hugo.toml` - Development overrides
+- `config/staging/hugo.toml` - Staging overrides
+- `config/production/hugo.toml` - Production overrides
 
-1. **Development Testing**: Use the development environment configuration for local testing
-2. **Staging Validation**: Test with real IDs in a staging environment
-3. **Privacy Testing**: Verify Do Not Track and cookie consent functionality
-4. **Performance Testing**: Check Core Web Vitals with your configuration
-5. **Cross-browser Testing**: Ensure compatibility across different browsers
+### Testing Your Configuration
 
-## Migration from Existing Configurations
+1. **Validate syntax**:
+   ```bash
+   hugo config
+   ```
 
-If you're migrating from an existing setup:
+2. **Check specific parameters**:
+   ```bash
+   hugo config | grep -A 10 "adsense"
+   ```
 
-1. **Backup Current Configuration**: Save your current `hugo.toml`
-2. **Gradual Migration**: Enable features one at a time
-3. **Test Each Feature**: Verify functionality after each addition
-4. **Monitor Performance**: Check that performance remains acceptable
-5. **Update Privacy Policy**: Ensure your privacy policy reflects new tracking
+3. **Test in development**:
+   ```bash
+   hugo server -D --debug
+   ```
+
+4. **Verify in browser**:
+   - Check Network tab for service requests
+   - Use browser extensions (Facebook Pixel Helper, etc.)
+   - Monitor console for errors
+
+### Best Practices
+
+1. **Start Simple**: Begin with basic configuration, add features gradually
+2. **Test Thoroughly**: Verify each service works before adding the next
+3. **Monitor Performance**: Check Core Web Vitals after enabling new features
+4. **Respect Privacy**: Always consider user privacy and legal requirements
+5. **Document Changes**: Keep track of configuration changes and their impact
+6. **Use Version Control**: Track configuration changes in git
+7. **Environment Separation**: Use different settings for dev/staging/production
+8. **Regular Reviews**: Periodically review and optimize your configuration

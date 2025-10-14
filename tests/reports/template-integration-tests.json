@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-10-13T13:33:17.807Z",
+  "testType": "Template Integration Tests",
+  "requirements": [
+    "1.1",
+    "2.2",
+    "3.1"
+  ],
+  "totalTests": 13,
+  "passed": 5,
+  "failed": 8,
+  "results": [
+    {
+      "name": "Google Analytics Partial",
+      "passed": false,
+      "message": "Google Analytics partial file not found"
+    },
+    {
+      "name": "Facebook Pixel Partial",
+      "passed": false,
+      "message": "Facebook Pixel partial file not found"
+    },
+    {
+      "name": "AdSense Partial",
+      "passed": false,
+      "message": "AdSense partial file not found"
+    },
+    {
+      "name": "Ad Placement Partials",
+      "passed": false,
+      "message": "0/4 ad placement partials found"
+    },
+    {
+      "name": "Google Custom Search Partial",
+      "passed": false,
+      "message": "Google Custom Search partial file not found"
+    },
+    {
+      "name": "Search Widget Partial",
+      "passed": false,
+      "message": "Search widget partial file not found"
+    },
+    {
+      "name": "Layout Integration - _default/baseof.html",
+      "passed": false,
+      "message": "0/3 partial types integrated"
+    },
+    {
+      "name": "Layout Integration - _default/single.html",
+      "passed": true,
+      "message": "2/3 partial types integrated"
+    },
+    {
+      "name": "Layout Integration - _default/list.html",
+      "passed": true,
+      "message": "2/3 partial types integrated"
+    },
+    {
+      "name": "Layout Integration - index.html",
+      "passed": false,
+      "message": "0/3 partial types integrated"
+    },
+    {
+      "name": "Analytics Configuration",
+      "passed": true,
+      "message": "Analytics configuration found"
+    },
+    {
+      "name": "Advertising Configuration",
+      "passed": true,
+      "message": "AdSense configuration found"
+    },
+    {
+      "name": "Search Configuration",
+      "passed": true,
+      "message": "Search configuration found"
+    }
+  ]
+}

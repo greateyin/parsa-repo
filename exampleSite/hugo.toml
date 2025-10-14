@@ -1,10 +1,10 @@
-# Example Site Configuration for Parsa Redesigned Theme
-# This demonstrates how to configure the theme
+# Example Site Configuration for Parsa Hugo Theme
+# Complete integration demonstration
 
-baseURL = "https://parsa-redesigned-demo.netlify.app"
+baseURL = "https://parsa-hugo-demo.netlify.app"
 languageCode = "en-us"
-title = "Parsa Redesigned - Demo Site"
-theme = "parsa-redesigned"
+title = "Parsa Hugo - Complete Integration Demo"
+theme = "parsa-hugo"
 
 # Enable Hugo extended features
 enableRobotsTXT = true
@@ -12,23 +12,19 @@ enableGitInfo = true
 enableEmoji = true
 
 # Content settings
-paginate = 9
-paginatePath = "page"
+[pagination]
+  pagerSize = 9
+  path = "page"
+
 summaryLength = 30
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
-
-# Hugo Modules
-[module]
-  [module.hugoVersion]
-    extended = true
-    min = "0.147.2"
 
 # Taxonomies
 [taxonomies]
   category = "categories"
   tag = "tags"
-  author = "authors"
+  authors = "authors"
 
 # Output formats (including SEO enhancements)
 [outputs]
@@ -62,14 +58,13 @@ defaultContentLanguageInSubdir = false
     style = "github"
     lineNos = true
 
-# Google Analytics (replace with your own ID)
+# Google Analytics (enabled for demonstration)
 GoogleAnalyticsID = "G-JKSVCT23D1"
 
-# Theme parameters - Example configuration
+# Theme parameters - Complete integration configuration
 [params]
   # Site information
-  description = "A modern, redesigned Hugo theme showcasing contemporary web design with Tailwind CSS"
-  author = "Parsa Redesigned Team"
+  description = "Complete integration demonstration of Hugo theme with analytics, advertising, search, and diagram features"
   logo = "/images/logo.png"
   favicon = "/favicon.ico"
   
@@ -93,7 +88,7 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
     readingTime = true
     
   # SEO Configuration
-  keywords = ["hugo", "theme", "blog", "modern", "tailwind", "responsive"]
+  keywords = ["hugo", "theme", "blog", "analytics", "advertising", "integration"]
   
   [params.seo]
     enableSEO = true
@@ -102,7 +97,7 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
     enableStructuredData = true
     defaultImage = "/images/og-default.jpg"
     
-    # Site verification codes (add your own)
+    # Site verification codes
     googleSiteVerification = ""
     bingSiteVerification = ""
     
@@ -116,31 +111,34 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
     # Performance optimization
     preconnect = [
       "https://fonts.googleapis.com",
-      "https://fonts.gstatic.com"
+      "https://fonts.gstatic.com",
+      "https://www.googletagmanager.com",
+      "https://connect.facebook.net"
     ]
     
   [params.openGraph]
-    siteName = "Parsa Redesigned Demo"
-    twitterSite = "@parsa_redesigned"
+    siteName = "Parsa Hugo Integration Demo"
+    twitterSite = "@parsa_hugo"
     
   # Organization information for structured data
   [params.organization]
-    name = "Parsa Redesigned Demo"
+    name = "Parsa Hugo Integration Demo"
     logo = "/images/logo.png"
     
   # PWA settings
   [params.pwa]
-    name = "Parsa Redesigned Demo"
+    name = "Parsa Hugo Integration Demo"
     shortName = "Parsa Demo"
-    description = "A modern Hugo theme demonstration"
+    description = "Complete integration demonstration of modern Hugo theme features"
     themeColor = "#3b82f6"
     backgroundColor = "#ffffff"
     
-  # Author info
+  # Author info (correct structure based on Hugo docs)
   [params.author]
-    name = "Demo Author"
+    name = "Integration Demo Author"
+    email = "demo@example.org"
     image = "/images/author.jpg"
-    bio = "Demonstrating the capabilities of the Parsa Redesigned theme with modern design and functionality."
+    bio = "Demonstrating the complete integration of analytics, advertising, search, and diagram features in Hugo themes."
     
   # Social links
   [params.social]
@@ -152,54 +150,55 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
   [params.search]
     placeholder = "Search articles..."
     
-  # Analytics and Advertising Configuration Examples
-  # Note: These are example configurations - replace with your own IDs
+  # Analytics and Advertising Configuration - FULLY ENABLED
   
-  # Google AdSense (disabled by default)
+  # Google AdSense (enabled for complete integration)
   [params.adsense]
-    enabled = false  # Set to true and add your client ID to enable
-    client = "ca-pub-2970874383549118"  # Replace with your AdSense client ID
-    inArticleSlot = "4383549118"  # Replace with your in-article ad slot ID
-    autoAds = false
+    enabled = true
+    client = "ca-pub-2970874383549118"
+    inArticleSlot = "4383549118"
+    autoAds = true
     
     [params.adsense.placements]
+      header = true
       sidebar = true
       footer = true
-      inContent = false
+      inContent = true
       
-  # Facebook Pixel (disabled by default)
+  # Facebook Pixel (enabled for complete integration)
   [params.facebookPixel]
-    enabled = false  # Set to true and add your pixel ID to enable
-    pixelId = "123456789012345"  # Replace with your Facebook Pixel ID
+    enabled = true
+    pixelId = "123456789012345"
     
     [params.facebookPixel.events]
       pageView = true
+      viewContent = true
       search = true
       contact = true
       
-  # Google Custom Search Engine (optional)
+  # Google Custom Search Engine (enabled for complete integration)
   [params.gcs_engine_id]
-    value = ""  # Add your Google Custom Search Engine ID here
+    value = "3164aa570fbbb474a"
     
-  # Mermaid Diagrams (enabled by default)
+  # Mermaid Diagrams (enabled for complete integration)
   [params.mermaid]
     enabled = true
     theme = "default"
     
-  # Privacy and Consent Management
+  # Privacy and Consent Management (enabled for GDPR compliance)
   [params.privacy]
     respectDoNotTrack = true
-    cookieConsent = false  # Enable for GDPR compliance
+    cookieConsent = true
     anonymizeIP = true
     
     [params.privacy.consentBanner]
-      enabled = false
-      message = "This website uses cookies to enhance your experience."
-      acceptText = "Accept"
+      enabled = true
+      message = "This website uses cookies and analytics to enhance your experience and provide personalized content."
+      acceptText = "Accept All"
       declineText = "Decline"
       learnMoreUrl = "/privacy-policy"
       
-  # Performance Optimization
+  # Performance Optimization (enabled for complete integration)
   [params.performance]
     lazyLoadAds = true
     asyncScripts = true
@@ -209,7 +208,7 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
   [params.security]
     httpsOnly = true
     noSniff = true
-    
+
 # Navigation menus
 [menu]
   [[menu.main]]
@@ -237,12 +236,13 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
     url = "/contact/"
     weight = 5
 
-# Languages
+  [[menu.main]]
+    name = "Privacy Policy"
+    url = "/privacy-policy/"
+    weight = 6
+
+# Languages (single language for now, but ready for multilingual)
 [languages]
   [languages.en]
     languageName = "English"
     weight = 1
-    
-  [languages.zh]
-    languageName = "中文"
-    weight = 2

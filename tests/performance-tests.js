@@ -218,6 +218,69 @@ class PerformanceTests {
     
     this.addResult('JavaScript Performance', 'Console warnings', consoleMessages.length <= 2, 
       `${consoleMessages.length} console warnings/errors`);
+
+    // Test analytics script performance
+    await this.testAnalyticsScriptPerformance();
+  }
+
+  async testAnalyticsScriptPerformance() {
+    console.log('📊 Testing analytics script performance...');
+    
+    // Test Google Analytics performance impact
+    const analyticsMetrics = await this.page.evaluate(() => {
+      const scripts = Array.from(document.querySelectorAll('script[src]'));
+      const analyticsScripts = scripts.filter(script => 
+        script.src.includes('gtag') || 
+        script.src.includes('fbevents') || 
+        script.src.includes('adsbygoogle') ||
+        script.src.includes('mermaid')
+      );
+      
+      return {
+        totalScripts: scripts.length,
+        analyticsScripts: analyticsScripts.length,
+        asyncScripts: analyticsScripts.filter(script => script.async).length,
+        hasGoogleAnalytics: !!window.gtag,
+        hasFacebookPixel: !!window.fbq,
+        hasAdSense: !!window.adsbygoogle,
+        hasMermaid: !!window.mermaid
+      };
+    });
+
+    this.addResult('Analytics Performance', 'Script loading', 
+      analyticsMetrics.asyncScripts === analyticsMetrics.analyticsScripts,
+      `${analyticsMetrics.asyncScripts}/${analyticsMetrics.analyticsScripts} analytics scripts are async`);
+
+    this.addResult('Analytics Performance', 'Google Analytics initialization', 
+      analyticsMetrics.hasGoogleAnalytics,
+      `Google Analytics ${analyticsMetrics.hasGoogleAnalytics ? 'loaded' : 'not loaded'}`);
+
+    // Test script loading order and timing
+    const scriptTimings = await this.page.evaluate(() => {
+      const entries = performance.getEntriesByType('resource');
+      const scriptEntries = entries.filter(entry => 
+        entry.name.includes('.js') && (
+          entry.name.includes('gtag') || 
+          entry.name.includes('fbevents') || 
+          entry.name.includes('adsbygoogle')
+        )
+      );
+      
+      return scriptEntries.map(entry => ({
+        name: entry.name,
+        duration: entry.duration,
+        startTime: entry.startTime,
+        transferSize: entry.transferSize
+      }));
+    });
+
+    const avgScriptLoadTime = scriptTimings.length > 0 
+      ? scriptTimings.reduce((sum, timing) => sum + timing.duration, 0) / scriptTimings.length 
+      : 0;
+
+    this.addResult('Analytics Performance', 'Script load timing', 
+      avgScriptLoadTime <= 500,
+      `Average script load time: ${Math.round(avgScriptLoadTime)}ms`);
   }  a
 ddResult(category, test, passed, message, data = null) {
     const result = { category, test, passed, message, data };

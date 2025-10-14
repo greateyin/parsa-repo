@@ -1,0 +1,279 @@
+{
+  "timestamp": "2025-10-13T12:02:12.820Z",
+  "testSuite": "Configuration Management Unit Tests",
+  "totalTests": 50,
+  "passed": 49,
+  "failed": 1,
+  "results": [
+    {
+      "name": "TOML Configuration Parsing - Analytics",
+      "passed": true,
+      "message": "GA ID: G-JKSVCT23D1, Has Analytics: true"
+    },
+    {
+      "name": "TOML Configuration Parsing - Advertising",
+      "passed": true,
+      "message": "Has AdSense: true, Client: ca-pub-2970874383549118"
+    },
+    {
+      "name": "TOML Configuration Parsing - Tracking",
+      "passed": true,
+      "message": "Has FB Pixel: true, Pixel ID: 123456789012345"
+    },
+    {
+      "name": "Nested Configuration Parsing - Privacy Settings",
+      "passed": true,
+      "message": "DNT: true, Consent: true, Banner: true"
+    },
+    {
+      "name": "Nested Configuration Parsing - GDPR Settings",
+      "passed": true,
+      "message": "GDPR Enabled: true, Region: EU, Analytics: true"
+    },
+    {
+      "name": "Nested Configuration Parsing - Performance Settings",
+      "passed": true,
+      "message": "Lazy Load: true, Async: true, Preconnect Count: 2"
+    },
+    {
+      "name": "Service Configuration Extraction - Google Analytics",
+      "passed": true,
+      "message": "ID: G-SERVICE456, Anonymize: false, DNT: true"
+    },
+    {
+      "name": "Service Configuration Extraction - Search",
+      "passed": true,
+      "message": "Has Search: true, Engine ID: 3164aa570fbbb474a"
+    },
+    {
+      "name": "Service Configuration Extraction - Diagrams",
+      "passed": true,
+      "message": "Enabled: true, Theme: dark"
+    },
+    {
+      "name": "Required Field Validation - Valid Configuration",
+      "passed": true,
+      "message": "Valid config passed: 0 errors, 1 warnings"
+    },
+    {
+      "name": "Required Field Validation - Missing Fields",
+      "passed": true,
+      "message": "Missing fields detected: 1 errors"
+    },
+    {
+      "name": "Required Field Validation - Empty Fields",
+      "passed": true,
+      "message": "Empty fields detected: 2 errors"
+    },
+    {
+      "name": "Format Validation - All Service IDs",
+      "passed": false,
+      "message": "Correct validations: 15/16"
+    },
+    {
+      "name": "Format Validation - Google Analytics GA4 IDs",
+      "passed": true,
+      "message": "GA4 format validations: 4/4"
+    },
+    {
+      "name": "Format Validation - AdSense Client IDs",
+      "passed": true,
+      "message": "AdSense format validations: 4/4"
+    },
+    {
+      "name": "Cross-Service Dependency Validation",
+      "passed": true,
+      "message": "Correct dependency checks: 4/4"
+    },
+    {
+      "name": "Do Not Track Settings Processing",
+      "passed": true,
+      "message": "Correct DNT handling: 5/5 scenarios"
+    },
+    {
+      "name": "Do Not Track Default Behavior",
+      "passed": true,
+      "message": "Default DNT respect setting: true"
+    },
+    {
+      "name": "Cookie Consent Management",
+      "passed": true,
+      "message": "Correct consent handling: 4/4 scenarios"
+    },
+    {
+      "name": "Cookie Consent Banner Configuration",
+      "passed": true,
+      "message": "Banner enabled: true, Custom message: true, Position: bottom, Theme: dark"
+    },
+    {
+      "name": "GDPR Compliance Settings",
+      "passed": true,
+      "message": "Correct GDPR handling: 4/4 scenarios"
+    },
+    {
+      "name": "GDPR EU Region Compliance",
+      "passed": true,
+      "message": "EU GDPR: enabled=true, region=EU, requires consent=true, level=strict"
+    },
+    {
+      "name": "IP Anonymization Settings",
+      "passed": true,
+      "message": "Correct IP anonymization handling: 6/6 scenarios"
+    },
+    {
+      "name": "IP Anonymization Default Value",
+      "passed": true,
+      "message": "Default IP anonymization: true"
+    },
+    {
+      "name": "Consent State Management - Full Consent",
+      "passed": true,
+      "message": "Full consent: level=full, analytics=true, advertising=true"
+    },
+    {
+      "name": "Consent State Management - Analytics Only",
+      "passed": true,
+      "message": "Analytics only: level=analytics, analytics=true, advertising=false"
+    },
+    {
+      "name": "Consent State Management - Functional Only",
+      "passed": true,
+      "message": "Functional only: level=functional, analytics=false, functional=true"
+    },
+    {
+      "name": "Consent State Management - No Consent",
+      "passed": true,
+      "message": "No consent (defaults): level=functional, functional=true, analytics=false"
+    },
+    {
+      "name": "Service-Specific Consent Mapping",
+      "passed": true,
+      "message": "Correct service consent mapping: 3/3 scenarios"
+    },
+    {
+      "name": "Service Consent Requirements - Full Consent",
+      "passed": true,
+      "message": "Full consent services: GA=true, FB=true, AdSense=true, Search=true"
+    },
+    {
+      "name": "Service Consent Requirements - Analytics Only",
+      "passed": true,
+      "message": "Analytics only services: GA=true, FB=false, AdSense=false, Search=true"
+    },
+    {
+      "name": "Consent Persistence - Saving",
+      "passed": true,
+      "message": "Correct consent saves: 2/2 scenarios"
+    },
+    {
+      "name": "Consent Persistence - Loading",
+      "passed": true,
+      "message": "Correct consent loads: 1/1 scenarios"
+    },
+    {
+      "name": "Consent Data Structure",
+      "passed": true,
+      "message": "Consent data includes: analytics=true, timestamp=true, version=true"
+    },
+    {
+      "name": "Service Defaults - Empty Configuration",
+      "passed": true,
+      "message": "Empty config: Analytics=false, AdSense=false, Mermaid=true"
+    },
+    {
+      "name": "Service Defaults - Partial Configuration",
+      "passed": true,
+      "message": "Partial config: Analytics=true, ID=G-TEST123, Mermaid=true"
+    },
+    {
+      "name": "Service Defaults - AdSense Placements",
+      "passed": true,
+      "message": "AdSense placements: header=true, sidebar=true, footer=true, inContent=true"
+    },
+    {
+      "name": "Privacy Defaults - Default Settings",
+      "passed": true,
+      "message": "Defaults: DNT=true, Anonymize=true, Consent=false, GDPR=false"
+    },
+    {
+      "name": "Privacy Defaults - Explicit False Values",
+      "passed": true,
+      "message": "Explicit false: DNT=false, Anonymize=true"
+    },
+    {
+      "name": "Privacy Defaults - Consent Banner",
+      "passed": true,
+      "message": "Banner: enabled=false, position=bottom, theme=light"
+    },
+    {
+      "name": "Performance Defaults - Default Settings",
+      "passed": true,
+      "message": "Defaults: LazyLoad=true, Async=true, Preconnect=3, DNS=2"
+    },
+    {
+      "name": "Performance Defaults - Explicit False Values",
+      "passed": true,
+      "message": "Explicit false: LazyLoad=false, Async=true"
+    },
+    {
+      "name": "Performance Defaults - Preconnect Domains",
+      "passed": true,
+      "message": "Preconnect domains: googletagmanager.com, google-analytics.com, pagead2.googlesyndication.com"
+    },
+    {
+      "name": "Configuration Error Detection",
+      "passed": true,
+      "message": "Correct error detection: 5/5 scenarios"
+    },
+    {
+      "name": "Multiple Configuration Errors",
+      "passed": true,
+      "message": "Multiple errors detected: 3 errors"
+    },
+    {
+      "name": "Missing Dependency Error Detection",
+      "passed": true,
+      "message": "Correct dependency error detection: 2/2 scenarios"
+    },
+    {
+      "name": "Missing Dependency Warning Detection",
+      "passed": true,
+      "message": "Correct dependency warning detection: 2/2 scenarios"
+    },
+    {
+      "name": "Configuration Conflict Resolution - GA4 ID",
+      "passed": true,
+      "message": "GA4 ID resolved to: G-SERVICE456 (expected: G-SERVICE456)"
+    },
+    {
+      "name": "Configuration Conflict Resolution - Privacy Override",
+      "passed": true,
+      "message": "Privacy override resolved to: false (expected: false)"
+    },
+    {
+      "name": "Configuration Conflict Resolution - Performance Settings",
+      "passed": true,
+      "message": "Performance conflict resolved to: false (expected: false)"
+    }
+  ],
+  "requirements": {
+    "6.1": "Configuration Management - Centralized configuration options for analytics and advertising features",
+    "6.4": "Configuration Validation - Clear error messages and fallback behavior for invalid configurations"
+  },
+  "coverage": {
+    "Configuration Parsing": "TOML configuration parsing, nested structure handling, and service-specific extraction",
+    "Configuration Validation": "Required field validation, format validation, and cross-service dependency validation",
+    "Privacy Settings Management": "Do Not Track settings, cookie consent management, GDPR compliance, and IP anonymization",
+    "Consent Management": "Consent state management, service-specific consent mapping, and consent persistence",
+    "Configuration Defaults": "Service defaults, privacy defaults, and performance defaults application",
+    "Error Handling": "Invalid configuration detection, missing dependency handling, and conflict resolution"
+  },
+  "testCategories": {
+    "Configuration Parsing": 9,
+    "Configuration Validation": 7,
+    "Privacy Settings": 12,
+    "Consent Management": 13,
+    "Configuration Defaults": 9,
+    "Error Handling": 8
+  }
+}

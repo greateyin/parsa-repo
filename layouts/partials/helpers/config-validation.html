@@ -193,7 +193,7 @@
 {{ end }}
 
 {{/* Configuration summary for debugging */}}
-{{ if site.IsServer }}
+{{ if hugo.IsServer }}
   {{ $enabledServices := slice }}
   {{ if $gaConfig.enabled }}{{ $enabledServices = $enabledServices | append "Google Analytics" }}{{ end }}
   {{ if $adsenseConfig.enabled }}{{ $enabledServices = $enabledServices | append "AdSense" }}{{ end }}

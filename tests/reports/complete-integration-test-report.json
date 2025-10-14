@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-10-13T14:04:13.551Z",
+  "summary": {
+    "total": 6,
+    "passed": 1,
+    "failed": 5,
+    "success_rate": "17%"
+  },
+  "tests": [
+    {
+      "name": "Hugo Configuration Validation",
+      "status": "passed"
+    },
+    {
+      "name": "Template Integration Validation",
+      "status": "failed",
+      "error": "Mermaid shortcode not found"
+    },
+    {
+      "name": "Example Site Build",
+      "status": "failed",
+      "error": "Build failed: Command failed: hugo --minify --gc\nERROR deprecated: site config key paginate was deprecated in Hugo v0.128.0 and subsequently removed. Use pagination.pagerSize instead.\nERROR deprecated: site config key paginatePath was deprecated in Hugo v0.128.0 and subsequently removed. Use pagination.path instead.\n"
+    },
+    {
+      "name": "Generated Content Validation",
+      "status": "failed",
+      "error": "Index page not generated"
+    },
+    {
+      "name": "Performance Validation",
+      "status": "failed",
+      "error": "ENOENT: no such file or directory, open '/Users/weichih/Documents/GitHub/parsa-hugo/exampleSite/public/index.html'"
+    },
+    {
+      "name": "Accessibility Validation",
+      "status": "failed",
+      "error": "ENOENT: no such file or directory, open '/Users/weichih/Documents/GitHub/parsa-hugo/exampleSite/public/index.html'"
+    }
+  ]
+}

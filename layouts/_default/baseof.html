@@ -4,7 +4,7 @@
       class="{{ if in (slice "zh" "zh-cn" "zh-tw" "zh-hk") .Site.Language.Lang }}zh-font zh-spacing{{ end }}{{ if eq (.Site.Params.languageDirection | default "ltr") "rtl" }} rtl-support{{ end }}"
       data-lang="{{ .Site.Language.Lang }}"
       data-lang-dir="{{ .Site.Params.languageDirection | default "ltr" }}"
-      {{ if .Site.IsMultiLingual }}data-multilingual="true"{{ end }}>
+      {{ if hugo.IsMultilingual }}data-multilingual="true"{{ end }}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
@@ -163,6 +163,7 @@
     {{ if $accessibility }}
       {{ $jsFiles = $jsFiles | append $accessibility }}
     {{ end }}
+    {{/* Temporarily disabled JavaScript build for testing
     {{ $js := $jsFiles | resources.Concat "js/bundle.js" }}
     {{ if hugo.IsProduction }}
       {{ $js = $js | js.Build (dict "target" "es2018" "minify" true) | fingerprint "sha384" }}
@@ -170,6 +171,7 @@
       {{ $js = $js | js.Build (dict "target" "es2018" "minify" false "sourceMap" "inline") }}
     {{ end }}
     <script src="{{ $js.RelPermalink }}" {{ if hugo.IsProduction }}integrity="{{ $js.Data.Integrity }}"{{ end }} type="module" defer></script>
+    */}}
   {{ end }}
   
   <!-- Service Worker registration -->

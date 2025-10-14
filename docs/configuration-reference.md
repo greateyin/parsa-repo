@@ -1,122 +1,67 @@
 # Configuration Reference
 
-This document provides a comprehensive reference for all configuration options available in the Hugo theme analytics enhancements.
+This document provides a complete reference for all configuration parameters available in the Parsa Redesigned Hugo theme with analytics and advertising enhancements.
 
 ## Table of Contents
 
-- [Google Analytics Configuration](#google-analytics-configuration)
-- [Google AdSense Configuration](#google-adsense-configuration)
-- [Facebook Pixel Configuration](#facebook-pixel-configuration)
-- [Google Custom Search Configuration](#google-custom-search-configuration)
-- [Mermaid Diagrams Configuration](#mermaid-diagrams-configuration)
-- [Privacy Settings](#privacy-settings)
-- [Performance Settings](#performance-settings)
-- [Security Settings](#security-settings)
-- [Configuration Examples](#configuration-examples)
-- [Troubleshooting](#troubleshooting)
+- [Analytics Configuration](#analytics-configuration)
+- [Advertising Configuration](#advertising-configuration)
+- [Search Configuration](#search-configuration)
+- [Diagram Configuration](#diagram-configuration)
+- [Privacy Configuration](#privacy-configuration)
+- [Performance Configuration](#performance-configuration)
+- [Security Configuration](#security-configuration)
+- [Configuration Validation](#configuration-validation)
 
-## Google Analytics Configuration
+## Analytics Configuration
+
+### Google Analytics 4
 
 Configure Google Analytics 4 tracking for your site.
 
-### Basic Configuration
-
 ```toml
-# Hugo configuration file (hugo.toml)
-GoogleAnalyticsID = "G-JKSVCT23D1"
+# Basic GA4 configuration
+GoogleAnalyticsID = "G-XXXXXXXXXX"
+
+# Privacy settings for GA4
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
+  disable = false
 ```
 
-### Advanced Privacy Settings
-
-```toml
-[privacy]
-  [privacy.googleAnalytics]
-    anonymizeIP = true
-    respectDoNotTrack = true
-    useSessionStorage = false
-```
-
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `GoogleAnalyticsID` | string | "" | Your Google Analytics 4 measurement ID (format: G-XXXXXXXXXX) |
-| `privacy.googleAnalytics.anonymizeIP` | boolean | true | Anonymize visitor IP addresses |
+| `GoogleAnalyticsID` | string | "" | Your GA4 measurement ID (format: G-XXXXXXXXXX) |
 | `privacy.googleAnalytics.respectDoNotTrack` | boolean | true | Respect browser Do Not Track settings |
-| `privacy.googleAnalytics.useSessionStorage` | boolean | false | Use session storage instead of cookies |
+| `privacy.googleAnalytics.anonymizeIP` | boolean | true | Anonymize visitor IP addresses |
+| `privacy.googleAnalytics.disable` | boolean | false | Completely disable Google Analytics |
 
-### Validation Rules
+#### Validation Rules
 
-- **Google Analytics ID**: Must follow the format `G-XXXXXXXXXX` where X is alphanumeric
-- **Example**: `G-JKSVCT23D1`
+- **GoogleAnalyticsID**: Must match pattern `G-[A-Z0-9]{10}`
+- **Required**: GoogleAnalyticsID must be provided if analytics is enabled
 
-## Google AdSense Configuration
-
-Configure Google AdSense advertising integration.
-
-### Basic Configuration
+#### Example
 
 ```toml
-[params.adsense]
-  enabled = true
-  client = "ca-pub-2970874383549118"
-  autoAds = true
+GoogleAnalyticsID = "G-JKSVCT23D1"
+
+[privacy.googleAnalytics]
+  respectDoNotTrack = true
+  anonymizeIP = true
 ```
 
-### Ad Placement Configuration
+### Facebook Pixel
 
-```toml
-[params.adsense]
-  enabled = true
-  client = "ca-pub-2970874383549118"
-  inArticleSlot = "4383549118"
-  
-  [params.adsense.placements]
-    header = false
-    sidebar = true
-    footer = true
-    inContent = true
-    beforeContent = false
-    afterContent = true
-```
-
-### Configuration Options
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `params.adsense.enabled` | boolean | false | Enable/disable AdSense integration |
-| `params.adsense.client` | string | "" | Your AdSense client ID (format: ca-pub-XXXXXXXXXXXXXXXX) |
-| `params.adsense.inArticleSlot` | string | "" | Slot ID for in-article ads (10 digits) |
-| `params.adsense.autoAds` | boolean | false | Enable Google Auto Ads |
-| `params.adsense.responsive` | boolean | true | Use responsive ad units |
-| `params.adsense.lazyLoad` | boolean | true | Enable lazy loading for ads |
-| `params.adsense.placements.*` | boolean | false | Enable ads in specific locations |
-
-### Validation Rules
-
-- **Client ID**: Must follow the format `ca-pub-XXXXXXXXXXXXXXXX` (16 digits)
-- **Slot ID**: Must be exactly 10 digits
-- **Example Client**: `ca-pub-2970874383549118`
-- **Example Slot**: `4383549118`
-
-## Facebook Pixel Configuration
-
-Configure Facebook Pixel tracking for advertising and analytics.
-
-### Basic Configuration
+Configure Facebook Pixel for conversion tracking and audience building.
 
 ```toml
 [params.facebookPixel]
   enabled = true
-  pixelId = "123456789012345"
-```
-
-### Event Tracking Configuration
-
-```toml
-[params.facebookPixel]
-  enabled = true
-  pixelId = "123456789012345"
+  pixelId = "XXXXXXXXXXXXXXX"
   advancedMatching = false
   
   [params.facebookPixel.events]
@@ -126,75 +71,141 @@ Configure Facebook Pixel tracking for advertising and analytics.
     contact = true
     lead = false
     completeRegistration = false
+    purchase = false
+    addToCart = false
+    initiateCheckout = false
 ```
 
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `params.facebookPixel.enabled` | boolean | false | Enable/disable Facebook Pixel |
-| `params.facebookPixel.pixelId` | string | "" | Your Facebook Pixel ID (15-16 digits) |
-| `params.facebookPixel.advancedMatching` | boolean | false | Enable advanced matching |
-| `params.facebookPixel.events.*` | boolean | varies | Enable specific event tracking |
+| `enabled` | boolean | false | Enable/disable Facebook Pixel |
+| `pixelId` | string | "" | Your Facebook Pixel ID (15-16 digits) |
+| `advancedMatching` | boolean | false | Enable advanced matching for better attribution |
+| `events.pageView` | boolean | true | Track page views |
+| `events.viewContent` | boolean | false | Track content views |
+| `events.search` | boolean | false | Track search events |
+| `events.contact` | boolean | false | Track contact form submissions |
+| `events.lead` | boolean | false | Track lead generation events |
+| `events.completeRegistration` | boolean | false | Track registration completions |
+| `events.purchase` | boolean | false | Track purchase events |
+| `events.addToCart` | boolean | false | Track add to cart events |
+| `events.initiateCheckout` | boolean | false | Track checkout initiations |
 
-### Validation Rules
+#### Validation Rules
 
-- **Pixel ID**: Must be 15-16 digits
-- **Example**: `123456789012345`
+- **pixelId**: Must be 15-16 digits
+- **Required**: pixelId must be provided if Facebook Pixel is enabled
 
-## Google Custom Search Configuration
+## Advertising Configuration
 
-Configure Google Custom Search Engine integration.
+### Google AdSense
 
-### Basic Configuration
+Configure Google AdSense for displaying advertisements on your site.
+
+```toml
+[params.adsense]
+  enabled = true
+  client = "ca-pub-XXXXXXXXXXXXXXXX"
+  inArticleSlot = "XXXXXXXXXX"
+  autoAds = false
+  responsive = true
+  lazyLoad = true
+  testMode = false
+  
+  [params.adsense.placements]
+    header = false
+    sidebar = true
+    footer = true
+    inContent = true
+    beforeContent = false
+    afterContent = true
+    
+  [params.adsense.slots]
+    sidebar = "XXXXXXXXXX"
+    footer = "XXXXXXXXXX"
+    beforeContent = "XXXXXXXXXX"
+    afterContent = "XXXXXXXXXX"
+```
+
+#### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `enabled` | boolean | false | Enable/disable AdSense |
+| `client` | string | "" | Your AdSense client ID (format: ca-pub-XXXXXXXXXXXXXXXX) |
+| `inArticleSlot` | string | "" | Slot ID for in-article ads (10 digits) |
+| `autoAds` | boolean | false | Enable Google Auto Ads |
+| `responsive` | boolean | true | Use responsive ad units |
+| `lazyLoad` | boolean | true | Enable lazy loading for ads |
+| `testMode` | boolean | false | Enable test mode for development |
+| `placements.*` | boolean | varies | Enable ads in specific locations |
+| `slots.*` | string | "" | Slot IDs for specific ad placements |
+
+#### Validation Rules
+
+- **client**: Must match pattern `ca-pub-[0-9]{16}`
+- **slots**: Must be 10 digits when provided
+- **Required**: client must be provided if AdSense is enabled
+
+#### Ad Placement Options
+
+| Placement | Description | Default |
+|-----------|-------------|---------|
+| `header` | Top of page header | false |
+| `sidebar` | Sidebar widget area | true |
+| `footer` | Bottom of page footer | true |
+| `inContent` | Within article content | true |
+| `beforeContent` | Before article content | false |
+| `afterContent` | After article content | true |
+
+## Search Configuration
+
+### Google Custom Search Engine
+
+Configure Google Custom Search for site search functionality.
 
 ```toml
 [params.gcs_engine_id]
-  value = "3164aa570fbbb474a"
-```
+  value = "XXXXXXXXXXXXXXXXX"
 
-### Advanced Configuration
-
-```toml
+# Alternative configuration format
 [params.googleCustomSearch]
-  engineId = "3164aa570fbbb474a"
+  engineId = "XXXXXXXXXXXXXXXXX"
   enabled = true
   autoComplete = true
   enableHistory = true
   maxCompletions = 5
   fallbackToLocal = true
+  placeholder = "Search..."
+  noResultsText = "No results found"
 ```
 
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `params.gcs_engine_id.value` | string | "" | Google Custom Search Engine ID |
-| `params.googleCustomSearch.engineId` | string | "" | Alternative configuration path |
-| `params.googleCustomSearch.enabled` | boolean | false | Enable/disable custom search |
-| `params.googleCustomSearch.autoComplete` | boolean | true | Enable search autocomplete |
-| `params.googleCustomSearch.enableHistory` | boolean | true | Enable search history |
-| `params.googleCustomSearch.maxCompletions` | number | 5 | Maximum autocomplete suggestions |
-| `params.googleCustomSearch.fallbackToLocal` | boolean | true | Fallback to local search if unavailable |
+| `gcs_engine_id.value` | string | "" | Google Custom Search Engine ID |
+| `googleCustomSearch.engineId` | string | "" | Alternative configuration path |
+| `googleCustomSearch.enabled` | boolean | true | Enable/disable custom search |
+| `googleCustomSearch.autoComplete` | boolean | true | Enable search autocomplete |
+| `googleCustomSearch.enableHistory` | boolean | true | Enable search history |
+| `googleCustomSearch.maxCompletions` | number | 5 | Maximum autocomplete suggestions |
+| `googleCustomSearch.fallbackToLocal` | boolean | true | Fallback to local search if GCS fails |
+| `googleCustomSearch.placeholder` | string | "Search..." | Search input placeholder text |
+| `googleCustomSearch.noResultsText` | string | "No results found" | No results message |
 
-### Validation Rules
+#### Validation Rules
 
-- **Engine ID**: Must be 17 character hexadecimal string
-- **Example**: `3164aa570fbbb474a`
+- **engineId**: Must be 17 hexadecimal characters
+- **maxCompletions**: Must be between 1 and 10
 
-## Mermaid Diagrams Configuration
+## Diagram Configuration
 
-Configure Mermaid.js diagram rendering.
+### Mermaid.js Diagrams
 
-### Basic Configuration
-
-```toml
-[params.mermaid]
-  enabled = true
-  theme = "default"
-```
-
-### Advanced Configuration
+Configure Mermaid.js for rendering diagrams in your content.
 
 ```toml
 [params.mermaid]
@@ -202,82 +213,108 @@ Configure Mermaid.js diagram rendering.
   theme = "default"
   startOnLoad = true
   securityLevel = "loose"
+  version = "10.6.1"
   
   [params.mermaid.flowchart]
     useMaxWidth = true
     htmlLabels = true
+    curve = "basis"
+    
+  [params.mermaid.sequence]
+    diagramMarginX = 50
+    diagramMarginY = 10
+    actorMargin = 50
+    
+  [params.mermaid.gantt]
+    numberSectionStyles = 4
+    axisFormat = "%m/%d/%Y"
 ```
 
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `params.mermaid.enabled` | boolean | true | Enable/disable Mermaid diagrams |
-| `params.mermaid.theme` | string | "default" | Mermaid theme (default, dark, forest, neutral, base) |
-| `params.mermaid.startOnLoad` | boolean | true | Initialize diagrams on page load |
-| `params.mermaid.securityLevel` | string | "loose" | Security level for diagram rendering |
-| `params.mermaid.flowchart.useMaxWidth` | boolean | true | Use maximum available width |
-| `params.mermaid.flowchart.htmlLabels` | boolean | true | Enable HTML labels in flowcharts |
+| `enabled` | boolean | true | Enable/disable Mermaid diagrams |
+| `theme` | string | "default" | Mermaid theme (default, dark, forest, neutral, base) |
+| `startOnLoad` | boolean | true | Initialize diagrams on page load |
+| `securityLevel` | string | "loose" | Security level for diagram rendering |
+| `version` | string | "10.6.1" | Mermaid.js version to load |
+| `flowchart.useMaxWidth` | boolean | true | Use maximum available width |
+| `flowchart.htmlLabels` | boolean | true | Enable HTML labels in flowcharts |
+| `flowchart.curve` | string | "basis" | Curve type for flowchart lines |
+| `sequence.diagramMarginX` | number | 50 | Horizontal margin for sequence diagrams |
+| `sequence.diagramMarginY` | number | 10 | Vertical margin for sequence diagrams |
+| `sequence.actorMargin` | number | 50 | Margin between actors |
+| `gantt.numberSectionStyles` | number | 4 | Number of section styles for Gantt charts |
+| `gantt.axisFormat` | string | "%m/%d/%Y" | Date format for Gantt chart axis |
 
-### Validation Rules
+#### Supported Diagram Types
 
-- **Theme**: Must be one of: default, dark, forest, neutral, base
+- Flowcharts
+- Sequence diagrams
+- Class diagrams
+- State diagrams
+- Entity relationship diagrams
+- User journey diagrams
+- Gantt charts
+- Pie charts
+- Git graphs
 
-## Privacy Settings
+## Privacy Configuration
 
-Configure privacy compliance and user consent management.
+### Privacy and Consent Management
 
-### Basic Configuration
+Configure privacy settings and consent management for GDPR compliance.
 
 ```toml
 [params.privacy]
   respectDoNotTrack = true
   cookieConsent = false
   anonymizeIP = true
-```
-
-### Cookie Consent Configuration
-
-```toml
-[params.privacy]
-  respectDoNotTrack = true
-  cookieConsent = true
-  anonymizeIP = true
   disableTracking = false
   
   [params.privacy.consentBanner]
-    enabled = true
+    enabled = false
     message = "This website uses cookies to ensure you get the best experience."
     acceptText = "Accept"
     declineText = "Decline"
     learnMoreText = "Learn More"
     learnMoreUrl = "/privacy-policy"
+    position = "bottom"
+    backgroundColor = "#1f2937"
+    textColor = "#ffffff"
+    
+  [params.privacy.cookieCategories]
+    necessary = true
+    analytics = false
+    marketing = false
+    preferences = false
 ```
 
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `params.privacy.respectDoNotTrack` | boolean | true | Respect browser Do Not Track settings |
-| `params.privacy.cookieConsent` | boolean | false | Enable cookie consent banner |
-| `params.privacy.anonymizeIP` | boolean | true | Anonymize IP addresses |
-| `params.privacy.disableTracking` | boolean | false | Completely disable all tracking |
-| `params.privacy.consentBanner.*` | various | varies | Cookie consent banner configuration |
+| `respectDoNotTrack` | boolean | true | Respect browser Do Not Track settings |
+| `cookieConsent` | boolean | false | Enable cookie consent banner |
+| `anonymizeIP` | boolean | true | Anonymize IP addresses |
+| `disableTracking` | boolean | false | Completely disable all tracking |
+| `consentBanner.enabled` | boolean | false | Enable consent banner |
+| `consentBanner.message` | string | "This website uses cookies..." | Consent banner message |
+| `consentBanner.acceptText` | string | "Accept" | Accept button text |
+| `consentBanner.declineText` | string | "Decline" | Decline button text |
+| `consentBanner.learnMoreText` | string | "Learn More" | Learn more link text |
+| `consentBanner.learnMoreUrl` | string | "/privacy-policy" | Learn more link URL |
+| `consentBanner.position` | string | "bottom" | Banner position (top, bottom) |
+| `consentBanner.backgroundColor` | string | "#1f2937" | Banner background color |
+| `consentBanner.textColor` | string | "#ffffff" | Banner text color |
+| `cookieCategories.*` | boolean | varies | Enable specific cookie categories |
 
-## Performance Settings
+## Performance Configuration
 
-Configure performance optimization features.
+### Performance Optimization
 
-### Basic Configuration
-
-```toml
-[params.performance]
-  lazyLoadAds = true
-  asyncScripts = true
-  resourceHints = true
-```
-
-### Advanced Configuration
+Configure performance optimization settings.
 
 ```toml
 [params.performance]
@@ -285,6 +322,7 @@ Configure performance optimization features.
   asyncScripts = true
   resourceHints = true
   criticalCSS = false
+  serviceWorker = false
   
   preconnectDomains = [
     "https://www.googletagmanager.com",
@@ -293,93 +331,180 @@ Configure performance optimization features.
     "https://cse.google.com",
     "https://cdn.jsdelivr.net"
   ]
+  
+  [params.performance.lazyLoading]
+    images = true
+    iframes = true
+    ads = true
+    threshold = "0px"
+    
+  [params.performance.caching]
+    staticAssets = "1y"
+    htmlPages = "1h"
+    apiResponses = "5m"
 ```
 
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `params.performance.lazyLoadAds` | boolean | true | Enable lazy loading for advertisements |
-| `params.performance.asyncScripts` | boolean | true | Load external scripts asynchronously |
-| `params.performance.resourceHints` | boolean | true | Add resource hints for external domains |
-| `params.performance.criticalCSS` | boolean | false | Inline critical CSS |
-| `params.performance.preconnectDomains` | array | predefined | Domains to preconnect |
+| `lazyLoadAds` | boolean | true | Enable lazy loading for advertisements |
+| `asyncScripts` | boolean | true | Load external scripts asynchronously |
+| `resourceHints` | boolean | true | Add resource hints for external domains |
+| `criticalCSS` | boolean | false | Inline critical CSS |
+| `serviceWorker` | boolean | false | Enable service worker for caching |
+| `preconnectDomains` | array | [] | Domains to preconnect |
+| `lazyLoading.images` | boolean | true | Lazy load images |
+| `lazyLoading.iframes` | boolean | true | Lazy load iframes |
+| `lazyLoading.ads` | boolean | true | Lazy load advertisements |
+| `lazyLoading.threshold` | string | "0px" | Intersection observer threshold |
+| `caching.staticAssets` | string | "1y" | Cache duration for static assets |
+| `caching.htmlPages` | string | "1h" | Cache duration for HTML pages |
+| `caching.apiResponses` | string | "5m" | Cache duration for API responses |
 
-## Security Settings
+## Security Configuration
 
-Configure security features and Content Security Policy.
+### Security Settings
 
-### Basic Configuration
+Configure security-related settings.
 
 ```toml
 [params.security]
   contentSecurityPolicy = false
   subresourceIntegrity = false
   httpsOnly = true
+  noSniff = true
+  frameOptions = "SAMEORIGIN"
+  
+  [params.security.csp]
+    defaultSrc = ["'self'"]
+    scriptSrc = ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"]
+    styleSrc = ["'self'", "'unsafe-inline'"]
+    imgSrc = ["'self'", "data:", "https:"]
+    connectSrc = ["'self'", "https://www.google-analytics.com"]
+    fontSrc = ["'self'", "https://fonts.gstatic.com"]
+    objectSrc = ["'none'"]
+    mediaSrc = ["'self'"]
+    frameSrc = ["'self'", "https://www.youtube.com"]
 ```
 
-### Configuration Options
+#### Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `params.security.contentSecurityPolicy` | boolean | false | Enable CSP headers |
-| `params.security.subresourceIntegrity` | boolean | false | Enable SRI for external resources |
-| `params.security.httpsOnly` | boolean | true | Enforce HTTPS for external resources |
-| `params.security.noSniff` | boolean | true | Add X-Content-Type-Options header |
+| `contentSecurityPolicy` | boolean | false | Enable CSP headers |
+| `subresourceIntegrity` | boolean | false | Enable SRI for external resources |
+| `httpsOnly` | boolean | true | Enforce HTTPS for external resources |
+| `noSniff` | boolean | true | Add X-Content-Type-Options header |
+| `frameOptions` | string | "SAMEORIGIN" | X-Frame-Options header value |
+| `csp.*` | array | varies | Content Security Policy directives |
 
-## Configuration Examples
+## Configuration Validation
 
-### Minimal Configuration
+The theme includes automatic configuration validation that checks:
 
-```toml
-# hugo.toml
-GoogleAnalyticsID = "G-JKSVCT23D1"
+### Validation Rules
 
-[params.adsense]
-  enabled = true
-  client = "ca-pub-2970874383549118"
+1. **ID Format Validation**
+   - Google Analytics ID: `G-[A-Z0-9]{10}`
+   - AdSense Client ID: `ca-pub-[0-9]{16}`
+   - AdSense Slot ID: `[0-9]{10}`
+   - Facebook Pixel ID: `[0-9]{15,16}`
+   - Google Custom Search Engine ID: `[a-f0-9]{17}`
+
+2. **Required Field Validation**
+   - Services enabled without required IDs
+   - Missing configuration for enabled features
+
+3. **Privacy Compliance Validation**
+   - Tracking enabled without consent management
+   - Missing privacy policy links
+   - Do Not Track settings
+
+4. **Performance Validation**
+   - Multiple tracking services without optimization
+   - Missing lazy loading configuration
+   - Excessive external resource loading
+
+### Validation Messages
+
+The theme displays validation messages during build:
+
+```
+INFO: Theme Analytics Enhancement initialized
+INFO: Enabled services: Google Analytics, AdSense, Mermaid Diagrams
+WARNING: Analytics tracking is enabled but cookie consent is disabled. Consider enabling params.privacy.cookieConsent for GDPR compliance.
+ERROR: AdSense is enabled but no client ID is configured. Please set params.adsense.client in your configuration.
+WARNING: Multiple tracking services enabled. Consider enabling params.performance.lazyLoadAds for better performance.
 ```
 
-### Complete Configuration
+### Configuration Testing
+
+Test your configuration with the built-in validation:
+
+```bash
+# Run configuration validation
+hugo --printI18nWarnings --printPathWarnings
+
+# Check for configuration errors
+hugo --debug | grep -i "analytics\|adsense\|pixel\|mermaid"
+```
+
+## Environment-Specific Configuration
+
+### Development Environment
 
 ```toml
-# hugo.toml
-GoogleAnalyticsID = "G-JKSVCT23D1"
-
+# Disable tracking in development
 [params.adsense]
-  enabled = true
-  client = "ca-pub-2970874383549118"
-  inArticleSlot = "4383549118"
-  autoAds = true
-  
-  [params.adsense.placements]
-    sidebar = true
-    footer = true
-    inContent = true
+  enabled = false
+  testMode = true
 
 [params.facebookPixel]
-  enabled = true
-  pixelId = "123456789012345"
-  
-  [params.facebookPixel.events]
-    pageView = true
-    search = true
-    contact = true
+  enabled = false
 
-[params.gcs_engine_id]
-  value = "3164aa570fbbb474a"
+[params.privacy]
+  respectDoNotTrack = false
+  cookieConsent = false
 
-[params.mermaid]
+[params.performance]
+  asyncScripts = false  # Easier debugging
+  lazyLoadAds = false
+```
+
+### Staging Environment
+
+```toml
+# Limited tracking in staging
+[params.adsense]
   enabled = true
-  theme = "default"
+  testMode = true
+  client = "ca-pub-XXXXXXXXXXXXXXXX"
+
+[params.facebookPixel]
+  enabled = false  # Avoid test data
 
 [params.privacy]
   respectDoNotTrack = true
   cookieConsent = true
-  
-  [params.privacy.consentBanner]
-    enabled = true
-    message = "We use cookies to improve your experience."
+```
+
+### Production Environment
+
+```toml
+# Full tracking in production
+[params.adsense]
+  enabled = true
+  testMode = false
+  client = "ca-pub-XXXXXXXXXXXXXXXX"
+
+[params.facebookPixel]
+  enabled = true
+  pixelId = "XXXXXXXXXXXXXXX"
+
+[params.privacy]
+  respectDoNotTrack = true
+  cookieConsent = true
 
 [params.performance]
   lazyLoadAds = true
@@ -387,83 +512,15 @@ GoogleAnalyticsID = "G-JKSVCT23D1"
   resourceHints = true
 ```
 
-### Privacy-Focused Configuration
+## Best Practices
 
-```toml
-# hugo.toml
-GoogleAnalyticsID = "G-JKSVCT23D1"
-
-[params.privacy]
-  respectDoNotTrack = true
-  cookieConsent = true
-  anonymizeIP = true
-  
-  [params.privacy.consentBanner]
-    enabled = true
-    message = "This site uses cookies only with your consent."
-    learnMoreUrl = "/privacy-policy"
-
-[params.performance]
-  lazyLoadAds = true
-  asyncScripts = true
-
-# Disable advertising for privacy
-[params.adsense]
-  enabled = false
-
-[params.facebookPixel]
-  enabled = false
-```
-
-## Troubleshooting
-
-### Common Configuration Errors
-
-1. **Invalid Google Analytics ID**
-   - Error: `Invalid Google Analytics ID format`
-   - Solution: Use format `G-XXXXXXXXXX` (e.g., `G-JKSVCT23D1`)
-
-2. **Invalid AdSense Client ID**
-   - Error: `Invalid AdSense client ID format`
-   - Solution: Use format `ca-pub-XXXXXXXXXXXXXXXX` (16 digits)
-
-3. **Invalid Facebook Pixel ID**
-   - Error: `Invalid Facebook Pixel ID format`
-   - Solution: Use 15-16 digit number (e.g., `123456789012345`)
-
-4. **Missing Required Configuration**
-   - Error: Service enabled but no ID configured
-   - Solution: Provide the required ID or disable the service
-
-### Performance Issues
-
-1. **Slow Page Loading**
-   - Enable `params.performance.lazyLoadAds = true`
-   - Enable `params.performance.asyncScripts = true`
-   - Consider disabling unused services
-
-2. **High Resource Usage**
-   - Disable auto ads: `params.adsense.autoAds = false`
-   - Reduce ad placements
-   - Enable lazy loading
-
-### Privacy Compliance
-
-1. **GDPR Compliance**
-   - Enable `params.privacy.cookieConsent = true`
-   - Set `params.privacy.respectDoNotTrack = true`
-   - Configure consent banner messages
-
-2. **Do Not Track**
-   - Ensure `params.privacy.respectDoNotTrack = true`
-   - Test with browser DNT enabled
-
-### Validation Warnings
-
-The theme includes comprehensive validation that will show warnings for:
-- Invalid ID formats
-- Missing required configuration
-- Privacy compliance recommendations
-- Performance optimization suggestions
-
-Check your Hugo build output for validation messages and follow the provided guidance.
+1. **Start Simple**: Begin with basic analytics, add features gradually
+2. **Test Thoroughly**: Verify each service works before adding the next
+3. **Respect Privacy**: Enable cookie consent for GDPR compliance
+4. **Optimize Performance**: Use lazy loading and async scripts
+5. **Monitor Impact**: Check Core Web Vitals after enabling new features
+6. **Keep Updated**: Regularly review and update your configuration
+7. **Document Changes**: Keep track of configuration changes for your team
+8. **Use Environment-Specific Configs**: Different settings for dev/staging/production
+9. **Validate Regularly**: Run configuration validation during builds
+10. **Monitor Errors**: Check Hugo build output for validation warnings

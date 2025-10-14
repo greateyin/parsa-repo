@@ -1,0 +1,367 @@
+{
+  "summary": {
+    "total": 38,
+    "passed": 38,
+    "failed": 0,
+    "successRate": "100.00%",
+    "timestamp": "2025-10-13T09:46:26.882Z"
+  },
+  "testCategories": {
+    "Google Custom Search Integration": 10,
+    "Local Search Fallback": 8,
+    "Configuration Validation": 13,
+    "Widget Functionality": 5,
+    "Accessibility": 7,
+    "Performance": 4
+  },
+  "requirements": {
+    "3.1 - Google Custom Search Integration": {
+      "tests": [
+        {
+          "name": "Valid GCS Configuration Parsing",
+          "passed": true,
+          "details": "Enabled: true, Engine ID: 3164aa570fbbb474a, Valid format: true",
+          "timestamp": "2025-10-13T09:46:26.879Z"
+        },
+        {
+          "name": "GCS Engine ID Validation",
+          "passed": true,
+          "details": "Engine ID format validation: true",
+          "timestamp": "2025-10-13T09:46:26.879Z"
+        },
+        {
+          "name": "GCS Script Loading Configuration",
+          "passed": true,
+          "details": "Should load: true, URL includes engine ID: true, Async: true",
+          "timestamp": "2025-10-13T09:46:26.879Z"
+        },
+        {
+          "name": "GCS Script URL Generation",
+          "passed": true,
+          "details": "Generated URL: https://cse.google.com/cse.js?cx=3164aa570fbbb474a, Expected: https://cse.google.com/cse.js?cx=3164aa570fbbb474a",
+          "timestamp": "2025-10-13T09:46:26.879Z"
+        },
+        {
+          "name": "GCS Element Configuration",
+          "passed": true,
+          "details": "Element class: gcse-search, History enabled: true",
+          "timestamp": "2025-10-13T09:46:26.880Z"
+        },
+        {
+          "name": "GCS Element Required Attributes",
+          "passed": true,
+          "details": "Has all required attributes: true, Attributes: 7",
+          "timestamp": "2025-10-13T09:46:26.880Z"
+        },
+        {
+          "name": "GCS Error Handling Configuration",
+          "passed": true,
+          "details": "Script error handler: true, Load timeout: true, Init check: true",
+          "timestamp": "2025-10-13T09:46:26.880Z"
+        },
+        {
+          "name": "GCS Fallback Behavior",
+          "passed": true,
+          "details": "Hide GCS: true, Show fallback: true",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "GCS Accessibility Features",
+          "passed": true,
+          "details": "ARIA labels: true, Live region: true, Announcements: true",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "GCS ARIA Attributes",
+          "passed": true,
+          "details": "Required ARIA attributes: true, Role: search",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        }
+      ],
+      "coverage": "Complete"
+    },
+    "3.4 - Local Search Fallback": {
+      "tests": [
+        {
+          "name": "GCS Fallback Behavior",
+          "passed": true,
+          "details": "Hide GCS: true, Show fallback: true",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Fallback Activation Logic",
+          "passed": true,
+          "details": "Correctly handled 4/4 scenarios",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Local Search Configuration",
+          "passed": true,
+          "details": "Index URL: https://example.com/index.json, Search keys: 4",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Local Search Fuse.js Options",
+          "passed": true,
+          "details": "Required options: true, Keys array: true",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Local Search Form Configuration",
+          "passed": true,
+          "details": "Form action: https://example.com/search/, Method: get",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Local Search Form Accessibility",
+          "passed": true,
+          "details": "ARIA labels: true, Input label: Search",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Local Search Script Loading",
+          "passed": true,
+          "details": "Should load: true, Scripts count: 3",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        },
+        {
+          "name": "Local Search Script Dependencies",
+          "passed": true,
+          "details": "Correct dependencies: true, Loading strategy: conditional",
+          "timestamp": "2025-10-13T09:46:26.881Z"
+        }
+      ],
+      "coverage": "Complete"
+    }
+  },
+  "details": [
+    {
+      "name": "Valid GCS Configuration Parsing",
+      "passed": true,
+      "details": "Enabled: true, Engine ID: 3164aa570fbbb474a, Valid format: true",
+      "timestamp": "2025-10-13T09:46:26.879Z"
+    },
+    {
+      "name": "GCS Engine ID Validation",
+      "passed": true,
+      "details": "Engine ID format validation: true",
+      "timestamp": "2025-10-13T09:46:26.879Z"
+    },
+    {
+      "name": "GCS Script Loading Configuration",
+      "passed": true,
+      "details": "Should load: true, URL includes engine ID: true, Async: true",
+      "timestamp": "2025-10-13T09:46:26.879Z"
+    },
+    {
+      "name": "GCS Script URL Generation",
+      "passed": true,
+      "details": "Generated URL: https://cse.google.com/cse.js?cx=3164aa570fbbb474a, Expected: https://cse.google.com/cse.js?cx=3164aa570fbbb474a",
+      "timestamp": "2025-10-13T09:46:26.879Z"
+    },
+    {
+      "name": "GCS Element Configuration",
+      "passed": true,
+      "details": "Element class: gcse-search, History enabled: true",
+      "timestamp": "2025-10-13T09:46:26.880Z"
+    },
+    {
+      "name": "GCS Element Required Attributes",
+      "passed": true,
+      "details": "Has all required attributes: true, Attributes: 7",
+      "timestamp": "2025-10-13T09:46:26.880Z"
+    },
+    {
+      "name": "GCS Error Handling Configuration",
+      "passed": true,
+      "details": "Script error handler: true, Load timeout: true, Init check: true",
+      "timestamp": "2025-10-13T09:46:26.880Z"
+    },
+    {
+      "name": "GCS Fallback Behavior",
+      "passed": true,
+      "details": "Hide GCS: true, Show fallback: true",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "GCS Accessibility Features",
+      "passed": true,
+      "details": "ARIA labels: true, Live region: true, Announcements: true",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "GCS ARIA Attributes",
+      "passed": true,
+      "details": "Required ARIA attributes: true, Role: search",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Fallback Activation Logic",
+      "passed": true,
+      "details": "Correctly handled 4/4 scenarios",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Local Search Configuration",
+      "passed": true,
+      "details": "Index URL: https://example.com/index.json, Search keys: 4",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Local Search Fuse.js Options",
+      "passed": true,
+      "details": "Required options: true, Keys array: true",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Local Search Form Configuration",
+      "passed": true,
+      "details": "Form action: https://example.com/search/, Method: get",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Local Search Form Accessibility",
+      "passed": true,
+      "details": "ARIA labels: true, Input label: Search",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Local Search Script Loading",
+      "passed": true,
+      "details": "Should load: true, Scripts count: 3",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Local Search Script Dependencies",
+      "passed": true,
+      "details": "Correct dependencies: true, Loading strategy: conditional",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Search Results Processing",
+      "passed": true,
+      "details": "Total results: 2, Has results: true",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Search Results Formatting",
+      "passed": true,
+      "details": "Count text: 2 results found, Results list: 2",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Search Configuration Validation",
+      "passed": true,
+      "details": "Correctly validated 4/4 configurations",
+      "timestamp": "2025-10-13T09:46:26.881Z"
+    },
+    {
+      "name": "Search Default Value Handling",
+      "passed": true,
+      "details": "Default values correctly applied to all configurations",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Invalid Configuration Error Handling",
+      "passed": true,
+      "details": "Correctly handled 3/3 invalid configurations",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Search Widget Configuration",
+      "passed": true,
+      "details": "Header: true, Body: true, Footer: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Search Widget Accessibility",
+      "passed": true,
+      "details": "Role: true, ARIA label: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Search Widget Responsive Behavior",
+      "passed": true,
+      "details": "Correctly configured 3/3 viewport sizes",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Compact Widget Mode Configuration",
+      "passed": true,
+      "details": "Compact class: search-widget-compact, Width: 240px",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Compact Widget Responsive Configuration",
+      "passed": true,
+      "details": "Mobile width: 200px, Tablet width: 240px",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Search ARIA Attributes",
+      "passed": true,
+      "details": "Widget role: search, Live region: polite",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Required ARIA Attributes",
+      "passed": true,
+      "details": "Has required ARIA attributes: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Keyboard Navigation Support",
+      "passed": true,
+      "details": "Input Enter key: true, Button focusable: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Focus Management",
+      "passed": true,
+      "details": "Restores focus: true, Visible focus: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Screen Reader Announcements",
+      "passed": true,
+      "details": "Search method: Google Custom Search, Live region: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Live Region Configuration",
+      "passed": true,
+      "details": "Polite: true, Atomic: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Script Loading Performance",
+      "passed": true,
+      "details": "GCS async: true, Preconnect: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Performance Optimization",
+      "passed": true,
+      "details": "Lazy load: true, Preload critical: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Search Initialization Performance",
+      "passed": true,
+      "details": "Timeout check: true, Fallback on timeout: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Performance Monitoring",
+      "passed": true,
+      "details": "Tracks load time: true, Tracks init time: true",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    },
+    {
+      "name": "Conditional Loading Logic",
+      "passed": true,
+      "details": "Correctly handled 3/3 loading scenarios",
+      "timestamp": "2025-10-13T09:46:26.882Z"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "summary": {
+    "totalTests": 70,
+    "passedTests": 67,
+    "failedTests": 3,
+    "successRate": "95.7%",
+    "timestamp": "2025-10-13T11:46:03.285Z"
+  },
+  "testCategories": {
+    "Built-in Shortcode Rendering": 23,
+    "Shortcode Styling": 5,
+    "Privacy Settings Integration": 15,
+    "Parameter Handling": 13,
+    "Error Handling": 6,
+    "Accessibility": 6,
+    "Performance": 9
+  },
+  "failedTests": [
+    {
+      "name": "Consistent Theme Styling",
+      "passed": false,
+      "details": "Border radius consistency: true, Dark mode support: false",
+      "timestamp": "2025-10-13T11:46:03.282Z"
+    },
+    {
+      "name": "Skip Link Provision",
+      "passed": false,
+      "details": "Shortcodes with external links have skip links: false",
+      "timestamp": "2025-10-13T11:46:03.285Z"
+    },
+    {
+      "name": "Script Loading Optimization",
+      "passed": false,
+      "details": "Script optimization coverage: 75% (3/4)",
+      "timestamp": "2025-10-13T11:46:03.285Z"
+    }
+  ],
+  "recommendations": [
+    "Excellent test coverage - consider adding integration tests for real-world scenarios"
+  ]
+}

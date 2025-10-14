@@ -13,7 +13,8 @@ async function runAnalyticsTests() {
   
   const testFiles = [
     'analytics-config-unit-tests.js',
-    'facebook-pixel-unit-tests.js'
+    'facebook-pixel-unit-tests.js',
+    'adsense-unit-tests.js'
   ];
   
   let totalPassed = 0;
@@ -50,6 +51,8 @@ async function runAnalyticsTests() {
     console.log('   • Privacy settings and Do Not Track functionality');
     console.log('   • Google Analytics 4 integration');
     console.log('   • Facebook Pixel configuration and event tracking');
+    console.log('   • Google AdSense integration and ad placement');
+    console.log('   • Responsive ad units and mobile optimization');
     console.log('   • GDPR compliance and cookie consent');
     console.log('   • Type validation and default values');
     console.log('   • Analytics manager coordination');
@@ -57,6 +60,8 @@ async function runAnalyticsTests() {
     console.log('\n🎯 Requirements Verified:');
     console.log('   ✅ Requirement 1.1: Google Analytics 4 Integration');
     console.log('   ✅ Requirement 1.2: Privacy settings and Do Not Track functionality');
+    console.log('   ✅ Requirement 2.1: Google AdSense Integration');
+    console.log('   ✅ Requirement 2.5: Responsive ad units and mobile optimization');
     console.log('   ✅ Requirement 7.1: Facebook Pixel Integration');
     console.log('   ✅ Requirement 7.5: Privacy compliance and GDPR requirements');
     

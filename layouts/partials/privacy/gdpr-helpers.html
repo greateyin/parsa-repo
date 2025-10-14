@@ -201,7 +201,7 @@
       }
       
       // Log GDPR applicability (development only)
-      if ({{ site.IsServer }}) {
+      if ({{ hugo.IsServer }}) {
         console.log('GDPR Applicable:', this.isGDPRApplicable());
         console.log('Active Processing:', this.getActiveProcessing());
       }
