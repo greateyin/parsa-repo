@@ -115,18 +115,21 @@
 </section>
 {{ end }}
 
+{{ $newsletter := .Site.Params.newsletter | default dict }}
+{{ $newsletterEnabled := $newsletter.enabled | default false }}
+
 <!-- Newsletter/CTA Section (Optional) -->
-{{ if .Site.Params.newsletter.enabled }}
+{{ if $newsletterEnabled }}
 <section class="py-16">
   <div class="container mx-auto px-4">
     <div class="max-w-2xl mx-auto text-center bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8 md:p-12">
       <h2 class="text-3xl font-bold mb-4">
-        {{ .Site.Params.newsletter.title | default "Stay Updated" }}
+        {{ $newsletter.title | default "Stay Updated" }}
       </h2>
       <p class="text-muted-foreground mb-8">
-        {{ .Site.Params.newsletter.description | default "Get the latest articles delivered straight to your inbox" }}
+        {{ $newsletter.description | default "Get the latest articles delivered straight to your inbox" }}
       </p>
-      
+
       <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
         <input type="email" 
                placeholder="{{ i18n "emailPlaceholder" | default "Enter your email" }}"

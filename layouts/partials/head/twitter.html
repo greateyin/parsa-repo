@@ -1,12 +1,13 @@
+{{ $openGraph := .Site.Params.openGraph | default dict }}
 {{ if .Site.Params.enableTwitterCard | default true }}
 <!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="{{ .Params.twitter.card | default "summary_large_image" }}" />
-{{ with .Site.Params.openGraph.twitterSite }}<meta name="twitter:site" content="{{ . }}" />{{ end }}
-{{ with .Site.Params.openGraph.twitterCreator }}<meta name="twitter:creator" content="{{ . }}" />{{ end }}
+{{ with $openGraph.twitterSite }}<meta name="twitter:site" content="{{ . }}" />{{ end }}
+{{ with $openGraph.twitterCreator }}<meta name="twitter:creator" content="{{ . }}" />{{ end }}
 <meta name="twitter:title" content="{{ with .Params.twitter.title }}{{ . }}{{ else }}{{ .Title }}{{ end }}" />
 <meta name="twitter:description" content="{{ with .Params.twitter.description }}{{ . }}{{ else }}{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
 
-{{ with .Params.twitter.image | default .Params.image | default .Site.Params.openGraph.defaultImage }}
+{{ with .Params.twitter.image | default .Params.image | default $openGraph.defaultImage }}
 <meta name="twitter:image" content="{{ . | absURL }}" />
 {{ end }}
 

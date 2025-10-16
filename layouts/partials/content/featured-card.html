@@ -4,12 +4,19 @@
 {{ $image := "" }}
 {{ $readTime := 5 }}
 {{ $author := "Anonymous" }}
+{{ $siteAuthorName := "" }}
+
+{{ with .Site.Params.author }}
+  {{ $siteAuthorName = .name | default "" }}
+{{ end }}
 
 {{/* Handle different contexts */}}
 {{ if .Params }}
   {{ $image = .Params.image | default "/images/placeholder.jpg" }}
   {{ $readTime = .Params.readTime | default .ReadingTime | default 5 }}
-  {{ $author = .Params.author | default .Site.Params.author.name | default "Anonymous" }}
+  {{ $author = .Params.author | default $siteAuthorName | default "Anonymous" }}
+{{ else if $siteAuthorName }}
+  {{ $author = $siteAuthorName }}
 {{ end }}
 
 <article class="group relative overflow-hidden rounded-2xl border border-border/50 bg-card hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700 card-hover-effect hover:border-primary/30 scroll-fade-in will-change-transform gpu-accelerated">

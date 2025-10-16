@@ -7,6 +7,13 @@
 {{ $context := .context }}
 {{ $type := .type }}
 {{ $fallback := "" }}
+{{ $siteAuthorName := "" }}
+
+{{ with $context.Site.Params }}
+  {{ with .author }}
+    {{ $siteAuthorName = .name | default "" }}
+  {{ end }}
+{{ end }}
 
 {{ if eq $type "excerpt" }}
   {{/* Fallback for missing excerpts */}}
@@ -30,8 +37,8 @@
   {{/* Fallback for missing author */}}
   {{ if $context.Params.author }}
     {{ $fallback = $context.Params.author }}
-  {{ else if $context.Site.Params.author.name }}
-    {{ $fallback = $context.Site.Params.author.name }}
+  {{ else if $siteAuthorName }}
+    {{ $fallback = $siteAuthorName }}
   {{ else }}
     {{ $fallback = i18n "defaultAuthor" | default "Anonymous" }}
   {{ end }}

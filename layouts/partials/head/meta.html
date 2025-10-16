@@ -1,6 +1,15 @@
 <!-- Primary SEO Meta Tags -->
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ with .Summary }}{{ . | truncate 160 }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}">
-<meta name="author" content="{{ with .Params.author }}{{ . }}{{ else }}{{ .Site.Params.author.name }}{{ end }}">
+{{- $authorName := "" -}}
+{{- with .Params.author -}}
+  {{- $authorName = . -}}
+{{- else -}}
+  {{- with .Site.Params.author -}}
+    {{- $authorName = .name | default "" -}}
+  {{- end -}}
+{{- end -}}
+{{- $seoConfig := .Site.Params.seo | default dict -}}
+<meta name="author" content="{{ $authorName | default (.Site.Title | default "Anonymous") }}">
 
 <!-- Keywords Meta Tag (if specified) -->
 {{ with .Params.keywords }}
@@ -53,15 +62,15 @@
 <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
 
 <!-- Preconnect to external domains for performance -->
-{{ if .Site.Params.seo.preconnect }}
-  {{ range .Site.Params.seo.preconnect }}
+{{ if $seoConfig.preconnect }}
+  {{ range $seoConfig.preconnect }}
     <link rel="preconnect" href="{{ . }}">
   {{ end }}
 {{ end }}
 
 <!-- DNS Prefetch for performance -->
-{{ if .Site.Params.seo.dnsPrefetch }}
-  {{ range .Site.Params.seo.dnsPrefetch }}
+{{ if $seoConfig.dnsPrefetch }}
+  {{ range $seoConfig.dnsPrefetch }}
     <link rel="dns-prefetch" href="{{ . }}">
   {{ end }}
 {{ end }}
