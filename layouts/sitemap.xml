@@ -21,10 +21,10 @@
       {{ if hugo.IsMultilingual }}
         {{ range .Site.Languages }}
           {{ if ne . $.Site.Language }}
-            <xhtml:link rel="alternate" hreflang="{{ .Lang }}" href="{{ $.Permalink | relLangURL . }}" />
+            <xhtml:link rel="alternate" hreflang="{{ .Lang }}" href="{{ $.Permalink | relLangURL }}" />
           {{ end }}
         {{ end }}
-        <xhtml:link rel="alternate" hreflang="x-default" href="{{ .Permalink | relLangURL .Site.DefaultContentLanguage }}" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="{{ .Permalink | relLangURL }}" />
       {{ end }}
       
       <!-- Image sitemap for articles with images -->

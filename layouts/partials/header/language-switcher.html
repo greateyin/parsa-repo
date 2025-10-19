@@ -44,7 +44,7 @@
       <!-- Language Options -->
       {{ range .Site.Languages }}
         {{ $isCurrentLang := eq . $.Site.Language }}
-        <a href="{{ if $isCurrentLang }}#{{ else }}{{ $.Permalink | relLangURL . }}{{ end }}" 
+        <a href="{{ if $isCurrentLang }}#{{ else }}{{ $.Permalink | relLangURL }}{{ end }}" 
            class="group flex items-center px-4 py-3 text-sm transition-colors duration-200 {{ if $isCurrentLang }}bg-muted text-primary font-medium{{ else }}text-foreground hover:bg-muted/50 hover:text-primary{{ end }}"
            role="menuitem"
            {{ if $isCurrentLang }}aria-current="true"{{ end }}

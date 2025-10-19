@@ -76,7 +76,7 @@
           <div class="space-y-1">
             {{ range .Site.Languages }}
               {{ $isCurrentLang := eq . $.Site.Language }}
-              <a href="{{ if $isCurrentLang }}#{{ else }}{{ $.Permalink | relLangURL . }}{{ end }}" 
+              <a href="{{ if $isCurrentLang }}#{{ else }}{{ $.Permalink | relLangURL }}{{ end }}" 
                  class="flex items-center touch-target px-4 py-3 responsive-text-sm font-medium transition-all duration-200 group {{ if $isCurrentLang }}text-primary bg-muted/30 border-l-4 border-primary{{ else }}text-muted-foreground hover:text-primary hover:bg-muted/30 rounded-lg{{ end }}"
                  {{ if $isCurrentLang }}aria-current="true"{{ end }}
                  hreflang="{{ .Lang }}"

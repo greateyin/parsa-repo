@@ -34,10 +34,10 @@
 {{ if hugo.IsMultilingual }}
   {{ range .Site.Languages }}
     {{ if ne . $.Site.Language }}
-      <link rel="alternate" hreflang="{{ .Lang }}" href="{{ $.Permalink | relLangURL . }}">
+      <link rel="alternate" hreflang="{{ .Lang }}" href="{{ $.Permalink | relLangURL }}">
     {{ end }}
   {{ end }}
-  <link rel="alternate" hreflang="x-default" href="{{ .Permalink | relLangURL .Site.DefaultContentLanguage }}">
+  <link rel="alternate" hreflang="x-default" href="{{ .Permalink | relLangURL }}">
 {{ end }}
 
 <!-- RSS Feed -->

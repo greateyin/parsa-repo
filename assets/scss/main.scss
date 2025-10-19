@@ -1,0 +1,99 @@
+// ========================================
+// Main SCSS File - 主要樣式檔案
+// ========================================
+
+// 1. Variables
+@import 'variables';
+
+// 2. Critical fixes for search box and language switcher
+.col-lg-4 .widget.search-box {
+  padding: 0.5rem 0.75rem !important;
+  margin-bottom: 1rem !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 8px !important;
+  background-color: #f8f9fa !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  max-width: 100% !important;
+  
+  form {
+    position: relative !important;
+    margin: 0 !important;
+  }
+  
+  input.form-control {
+    padding: 0.375rem 0.5rem 0.375rem 2.25rem !important;
+    font-size: 0.875rem !important;
+    height: 36px !important;
+    border-radius: 6px !important;
+    border: 1px solid #ced4da !important;
+    background-color: #ffffff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    
+    &:focus {
+      border-color: #86b7fe !important;
+      outline: 0 !important;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+    }
+  }
+  
+  i.ti-search {
+    position: absolute !important;
+    left: 0.75rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #6c757d !important;
+    font-size: 0.875rem !important;
+    z-index: 3 !important;
+    pointer-events: none !important;
+  }
+}
+
+// ========================================
+// 3. Modern Components - 現代化組件
+// ========================================
+
+// 載入新的現代化組件
+@import 'components/modern-cards';
+@import 'components/modern-header';
+
+// ========================================
+// 4. Legacy Compatibility - 舊版兼容性
+// ========================================
+
+// Language switcher z-index fix
+.language-switcher {
+  position: relative !important;
+  z-index: 1650 !important;
+  
+  .nav-item.dropdown {
+    position: relative !important;
+    z-index: 1650 !important;
+  }
+  
+  .dropdown-menu {
+    z-index: 2100 !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+.glass-navigation .language-switcher,
+.glass-navigation .language-switcher .dropdown {
+  position: relative;
+  z-index: 1650;
+}
+
+.glass-navigation .dropdown-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.1);
+  z-index: 2100;
+  pointer-events: auto;
+  position: absolute;
+  top: calc(100% + 0.5rem) !important;
+  left: 0 !important;
+  transform: none !important;
+}

@@ -1,0 +1,308 @@
+// ========================================
+// Modern Header Component - 現代化導航
+// 參考 referenceSite 的 Header 設計
+// ========================================
+
+.modern-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  border-bottom: 1px solid $border;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  
+  // 支援 backdrop-filter 的瀏覽器
+  @supports (backdrop-filter: blur(12px)) {
+    background: rgba(255, 255, 255, 0.6);
+  }
+  
+  .header-container {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem; // 64px
+    
+    @include media-breakpoint-up(md) {
+      height: 4rem;
+    }
+  }
+  
+  // Logo 區域
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    text-decoration: none;
+    
+    .brand-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: $border-radius-lg;
+      background: $hero-gradient;
+    }
+    
+    .brand-text {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      background: $hero-gradient;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+  
+  // 主導航
+  .header-nav {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+    
+    @include media-breakpoint-up(md) {
+      display: flex;
+    }
+    
+    .nav-link {
+      padding: $spacing-2 $spacing-4;
+      border-radius: $border-radius-md;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+      text-decoration: none;
+      transition: $transition-base;
+      
+      &:hover {
+        color: $text-primary;
+        background-color: $muted;
+      }
+      
+      &.active {
+        background-color: $accent;
+        color: $accent-foreground;
+      }
+    }
+  }
+  
+  // 右側動作區
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    
+    .search-button {
+      display: none;
+      
+      @include media-breakpoint-up(md) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: $border-radius-md;
+        color: $text-secondary;
+        cursor: pointer;
+        transition: $transition-base;
+        
+        &:hover {
+          color: $text-primary;
+          background-color: $muted;
+        }
+        
+        svg {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    }
+    
+    .mobile-menu-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      background: transparent;
+      border: none;
+      border-radius: $border-radius-md;
+      color: $text-secondary;
+      cursor: pointer;
+      transition: $transition-base;
+      
+      @include media-breakpoint-up(md) {
+        display: none;
+      }
+      
+      &:hover {
+        color: $text-primary;
+        background-color: $muted;
+      }
+      
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+  }
+  
+  // 手機選單
+  .mobile-menu {
+    display: block;
+    padding: $spacing-4 0;
+    border-top: 1px solid $border;
+    
+    @include media-breakpoint-up(md) {
+      display: none;
+    }
+    
+    .mobile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-2;
+      
+      .nav-link {
+        display: block;
+        padding: $spacing-2 $spacing-4;
+        border-radius: $border-radius-md;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-secondary;
+        text-decoration: none;
+        transition: $transition-base;
+        
+        &:hover {
+          color: $text-primary;
+          background-color: $muted;
+        }
+        
+        &.active {
+          background-color: $accent;
+          color: $accent-foreground;
+        }
+      }
+      
+      .search-link {
+        display: flex;
+        align-items: center;
+        gap: $spacing-2;
+        padding: $spacing-2 $spacing-4;
+        border-radius: $border-radius-md;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-secondary;
+        text-decoration: none;
+        transition: $transition-base;
+        
+        &:hover {
+          color: $text-primary;
+          background-color: $muted;
+        }
+        
+        svg {
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+    }
+  }
+  
+  // 隱藏狀態
+  &.mobile-menu-hidden .mobile-menu {
+    display: none;
+  }
+}
+
+// 分類過濾按鈕
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-3;
+  margin-bottom: $spacing-12;
+  
+  .filter-button {
+    @include btn-base;
+    padding: $spacing-2 $spacing-4;
+    border-radius: 9999px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    
+    &.active {
+      background-color: $primary;
+      border-color: $primary;
+      color: $primary-foreground;
+    }
+    
+    &:not(.active) {
+      background-color: transparent;
+      border-color: $border;
+      color: $text-secondary;
+      
+      &:hover {
+        border-color: $primary;
+        color: $primary;
+      }
+    }
+  }
+}
+
+// CTA 區塊
+.cta-section {
+  background: $hero-gradient;
+  padding: 4rem 0;
+  margin-top: 5rem;
+  
+  .cta-content {
+    @include container;
+    text-align: center;
+    color: white;
+    
+    .cta-title {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-4;
+    }
+    
+    .cta-description {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: $spacing-8;
+      max-width: 32rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-4;
+      justify-content: center;
+      
+      .btn {
+        border-radius: 9999px;
+        
+        &.btn-secondary {
+          background-color: white;
+          color: $primary;
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+          }
+        }
+        
+        &.btn-outline {
+          background-color: rgba(255, 255, 255, 0.1);
+          color: white;
+          border-color: rgba(255, 255, 255, 0.2);
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+  }
+}

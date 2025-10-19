@@ -5,7 +5,7 @@
 baseURL = "https://example.com"
 languageCode = "en-us"
 title = "Parsa Hugo Demo"
-theme = "parsa-hugo"
+# theme = "parsa-hugo"  # 註解掉，因為這是主題本身
 
 # Hugo version requirements
 [module]

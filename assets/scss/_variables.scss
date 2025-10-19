@@ -1,0 +1,101 @@
+// ========================================
+// SASS Variables - 全域變數定義
+// ========================================
+
+// 主色調 - 參考 referenceSite 設計
+$primary: hsl(217, 91%, 35%);        // --primary: 217 91% 35%
+$primary-foreground: hsl(0, 0%, 100%);
+$accent: hsl(199, 89%, 48%);         // --accent: 199 89% 48%
+$accent-foreground: hsl(0, 0%, 100%);
+
+// 舊版兼容
+$primary-blue: $primary;
+$primary-blue-light: lighten($primary, 10%);
+$primary-blue-dark: darken($primary, 10%);
+
+// 設計系統色彩 - 參考 referenceSite
+$background: hsl(0, 0%, 100%);       // --background: 0 0% 100%
+$foreground: hsl(222, 47%, 11%);     // --foreground: 222 47% 11%
+$card: hsl(0, 0%, 100%);             // --card: 0 0% 100%
+$card-foreground: hsl(222, 47%, 11%);
+$muted: hsl(210, 40%, 96%);          // --muted: 210 40% 96%
+$muted-foreground: hsl(215, 16%, 47%);
+$border: hsl(214, 32%, 91%);         // --border: 214 32% 91%
+$input: hsl(214, 32%, 91%);
+
+// 舊版兼容映射
+$gray-50: $muted;
+$gray-100: lighten($muted, 2%);
+$gray-200: $border;
+$gray-300: darken($border, 5%);
+$gray-400: $muted-foreground;
+$gray-500: darken($muted-foreground, 10%);
+$gray-600: darken($muted-foreground, 20%);
+$gray-700: lighten($foreground, 20%);
+$gray-800: lighten($foreground, 10%);
+$gray-900: $foreground;
+
+// 文字顏色 - 對應設計系統
+$text-primary: $foreground;
+$text-secondary: $muted-foreground;
+$text-muted: lighten($muted-foreground, 15%);
+
+// 背景顏色 - 對應設計系統
+$bg-primary: $background;
+$bg-secondary: $muted;
+
+// 漸變效果 - 參考設計
+$hero-gradient: linear-gradient(135deg, #{$primary}, #{$accent});
+$card-hover-shadow: 0 10px 40px -10px rgba(#{red($primary)}, #{green($primary)}, #{blue($primary)}, 0.2);
+
+// 字體系統
+$font-family-sans: 'Noto Sans TC', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+$font-size-4xl: 2.25rem;
+$font-size-5xl: 3rem;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+$line-height-normal: 1.5;
+$line-height-tight: 1.25;
+
+// 間距系統
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.25rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+
+// 邊框和圓角
+$border-width: 1px;
+$border-color: #e9ecef;
+$border-radius: 0.375rem;
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 0.75rem;
+
+// Z-Index 層級
+$z-index-header: 1600;
+$z-index-language-switcher: 1650;
+$z-index-dropdown-menu: 2100;
+
+// 陰影系統 - 現代化設計
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+
+// 過渡效果
+$transition-fast: 150ms ease-in-out;
+$transition-base: 250ms ease-in-out;
