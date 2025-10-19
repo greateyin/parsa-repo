@@ -24,9 +24,15 @@
       </h1>
       
       <!-- Article Meta -->
+      {{ $siteAuthorName := "" }}
+      {{ with .Site.Params.author }}
+        {{ $siteAuthorName = .name | default "" }}
+      {{ end }}
+      {{ $pageAuthor := .Params.author | default $siteAuthorName }}
+      {{ $features := .Site.Params.features | default dict }}
       <div class="flex flex-wrap items-center justify-center gap-4 text-muted-foreground text-sm mb-6">
         <!-- Author -->
-        {{ with .Params.author | default .Site.Params.author.name }}
+        {{ with $pageAuthor }}
         <div class="flex items-center">
           <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
@@ -109,7 +115,7 @@
     {{ end }}
     
     <!-- Social Sharing -->
-    {{ if .Site.Params.features.socialSharing }}
+    {{ if $features.socialSharing }}
       {{ partial "footer/social-share.html" . }}
     {{ end }}
     

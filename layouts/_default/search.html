@@ -12,12 +12,14 @@
     </div>
 
     <!-- Search Widget -->
+    {{ $mainSections := .Site.Params.mainSections | default (slice "posts" "post" "blog") }}
     <div class="relative max-w-2xl mx-auto mb-8">
       {{ partial "search/search-widget.html" . }}
     </div>
     
     <!-- Google Custom Search Results -->
-    {{ $gcsId := .Site.Params.gcs_engine_id.value }}
+    {{ $gcs := .Site.Params.gcs_engine_id | default dict }}
+    {{ $gcsId := $gcs.value | default "" }}
     {{ if $gcsId }}
     <div class="max-w-4xl mx-auto mb-8">
       {{ partial "search/google-custom-search.html" . }}
@@ -39,7 +41,7 @@
     <div id="initial-content" class="mt-12">
       <h2 class="text-2xl font-bold mb-6">{{ i18n "recentArticles" | default "Recent Articles" }}</h2>
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {{ range first 6 (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+        {{ range first 6 (where .Site.RegularPages "Type" "in" $mainSections) }}
           {{ partial "content/article-card.html" . }}
         {{ end }}
       </div>

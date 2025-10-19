@@ -1,3 +1,6 @@
+{{- $colors := .Site.Params.colors | default dict -}}
+{{- $theme := .Site.Params.theme | default dict -}}
+{{- $primaryColor := $colors.primary | default ($theme.primaryColor | default "#3b82f6") -}}
 <?xml version="1.0" encoding="utf-8"?>
 <browserconfig>
     <msapplication>
@@ -6,7 +9,7 @@
             <square150x150logo src="{{ "images/mstile-150x150.png" | relURL }}"/>
             <square310x310logo src="{{ "images/mstile-310x310.png" | relURL }}"/>
             <wide310x150logo src="{{ "images/mstile-310x150.png" | relURL }}"/>
-            <TileColor>{{ .Site.Params.theme.primaryColor | default "#3b82f6" }}</TileColor>
+            <TileColor>{{ $primaryColor }}</TileColor>
         </tile>
         <notification>
             <polling-uri src="{{ "notifications/polling.xml" | relURL }}"/>

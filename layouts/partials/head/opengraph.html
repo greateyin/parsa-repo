@@ -1,12 +1,13 @@
+{{ $openGraph := .Site.Params.openGraph | default dict }}
 {{ if .Site.Params.enableOpenGraph | default true }}
 <!-- OpenGraph Meta Tags -->
 <meta property="og:title" content="{{ with .Params.og.title }}{{ . }}{{ else }}{{ .Title }}{{ end }}" />
 <meta property="og:description" content="{{ with .Params.og.description }}{{ . }}{{ else }}{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
 <meta property="og:url" content="{{ .Permalink }}" />
-<meta property="og:site_name" content="{{ .Site.Params.openGraph.siteName | default .Site.Title }}" />
+<meta property="og:site_name" content="{{ $openGraph.siteName | default .Site.Title }}" />
 
-{{ with .Params.image | default .Params.og.image | default .Site.Params.openGraph.defaultImage }}
+{{ with .Params.image | default .Params.og.image | default $openGraph.defaultImage }}
 <meta property="og:image" content="{{ . | absURL }}" />
 {{ end }}
 
@@ -18,7 +19,7 @@
 {{ range .Params.tags }}<meta property="article:tag" content="{{ . }}" />{{ end }}
 {{ end }}
 
-{{ with .Site.Params.openGraph.facebookAppId }}
+{{ with $openGraph.facebookAppId }}
 <meta property="fb:app_id" content="{{ . }}" />
 {{ end }}
 
@@ -26,7 +27,7 @@
 <meta property="og:image:alt" content="{{ . }}" />
 {{ end }}
 
-{{ if .Site.Params.openGraph.locale }}
-<meta property="og:locale" content="{{ .Site.Params.openGraph.locale }}" />
+{{ if $openGraph.locale }}
+<meta property="og:locale" content="{{ $openGraph.locale }}" />
 {{ end }}
 {{ end }}

@@ -1,3 +1,4 @@
+{{ $seoConfig := .Site.Params.seo | default dict }}
 User-agent: *
 {{ if hugo.IsProduction }}
 # Production robots.txt
@@ -21,8 +22,8 @@ Crawl-delay: 1
 # Sitemap location
 Sitemap: {{ .Site.BaseURL }}sitemap.xml
 
-{{ if .Site.Params.seo.additionalSitemaps }}
-{{ range .Site.Params.seo.additionalSitemaps }}
+{{ if $seoConfig.additionalSitemaps }}
+{{ range $seoConfig.additionalSitemaps }}
 Sitemap: {{ . }}
 {{ end }}
 {{ end }}
@@ -43,8 +44,8 @@ User-agent: Slurp
 Allow: /
 
 # Block problematic bots (optional)
-{{ if .Site.Params.seo.blockBots }}
-{{ range .Site.Params.seo.blockBots }}
+{{ if $seoConfig.blockBots }}
+{{ range $seoConfig.blockBots }}
 User-agent: {{ . }}
 Disallow: /
 {{ end }}
