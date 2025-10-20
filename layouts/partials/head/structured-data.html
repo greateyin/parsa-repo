@@ -1,4 +1,11 @@
 {{ $structuredData := dict }}
+{{ $siteAuthor := .Site.Params.author | default dict }}
+{{ $siteAuthorName := $siteAuthor.name | default "" }}
+{{ $siteAuthorURL := $siteAuthor.url | default "" }}
+{{ $siteAuthorImage := $siteAuthor.image | default "" }}
+{{ $seoConfig := .Site.Params.seo | default dict }}
+{{ $features := .Site.Params.features | default dict }}
+{{ $organization := .Site.Params.organization }}
 
 <!-- Website Schema -->
 {{ if .IsHome }}
@@ -11,26 +18,26 @@
     "inLanguage" .Site.Language.Lang
   }}
   
-  {{ if .Site.Params.author }}
+  {{ if $siteAuthorName }}
     {{ $author := dict
       "@type" "Person"
-      "name" .Site.Params.author.name
+      "name" $siteAuthorName
     }}
-    {{ if .Site.Params.author.url }}
-      {{ $author = $author | merge (dict "url" .Site.Params.author.url) }}
+    {{ if $siteAuthorURL }}
+      {{ $author = $author | merge (dict "url" $siteAuthorURL) }}
     {{ end }}
-    {{ if .Site.Params.author.image }}
-      {{ $author = $author | merge (dict "image" (.Site.Params.author.image | absURL)) }}
+    {{ if $siteAuthorImage }}
+      {{ $author = $author | merge (dict "image" ($siteAuthorImage | absURL)) }}
     {{ end }}
     {{ $websiteSchema = $websiteSchema | merge (dict "author" $author) }}
   {{ end }}
   
-  {{ if .Site.Params.seo.sameAs }}
-    {{ $websiteSchema = $websiteSchema | merge (dict "sameAs" .Site.Params.seo.sameAs) }}
+  {{ with $seoConfig.sameAs }}
+    {{ $websiteSchema = $websiteSchema | merge (dict "sameAs" .) }}
   {{ end }}
   
   <!-- Search Action for the website -->
-  {{ if .Site.Params.features.search }}
+  {{ if $features.search }}
     {{ $searchAction := dict
       "@type" "SearchAction"
       "target" (printf "%s/search/?q={search_term_string}" .Site.BaseURL)
@@ -51,20 +58,20 @@
     "description" .Site.Params.description
   }}
   
-  {{ if .Site.Params.organization }}
-    {{ if .Site.Params.organization.logo }}
-      {{ $organizationSchema = $organizationSchema | merge (dict "logo" (.Site.Params.organization.logo | absURL)) }}
+  {{ with $organization }}
+    {{ with .logo }}
+      {{ $organizationSchema = $organizationSchema | merge (dict "logo" (. | absURL)) }}
     {{ end }}
-    {{ if .Site.Params.organization.address }}
-      {{ $organizationSchema = $organizationSchema | merge (dict "address" .Site.Params.organization.address) }}
+    {{ with .address }}
+      {{ $organizationSchema = $organizationSchema | merge (dict "address" .) }}
     {{ end }}
-    {{ if .Site.Params.organization.contactPoint }}
-      {{ $organizationSchema = $organizationSchema | merge (dict "contactPoint" .Site.Params.organization.contactPoint) }}
+    {{ with .contactPoint }}
+      {{ $organizationSchema = $organizationSchema | merge (dict "contactPoint" .) }}
     {{ end }}
   {{ end }}
   
-  {{ if .Site.Params.seo.sameAs }}
-    {{ $organizationSchema = $organizationSchema | merge (dict "sameAs" .Site.Params.seo.sameAs) }}
+  {{ with $seoConfig.sameAs }}
+    {{ $organizationSchema = $organizationSchema | merge (dict "sameAs" .) }}
   {{ end }}
   
   {{ $structuredData = $organizationSchema }}
@@ -84,16 +91,16 @@
   }}
   
   <!-- Article Author -->
-  {{ $authorName := .Params.author | default .Site.Params.author.name }}
+  {{ $authorName := .Params.author | default $siteAuthorName }}
   {{ $author := dict
     "@type" "Person"
     "name" $authorName
   }}
-  {{ if .Site.Params.author.url }}
-    {{ $author = $author | merge (dict "url" .Site.Params.author.url) }}
+  {{ if $siteAuthorURL }}
+    {{ $author = $author | merge (dict "url" $siteAuthorURL) }}
   {{ end }}
-  {{ if .Site.Params.author.image }}
-    {{ $author = $author | merge (dict "image" (.Site.Params.author.image | absURL)) }}
+  {{ if $siteAuthorImage }}
+    {{ $author = $author | merge (dict "image" ($siteAuthorImage | absURL)) }}
   {{ end }}
   {{ $articleSchema = $articleSchema | merge (dict "author" $author) }}
   
@@ -103,17 +110,17 @@
     "name" .Site.Title
     "url" .Site.BaseURL
   }}
-  {{ if .Site.Params.organization.logo }}
+  {{ with $organization.logo }}
     {{ $logo := dict
       "@type" "ImageObject"
-      "url" (.Site.Params.organization.logo | absURL)
+      "url" (. | absURL)
     }}
     {{ $publisher = $publisher | merge (dict "logo" $logo) }}
   {{ end }}
   {{ $articleSchema = $articleSchema | merge (dict "publisher" $publisher) }}
   
   <!-- Article Image -->
-  {{ $image := .Params.image | default .Site.Params.seo.defaultImage }}
+  {{ $image := .Params.image | default $seoConfig.defaultImage }}
   {{ if $image }}
     {{ $imageSchema := dict
       "@type" "ImageObject"

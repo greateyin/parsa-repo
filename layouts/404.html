@@ -1,4 +1,6 @@
 {{ define "main" }}
+{{ $features := .Site.Params.features | default dict }}
+{{ $mainSections := .Site.Params.mainSections | default (slice "posts" "post" "blog") }}
 <div class="container mx-auto px-4 py-16">
   <div class="max-w-2xl mx-auto text-center">
     <!-- 404 Error Illustration -->
@@ -90,7 +92,7 @@
         {{ end }}
         
         <!-- Search Link -->
-        {{ if .Site.Params.features.search }}
+        {{ if $features.search }}
         <a href="{{ "/search/" | relLangURL }}" 
            class="flex items-center p-4 bg-card border border-border rounded-lg hover:shadow-md hover:border-primary/20 transition-all group">
           <div class="w-10 h-10 bg-muted/50 rounded-lg flex items-center justify-center mr-3 group-hover:bg-muted transition-colors">
@@ -108,7 +110,7 @@
     </div>
     
     <!-- Recent Articles (if available) -->
-    {{ $recentPages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+    {{ $recentPages := where .Site.RegularPages "Type" "in" $mainSections }}
     {{ $recentPages = $recentPages | first 3 }}
     {{ if $recentPages }}
     <div class="border-t border-border pt-8 mt-8">

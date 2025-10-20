@@ -1,4 +1,9 @@
-{{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+{{- $mainSections := .Site.Params.mainSections | default (slice "posts" "post" "blog") -}}
+{{- $pages := where .Site.RegularPages "Type" "in" $mainSections -}}
+{{- $siteAuthorName := "" -}}
+{{- with .Site.Params.author -}}
+  {{- $siteAuthorName = .name | default "" -}}
+{{- end -}}
 {{- $pages = where $pages "Params.draft" "!=" true -}}
 [
 {{- range $index, $page := $pages -}}
@@ -22,7 +27,7 @@
         {{ $tag | jsonify }}
       {{- end -}}
     ],
-    "author": {{ with $page.Params.author }}{{ . | jsonify }}{{ else }}{{ .Site.Params.author.name | jsonify }}{{ end }},
+    "author": {{ with $page.Params.author }}{{ . | jsonify }}{{ else }}{{ $siteAuthorName | default ($page.Site.Title | default "Anonymous") | jsonify }}{{ end }},
     "image": {{ with $page.Params.image }}{{ . | absURL | jsonify }}{{ else }}""{{ end }},
     "readTime": {{ with $page.Params.readTime }}{{ . }}{{ else }}{{ div (countwords $page.Content) 200 }}{{ end }},
     "wordCount": {{ $page.WordCount }}

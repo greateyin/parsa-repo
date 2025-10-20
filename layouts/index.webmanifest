@@ -1,11 +1,15 @@
-{{- $manifest := dict "name" .Site.Title "short_name" (.Site.Params.pwa.shortName | default .Site.Title) -}}
-{{- $manifest = $manifest | merge (dict "description" (.Site.Params.pwa.description | default .Site.Params.description)) -}}
+{{- $colors := .Site.Params.colors | default dict -}}
+{{- $theme := .Site.Params.theme | default dict -}}
+{{- $primaryColor := $colors.primary | default ($theme.primaryColor | default "#3b82f6") -}}
+{{- $pwa := .Site.Params.pwa | default dict -}}
+{{- $manifest := dict "name" .Site.Title "short_name" ($pwa.shortName | default .Site.Title) -}}
+{{- $manifest = $manifest | merge (dict "description" ($pwa.description | default .Site.Params.description)) -}}
 {{- $manifest = $manifest | merge (dict "start_url" "/") -}}
 {{- $manifest = $manifest | merge (dict "scope" "/") -}}
 {{- $manifest = $manifest | merge (dict "display" "standalone") -}}
 {{- $manifest = $manifest | merge (dict "orientation" "portrait-primary") -}}
-{{- $manifest = $manifest | merge (dict "theme_color" (.Site.Params.pwa.themeColor | default .Site.Params.theme.primaryColor | default "#3b82f6")) -}}
-{{- $manifest = $manifest | merge (dict "background_color" (.Site.Params.pwa.backgroundColor | default "#ffffff")) -}}
+{{- $manifest = $manifest | merge (dict "theme_color" ($pwa.themeColor | default $primaryColor)) -}}
+{{- $manifest = $manifest | merge (dict "background_color" ($pwa.backgroundColor | default "#ffffff")) -}}
 
 {{- $icons := slice -}}
 {{- $icons = $icons | append (dict "src" "/images/icon-192x192.png" "sizes" "192x192" "type" "image/png") -}}

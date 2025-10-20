@@ -12,7 +12,10 @@
   Requirements: 2.1, 2.4, 6.2
 */}}
 
-{{- $adsense := site.Params.adsense -}}
+{{- $adsense := site.Params.adsense | default dict -}}
+{{- $adsenseEnabled := $adsense.enabled | default false -}}
+{{- $adsenseClient := $adsense.client | default "" -}}
+{{- $adsenseConfigured := and $adsenseEnabled $adsenseClient -}}
 {{- $privacy := site.Params.privacy | default dict -}}
 {{- $performance := site.Params.performance | default dict -}}
 {{- $position := "head" -}}
@@ -20,7 +23,7 @@
 {{- if isset . "position" }}{{ $position = .position }}{{ end }}
 {{- if isset . "context" }}{{ $context = .context }}{{ end }}
 
-{{- if $adsense.enabled -}}
+{{- if $adsenseConfigured -}}
 
 {{- /* Ad placement configuration */ -}}
 {{- $placements := $adsense.placements | default dict -}}
@@ -63,7 +66,7 @@
     // Initialize AdSense Ad Manager
     window.AdSenseManager = window.AdSenseManager || {
       config: {
-        client: '{{ $adsense.client }}',
+        client: '{{ $adsenseClient }}',
         autoAds: {{ $adsense.autoAds | default false }},
         lazyLoad: {{ $performance.lazyLoadAds | default true }},
         respectDNT: {{ $privacy.respectDoNotTrack | default false }}
@@ -227,7 +230,7 @@
   {{- /* Fallback when AdSense is disabled */ -}}
   {{- if hugo.IsServer -}}
   <div class="ad-manager-disabled">
-    <!-- AdSense Ad Manager: Disabled (adsense.enabled = false) -->
+    <!-- AdSense Ad Manager: Disabled (adsense.enabled = {{ $adsenseEnabled }}, client configured = {{ if $adsenseClient }}true{{ else }}false{{ end }}) -->
   </div>
   {{- end -}}
 {{- end -}}

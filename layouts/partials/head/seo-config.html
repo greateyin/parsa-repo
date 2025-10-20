@@ -1,5 +1,13 @@
 <!-- SEO Configuration Validation and Defaults -->
-{{ $seoConfig := .Site.Params.seo | default dict }}
+{{- $seoConfig := .Site.Params.seo | default dict -}}
+{{- $colors := .Site.Params.colors | default dict -}}
+{{- $theme := .Site.Params.theme | default dict -}}
+{{- $primaryColor := $colors.primary | default ($theme.primaryColor | default "#3b82f6") -}}
+{{- $themeVersion := $theme.version | default "1.0.0" -}}
+{{- $siteAuthor := .Site.Params.author | default dict -}}
+{{- $siteAuthorName := $siteAuthor.name | default "" -}}
+{{- $features := .Site.Params.features | default dict -}}
+{{- $pwa := .Site.Params.pwa -}}
 
 <!-- Validate and set SEO defaults -->
 {{ if not $seoConfig.enableSEO }}
@@ -12,22 +20,22 @@
 {{ end }}
 
 <!-- Validate author information -->
-{{ if not .Site.Params.author.name }}
+{{ if not $siteAuthorName }}
   {{ warnf "Author name not set in configuration. This is important for article schema." }}
 {{ end }}
 
 <!-- Validate OpenGraph default image -->
-{{ if and $seoConfig.enableOpenGraph (not .Site.Params.seo.defaultImage) }}
+{{ if and $seoConfig.enableOpenGraph (not $seoConfig.defaultImage) }}
   {{ warnf "Default OpenGraph image not set. Consider adding params.seo.defaultImage in your configuration." }}
 {{ end }}
 
 <!-- Validate structured data requirements -->
-{{ if and .IsPage (not .Params.author) (not .Site.Params.author.name) }}
+{{ if and .IsPage (not .Params.author) (not $siteAuthorName) }}
   {{ warnf "No author specified for page %s. This may affect article structured data." .RelPermalink }}
 {{ end }}
 
 <!-- Performance hints -->
-{{ if not .Site.Params.seo.preconnect }}
+{{ if not $seoConfig.preconnect }}
   <!-- Default preconnect domains for common services -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,12 +48,12 @@
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
 <!-- Content Security Policy (basic) -->
-{{ if .Site.Params.seo.enableCSP }}
+{{ if $seoConfig.enableCSP }}
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self'; media-src 'self'; object-src 'none'; child-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
 {{ end }}
 
 <!-- Geo-location meta tags (if specified) -->
-{{ with .Site.Params.seo.geo }}
+{{ with $seoConfig.geo }}
   {{ with .region }}<meta name="geo.region" content="{{ . }}">{{ end }}
   {{ with .placename }}<meta name="geo.placename" content="{{ . }}">{{ end }}
   {{ with .position }}<meta name="geo.position" content="{{ . }}">{{ end }}
@@ -62,24 +70,24 @@
 
 <!-- Theme identification -->
 <meta name="theme" content="Parsa Redesigned">
-<meta name="theme-version" content="{{ .Site.Params.theme.version | default "1.0.0" }}">
+<meta name="theme-version" content="{{ $themeVersion }}">
 
 <!-- Performance and caching hints -->
 <meta http-equiv="Cache-Control" content="public, max-age=31536000">
 <meta name="format-detection" content="telephone=no, date=no, email=no, address=no">
 
 <!-- Accessibility enhancements -->
-<meta name="color-scheme" content="light{{ if .Site.Params.features.darkMode }} dark{{ end }}">
+<meta name="color-scheme" content="light{{ if $features.darkMode }} dark{{ end }}">
 
 <!-- Mobile app integration -->
-{{ if .Site.Params.pwa }}
-  {{ with .Site.Params.pwa.name }}
+{{ with $pwa }}
+  {{ with .name }}
     <meta name="application-name" content="{{ . }}">
     <meta name="apple-mobile-web-app-title" content="{{ . }}">
   {{ end }}
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="msapplication-TileColor" content="{{ .Site.Params.theme.primaryColor | default "#3b82f6" }}">
+  <meta name="msapplication-TileColor" content="{{ $primaryColor }}">
   <meta name="msapplication-config" content="{{ "browserconfig.xml" | relURL }}">
 {{ end }}

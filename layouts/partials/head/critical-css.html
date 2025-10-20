@@ -37,12 +37,16 @@
 
 {{/* Font preloading for critical fonts */}}
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+{{ $analytics := .Site.Params.analytics | default dict }}
+{{ $comments := .Site.Params.comments | default dict }}
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 
 {{/* Preload critical images */}}
 {{ if .IsHome }}
-  {{ with .Site.Params.hero.backgroundImage }}
-    <link rel="preload" href="{{ . | absURL }}" as="image">
+  {{ with .Site.Params.hero }}
+    {{ with .backgroundImage }}
+      <link rel="preload" href="{{ . | absURL }}" as="image">
+    {{ end }}
   {{ end }}
   {{ with .Site.Params.logo }}
     <link rel="preload" href="{{ . | absURL }}" as="image">
@@ -56,12 +60,12 @@
 {{/* Resource hints for external domains */}}
 <link rel="dns-prefetch" href="//fonts.googleapis.com">
 <link rel="dns-prefetch" href="//fonts.gstatic.com">
-{{ if .Site.Params.analytics.googleAnalytics }}
+{{ if $analytics.googleAnalytics }}
 <link rel="dns-prefetch" href="//www.google-analytics.com">
 <link rel="dns-prefetch" href="//www.googletagmanager.com">
 {{ end }}
-{{ if .Site.Params.comments.disqusShortname }}
-<link rel="dns-prefetch" href="//{{ .Site.Params.comments.disqusShortname }}.disqus.com">
+{{ if $comments.disqusShortname }}
+<link rel="dns-prefetch" href="//{{ $comments.disqusShortname }}.disqus.com">
 {{ end }}
 
 {{/* Preconnect to critical external resources */}}

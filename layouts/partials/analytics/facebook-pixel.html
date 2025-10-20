@@ -7,11 +7,15 @@
   Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
 */}}
 
-{{- $fbPixel := site.Params.facebookPixel -}}
+{{- $fbPixel := site.Params.facebookPixel | default dict -}}
+{{- $fbPixelEnabled := $fbPixel.enabled | default false -}}
+{{- $fbPixelId := $fbPixel.pixelId | default "" -}}
+{{- $fbPixelConfigured := and $fbPixelEnabled $fbPixelId -}}
+{{- $fbPixelEvents := $fbPixel.events | default dict -}}
 {{- $privacy := site.Params.privacy | default dict -}}
 {{- $respectDoNotTrack := $privacy.respectDoNotTrack | default true -}}
 
-{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+{{- if $fbPixelConfigured -}}
 
 <!-- Facebook Pixel Code -->
 <script>
@@ -32,13 +36,13 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     
     // Initialize Facebook Pixel
-    fbq('init', '{{ $fbPixel.pixelId }}');
-    
-    {{- if $fbPixel.events.pageView | default true }}
+    fbq('init', '{{ $fbPixelId }}');
+
+    {{- if $fbPixelEvents.pageView | default true }}
     fbq('track', 'PageView');
     {{- end }}
-    
-    {{- if and $fbPixel.events.viewContent (eq .Type "blog") }}
+
+    {{- if and ($fbPixelEvents.viewContent | default false) (eq .Type "blog") }}
     fbq('track', 'ViewContent', {
       content_type: 'article',
       content_ids: ['{{ .Permalink }}'],
@@ -46,8 +50,8 @@
       content_category: '{{ with .Section }}{{ . }}{{ end }}'
     });
     {{- end }}
-    
-    {{- if $fbPixel.events.search }}
+
+    {{- if $fbPixelEvents.search }}
     // Search event tracking function
     window.fbPixelTrackSearch = function(searchTerm) {
       if (typeof fbq !== 'undefined') {
@@ -57,8 +61,8 @@
       }
     };
     {{- end }}
-    
-    {{- if $fbPixel.events.contact }}
+
+    {{- if $fbPixelEvents.contact }}
     // Contact event tracking function
     window.fbPixelTrackContact = function() {
       if (typeof fbq !== 'undefined') {
@@ -66,8 +70,8 @@
       }
     };
     {{- end }}
-    
-    {{- if $fbPixel.events.lead }}
+
+    {{- if $fbPixelEvents.lead }}
     // Lead event tracking function
     window.fbPixelTrackLead = function() {
       if (typeof fbq !== 'undefined') {
@@ -75,7 +79,7 @@
       }
     };
     {{- end }}
-    
+
     {{- range $fbPixel.customEvents }}
     {{- if .enabled }}
     // Custom event: {{ .name }}
@@ -98,7 +102,7 @@
 <noscript>
   {{- if not $respectDoNotTrack }}
   <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id={{ $fbPixel.pixelId }}&ev=PageView&noscript=1"/>
+       src="https://www.facebook.com/tr?id={{ $fbPixelId }}&ev=PageView&noscript=1"/>
   {{- end }}
 </noscript>
 

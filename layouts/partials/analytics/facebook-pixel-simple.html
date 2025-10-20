@@ -1,7 +1,10 @@
 {{- /* Facebook Pixel - Simplified Version for Integration Testing */ -}}
 
-{{- $fbPixel := site.Params.facebookPixel -}}
-{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+{{- $fbPixel := site.Params.facebookPixel | default dict -}}
+{{- $fbPixelEnabled := $fbPixel.enabled | default false -}}
+{{- $fbPixelId := $fbPixel.pixelId | default "" -}}
+{{- $fbPixelEvents := $fbPixel.events | default dict -}}
+{{- if and $fbPixelEnabled $fbPixelId -}}
 
 {{- $privacy := site.Params.privacy | default dict -}}
 {{- $respectDNT := $privacy.respectDoNotTrack | default true -}}
@@ -23,9 +26,9 @@
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
 
-  fbq('init', '{{ $fbPixel.pixelId }}');
-  
-  {{- if $fbPixel.events.pageView | default true }}
+  fbq('init', '{{ $fbPixelId }}');
+
+  {{- if $fbPixelEvents.pageView | default true }}
   fbq('track', 'PageView');
   {{- end }}
   
@@ -36,7 +39,7 @@
 
 <noscript>
   <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id={{ $fbPixel.pixelId }}&ev=PageView&noscript=1"/>
+       src="https://www.facebook.com/tr?id={{ $fbPixelId }}&ev=PageView&noscript=1"/>
 </noscript>
 
 {{- end -}}

@@ -12,9 +12,10 @@
 
 {{- $performance := site.Params.performance | default dict -}}
 {{- $lazyLoadAds := $performance.lazyLoadAds | default true -}}
-{{- $adsense := site.Params.adsense -}}
+{{- $adsense := site.Params.adsense | default dict -}}
+{{- $adsenseEnabled := $adsense.enabled | default false -}}
 
-{{- if and $lazyLoadAds $adsense.enabled -}}
+{{- if and $lazyLoadAds $adsenseEnabled -}}
 
 <script>
 (function() {

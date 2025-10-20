@@ -6,6 +6,10 @@
       data-lang-dir="{{ .Site.Params.languageDirection | default "ltr" }}"
       {{ if hugo.IsMultilingual }}data-multilingual="true"{{ end }}>
 <head>
+  {{- $colors := .Site.Params.colors | default dict -}}
+  {{- $theme := .Site.Params.theme | default dict -}}
+  {{- $primaryColor := $colors.primary | default ($theme.primaryColor | default "#3b82f6") -}}
+  {{- $accentColor := $colors.accent | default ($theme.accentColor | default "#8b5cf6") -}}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -15,7 +19,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="{{ .Site.Params.theme.primaryColor | default "#3b82f6" }}">
+  <meta name="theme-color" content="{{ $primaryColor }}">
   
   <!-- Primary Meta Tags -->
   <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
@@ -28,8 +32,8 @@
   <!-- CSS Custom Properties for Theme -->
   <style>
     :root {
-      --color-primary: {{ .Site.Params.theme.primaryColor | default "#3b82f6" }};
-      --color-accent: {{ .Site.Params.theme.accentColor | default "#8b5cf6" }};
+      --color-primary: {{ $primaryColor }};
+      --color-accent: {{ $accentColor }};
       --color-background: #ffffff;
       --color-foreground: #0f172a;
       --color-muted: #64748b;

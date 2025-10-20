@@ -37,8 +37,10 @@
 {{- end -}}
 
 {{- /* Facebook Pixel */ -}}
-{{- $fbPixel := site.Params.facebookPixel -}}
-{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+{{- $fbPixel := site.Params.facebookPixel | default dict -}}
+{{- $fbPixelEnabled := $fbPixel.enabled | default false -}}
+{{- $fbPixelId := $fbPixel.pixelId | default "" -}}
+{{- if and $fbPixelEnabled $fbPixelId -}}
   {{- $scriptSources = $scriptSources | append (dict 
     "src" "https://connect.facebook.net/en_US/fbevents.js"
     "priority" "medium"
@@ -51,10 +53,12 @@
 {{- end -}}
 
 {{- /* Google AdSense */ -}}
-{{- $adsense := site.Params.adsense -}}
-{{- if and $adsense.enabled $adsense.client -}}
-  {{- $scriptSources = $scriptSources | append (dict 
-    "src" (printf "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%s" $adsense.client)
+{{- $adsense := site.Params.adsense | default dict -}}
+{{- $adsenseEnabled := $adsense.enabled | default false -}}
+{{- $adsenseClient := $adsense.client | default "" -}}
+{{- if and $adsenseEnabled $adsenseClient -}}
+  {{- $scriptSources = $scriptSources | append (dict
+    "src" (printf "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%s" $adsenseClient)
     "priority" "low"
     "service" "adSense"
     "async" true
@@ -65,7 +69,8 @@
 {{- end -}}
 
 {{- /* Google Custom Search */ -}}
-{{- $gcsId := site.Params.gcs_engine_id.value -}}
+{{- $gcs := site.Params.gcs_engine_id | default dict -}}
+{{- $gcsId := $gcs.value | default "" -}}
 {{- if $gcsId -}}
   {{- $scriptSources = $scriptSources | append (dict 
     "src" (printf "https://cse.google.com/cse.js?cx=%s" $gcsId)
