@@ -10,7 +10,10 @@
 {{- $gaID := site.Config.Services.GoogleAnalytics.ID -}}
 
 {{- /* Facebook Pixel configuration */ -}}
-{{- $fbPixel := site.Params.facebookPixel -}}
+{{- $fbPixel := site.Params.facebookPixel | default dict -}}
+{{- $fbPixelEnabled := $fbPixel.enabled | default false -}}
+{{- $fbPixelId := $fbPixel.pixelId | default "" -}}
+{{- $fbPixelConfigured := and $fbPixelEnabled $fbPixelId -}}
 
 {{- /* Load Google Analytics (if configured) */ -}}
 {{- if $gaID -}}
@@ -18,7 +21,7 @@
 {{- end -}}
 
 {{- /* Load Facebook Pixel (if configured) */ -}}
-{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+{{- if $fbPixelConfigured -}}
   {{- partial "analytics/facebook-pixel.html" . -}}
 {{- end -}}
 
@@ -34,9 +37,9 @@
         loaded: false
       },
       {{- end }}
-      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      {{- if $fbPixelConfigured }}
       facebookPixel: {
-        id: '{{ $fbPixel.pixelId }}',
+        id: '{{ $fbPixelId }}',
         enabled: true,
         loaded: false
       }
@@ -71,7 +74,7 @@
       }
       {{- end }}
       
-      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      {{- if $fbPixelConfigured }}
       if (typeof fbq !== 'undefined' && this.services.facebookPixel) {
         this.services.facebookPixel.loaded = true;
         console.log('Analytics: Facebook Pixel loaded');
@@ -87,7 +90,7 @@
       }
       {{- end }}
       
-      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      {{- if $fbPixelConfigured }}
       if (typeof fbq !== 'undefined') {
         fbq('track', eventName, parameters || {});
       }

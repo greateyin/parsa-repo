@@ -35,8 +35,12 @@
 {{- end -}}
 
 {{- /* Load Facebook Pixel (if configured) */ -}}
-{{- $fbPixel := site.Params.facebookPixel -}}
-{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+{{- $fbPixel := site.Params.facebookPixel | default dict -}}
+{{- $fbPixelEnabled := $fbPixel.enabled | default false -}}
+{{- $fbPixelId := $fbPixel.pixelId | default "" -}}
+{{- $fbPixelConfigured := and $fbPixelEnabled $fbPixelId -}}
+{{- $fbPixelEvents := $fbPixel.events | default dict -}}
+{{- if $fbPixelConfigured -}}
   {{- partial "analytics/facebook-pixel.html" . -}}
 {{- end -}}
 
@@ -52,19 +56,19 @@
         loaded: false
       },
       {{- end }}
-      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      {{- if $fbPixelConfigured }}
       facebookPixel: {
-        id: '{{ $fbPixel.pixelId }}',
+        id: '{{ $fbPixelId }}',
         enabled: true,
         loaded: false,
         events: {
           {{- if $fbPixel.events }}
-          pageView: {{ $fbPixel.events.pageView | default true }},
-          viewContent: {{ $fbPixel.events.viewContent | default false }},
-          search: {{ $fbPixel.events.search | default false }},
-          contact: {{ $fbPixel.events.contact | default false }},
-          lead: {{ $fbPixel.events.lead | default false }},
-          outboundClick: {{ $fbPixel.events.outboundClick | default false }}
+          pageView: {{ $fbPixelEvents.pageView | default true }},
+          viewContent: {{ $fbPixelEvents.viewContent | default false }},
+          search: {{ $fbPixelEvents.search | default false }},
+          contact: {{ $fbPixelEvents.contact | default false }},
+          lead: {{ $fbPixelEvents.lead | default false }},
+          outboundClick: {{ $fbPixelEvents.outboundClick | default false }}
           {{- else }}
           pageView: true,
           viewContent: false,
@@ -116,7 +120,7 @@
       }
       
       if (!service || service === 'facebookPixel') {
-        {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+        {{- if $fbPixelConfigured }}
         if (typeof fbq !== 'undefined') {
           fbq('track', eventName, parameters);
         }
@@ -126,18 +130,18 @@
     
     // Facebook Pixel specific event tracking
     facebookPixel: {
-      {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+      {{- if $fbPixelConfigured }}
       // Standard events
       trackPageView: function() {
-        {{- if $fbPixel.events.pageView | default true }}
+        {{- if $fbPixelEvents.pageView | default true }}
         if (typeof fbq !== 'undefined') {
           fbq('track', 'PageView');
         }
         {{- end }}
       },
-      
+
       trackViewContent: function(contentData) {
-        {{- if $fbPixel.events.viewContent }}
+        {{- if $fbPixelEvents.viewContent }}
         if (typeof fbq !== 'undefined') {
           var data = contentData || {
             content_type: 'article',
@@ -148,9 +152,9 @@
         }
         {{- end }}
       },
-      
+
       trackSearch: function(searchTerm) {
-        {{- if $fbPixel.events.search }}
+        {{- if $fbPixelEvents.search }}
         if (typeof fbq !== 'undefined' && searchTerm) {
           fbq('track', 'Search', {
             search_string: searchTerm
@@ -160,15 +164,15 @@
       },
       
       trackContact: function() {
-        {{- if $fbPixel.events.contact }}
+        {{- if $fbPixelEvents.contact }}
         if (typeof fbq !== 'undefined') {
           fbq('track', 'Contact');
         }
         {{- end }}
       },
-      
+
       trackLead: function() {
-        {{- if $fbPixel.events.lead }}
+        {{- if $fbPixelEvents.lead }}
         if (typeof fbq !== 'undefined') {
           fbq('track', 'Lead');
         }
@@ -197,7 +201,7 @@
       var self = this;
       
       // Track scroll depth for Facebook Pixel
-      {{- if and $fbPixel.enabled $fbPixel.events.viewContent }}
+      {{- if and $fbPixelConfigured ($fbPixelEvents.viewContent | default false) }}
       var scrollTracked = false;
       window.addEventListener('scroll', function() {
         if (!scrollTracked && (window.scrollY / document.body.scrollHeight) > 0.5) {
@@ -211,7 +215,7 @@
       document.addEventListener('click', function(e) {
         var link = e.target.closest('a');
         if (link && link.hostname !== window.location.hostname) {
-          {{- if $fbPixel.events.outboundClick | default false }}
+          {{- if $fbPixelEvents.outboundClick | default false }}
           self.facebookPixel.trackCustomEvent('OutboundClick', {
             url: link.href,
             text: link.textContent.trim()
@@ -224,13 +228,13 @@
       document.addEventListener('submit', function(e) {
         var form = e.target;
         if (form.tagName === 'FORM') {
-          {{- if $fbPixel.events.contact }}
+          {{- if $fbPixelEvents.contact }}
           if (form.classList.contains('contact-form') || form.id.includes('contact')) {
             self.facebookPixel.trackContact();
           }
           {{- end }}
           
-          {{- if $fbPixel.events.lead }}
+          {{- if $fbPixelEvents.lead }}
           if (form.classList.contains('newsletter-form') || form.classList.contains('subscribe-form')) {
             self.facebookPixel.trackLead();
           }
@@ -278,7 +282,7 @@
   {{- end }}
   
   // Mark Facebook Pixel as loaded when available
-  {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+  {{- if $fbPixelConfigured }}
   window.addEventListener('load', function() {
     if (typeof fbq !== 'undefined') {
       window.analyticsManager.markServiceLoaded('facebookPixel');
@@ -312,7 +316,7 @@
   });
   
   // Expose Facebook Pixel tracking functions globally for easy access
-  {{- if and $fbPixel.enabled $fbPixel.pixelId }}
+  {{- if $fbPixelConfigured }}
   window.fbPixelTrackSearch = function(searchTerm) {
     window.analyticsManager.facebookPixel.trackSearch(searchTerm);
   };

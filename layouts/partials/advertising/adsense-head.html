@@ -8,17 +8,19 @@
   Requirements: 2.1, 2.4, 8.1
 */}}
 
-{{- $adsense := site.Params.adsense -}}
+{{- $adsense := site.Params.adsense | default dict -}}
+{{- $adsenseEnabled := $adsense.enabled | default false -}}
+{{- $adsenseClient := $adsense.client | default "" -}}
 {{- $privacy := site.Params.privacy | default dict -}}
 {{- $performance := site.Params.performance | default dict -}}
 
-{{- if and $adsense.enabled $adsense.client -}}
+{{- if and $adsenseEnabled $adsenseClient -}}
   {{- /* Check Do Not Track preference */ -}}
   {{- $respectDoNotTrack := $privacy.respectDoNotTrack | default false -}}
   
   {{- /* AdSense script loading with async optimization */ -}}
   <script {{ if $performance.asyncScripts | default true }}async{{ end }} 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense.client }}"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsenseClient }}"
           crossorigin="anonymous"
           {{ if $respectDoNotTrack }}data-respect-dnt="true"{{ end }}></script>
   
@@ -34,7 +36,7 @@
     if (!doNotTrack) {
     {{- end -}}
       (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "{{ $adsense.client }}",
+        google_ad_client: "{{ $adsenseClient }}",
         enable_page_level_ads: true
         {{- if $adsense.autoAdsConfig -}}
         {{- range $key, $value := $adsense.autoAdsConfig -}}
@@ -78,6 +80,6 @@
 {{- else -}}
   {{- /* Debug information when AdSense is not configured */ -}}
   {{- if hugo.IsServer -}}
-  <!-- AdSense not configured: enabled={{ $adsense.enabled }}, client={{ $adsense.client }} -->
+  <!-- AdSense not configured: enabled={{ $adsenseEnabled }}, client={{ if $adsenseClient }}{{ $adsenseClient }}{{ else }}<nil>{{ end }} -->
   {{- end -}}
 {{- end -}}

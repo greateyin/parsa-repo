@@ -7,11 +7,15 @@
   Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
 */}}
 
-{{- $fbPixel := site.Params.facebookPixel -}}
+{{- $fbPixel := site.Params.facebookPixel | default dict -}}
+{{- $fbPixelEnabled := $fbPixel.enabled | default false -}}
+{{- $fbPixelId := $fbPixel.pixelId | default "" -}}
+{{- $fbPixelConfigured := and $fbPixelEnabled $fbPixelId -}}
+{{- $fbPixelEvents := $fbPixel.events | default dict -}}
 {{- $privacy := site.Params.privacy | default dict -}}
 {{- $respectDoNotTrack := $privacy.respectDoNotTrack | default true -}}
 
-{{- if and $fbPixel.enabled $fbPixel.pixelId -}}
+{{- if $fbPixelConfigured -}}
   {{- $doNotTrack := false -}}
   {{- if $respectDoNotTrack -}}
     {{- $doNotTrack = true -}}
@@ -36,14 +40,14 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     
     // Initialize Facebook Pixel
-    fbq('init', '{{ $fbPixel.pixelId }}');
+    fbq('init', '{{ $fbPixelId }}');
     
     {{- /* Standard Event Tracking */ -}}
-    {{- if $fbPixel.events.pageView | default true -}}
+    {{- if $fbPixelEvents.pageView | default true -}}
     fbq('track', 'PageView');
     {{- end -}}
     
-    {{- if $fbPixel.events.viewContent -}}
+    {{- if $fbPixelEvents.viewContent -}}
     // Track ViewContent event for blog posts and articles
     {{- if eq .Type "blog" -}}
     fbq('track', 'ViewContent', {
@@ -56,7 +60,7 @@
     {{- end -}}
     
     {{- /* Custom Event Tracking Configuration */ -}}
-    {{- if $fbPixel.events.search -}}
+    {{- if $fbPixelEvents.search -}}
     // Search event tracking (will be triggered by search interactions)
     window.fbPixelTrackSearch = function(searchTerm) {
       if (typeof fbq !== 'undefined') {
@@ -67,7 +71,7 @@
     };
     {{- end -}}
     
-    {{- if $fbPixel.events.contact -}}
+    {{- if $fbPixelEvents.contact -}}
     // Contact event tracking (will be triggered by contact form submissions)
     window.fbPixelTrackContact = function() {
       if (typeof fbq !== 'undefined') {
@@ -76,7 +80,7 @@
     };
     {{- end -}}
     
-    {{- if $fbPixel.events.lead -}}
+    {{- if $fbPixelEvents.lead -}}
     // Lead event tracking (will be triggered by newsletter signups)
     window.fbPixelTrackLead = function() {
       if (typeof fbq !== 'undefined') {
@@ -109,7 +113,7 @@
 <noscript>
   {{- if not $respectDoNotTrack -}}
   <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id={{ $fbPixel.pixelId }}&ev=PageView&noscript=1"/>
+       src="https://www.facebook.com/tr?id={{ $fbPixelId }}&ev=PageView&noscript=1"/>
   {{- end -}}
 </noscript>
 
